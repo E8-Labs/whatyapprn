@@ -6,79 +6,66 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import {
   placeholderImage,
   screenHeight,
   screenWidth,
 } from "../../res/Constants";
+import socket from "../../Api/socket";
+import GaleryCamPopup from "../../components/GaleryCamPopup";
+import * as FileSystem from "expo-file-system";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
 import { CustomFonts } from "../../assets/font/Fonts";
 import React, { useState, useEffect, useRef } from "react";
-import MessageBox from "../../components/MessageBox";
-import io from "socket.io-client";
+import MessageBox from "../../components/Chat/MessageBox";
+import ImageMessageBox from "../../components/Chat/ImageMessageBox";
 import axios from "axios";
 import { Apipath } from "../../Api/Apipaths";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EmojiSelector, { Categories } from "react-native-emoji-selector";
 
 const ChatScreen = ({ navigation, route }) => {
-  const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [user, setUser] = useState("");
-  //   const [slectedMessage, setSelectedMessage] = useState(null);
-  let listViewRef = useRef(null);
-
-  const SERVER_URL = "ws://185.28.22.219:8004";
+  const [showPopup, setShowPopup] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null); // Selected image for preview
 
   const chat = route.params.chat;
-  let chatId = chat.id;
-  //   console.log("chat.id", chat);
-  // Connect to the socket server when the component mounts
+  const chatId = chat.id;
+  let listViewRef = useRef(null);
+
   useEffect(() => {
-    const newSocket = io(SERVER_URL, {
-      // query: { chatId },
-    });
-
-    // Save socket instance to state
-    setSocket(newSocket);
-
-    // Listen for messages from the server
-    // console.log("Receiving messages on ", "receiveMessage" + chatId);
-    newSocket.on("receiveMessage" + chatId, (data) => {
+    socket.on("receiveMessage" + chatId, (data) => {
       const messageData = data;
       console.log("Message received", messageData);
 
       if (messageData.status) {
         setMessages((prevMessages) => {
-          // Check if the message with the same ID already exists
           const messageIndex = prevMessages.findIndex(
             (m) => m.id == messageData.message.id
           );
 
           if (messageIndex !== -1) {
-            // If message exists, update the emoji for that message
             const updatedMessages = [...prevMessages];
             updatedMessages[messageIndex].emoji = messageData.message.emoji;
             console.log("Message updated");
             return updatedMessages;
           } else {
-            // If message doesn't exist, add it to the end
             return [...prevMessages, messageData.message];
           }
         });
       } else {
-        console.log(messageData.message); // Handle errors if any
+        console.log(messageData.message);
       }
     });
 
-    // Handle disconnection
     return () => {
-      newSocket.disconnect();
+      socket.off("receiveMessage" + chatId);
     };
   }, [chatId]);
 
@@ -86,36 +73,20 @@ const ChatScreen = ({ navigation, route }) => {
     loadMessages();
   }, []);
 
-  // Handle sending a message
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
 
     const data = await AsyncStorage.getItem("USER");
-    if (data && socket) {
+    if (data) {
       const u = JSON.parse(data);
-      const userMessage = {
-        message: inputMessage,
-        id: `${chatId}-${messages.length}`, // Unique ID for the message
-        user: {
-          id: user && user.user.id,
-        },
-      };
-
-      //   setMessages((prevMessages) => [...prevMessages, userMessage]);
-      setInputMessage(""); // Clear the input after sending
-
       const messageData = {
-        token: u.token, // JWT token for authentication
-        chatId: chatId, // ID of the chat session
-        messageContent: inputMessage, // The message content
+        token: u.token,
+        chatId: chatId,
+        messageContent: inputMessage,
       };
 
-      // console.log('Sending message data:', messageData);
-
-      // Emit the message to the socket server
       socket.emit("sendMessage", messageData);
-    } else {
-      //   console.log("User data or socket is not available");
+      setInputMessage("");
     }
   };
 
@@ -124,33 +95,72 @@ const ChatScreen = ({ navigation, route }) => {
       const data = await AsyncStorage.getItem("USER");
       if (data) {
         let u = JSON.parse(data);
-        // console.log('user token is', u.token)
         setUser(u);
         let path = Apipath.loadMessages + "?chatId=" + chatId;
-        // console.log("path is", path);
         const response = await axios.get(path, {
           headers: {
             Authorization: "Bearer " + u.token,
           },
         });
 
-        // console.log('response is', response)
-
-        if (response.data) {
-          if (response.data.status === true) {
-            // console.log("loaded messages are", response.data.data);
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              ...response.data.data,
-            ]);
-            setInputMessage("");
-          } else {
-            // console.log("load messages api message is", response.data.message);
-          }
+        if (response.data && response.data.status === true) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            ...response.data.data,
+          ]);
+          setInputMessage("");
         }
       }
     } catch (e) {
-      //   console.log("error in load messages api is ", e);
+      console.error("Error loading messages:", e);
+    }
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Please allow camera access to continue");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.1,
+    });
+
+    if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+      setPreviewImage(imageUri); // Set preview image
+      setShowPopup(false);
+    }
+  };
+
+  const sendImageMessage = async () => {
+    if (!previewImage) return;
+
+    const data = await AsyncStorage.getItem("USER");
+    if (data) {
+      const u = JSON.parse(data);
+      const fileType = previewImage.split(".").pop();
+      const fileName = `image_${Date.now()}.${fileType}`;
+      const imageBuffer = await FileSystem.readAsStringAsync(previewImage, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const messageData = {
+        chatId: chatId,
+        messageContent: "", // No caption
+        file: {
+          buffer: imageBuffer,
+          originalname: fileName,
+          mimetype: `image/${fileType}`,
+        },
+        token: u.token,
+      };
+      console.log("Will send image message");
+      socket.emit("sendMessage", messageData);
+      setPreviewImage(null); // Reset preview image
     }
   };
 
@@ -215,6 +225,7 @@ const ChatScreen = ({ navigation, route }) => {
             />
           </TouchableOpacity>
         </View>
+
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ height: screenHeight * 0.89 }}
@@ -233,13 +244,21 @@ const ChatScreen = ({ navigation, route }) => {
                 });
               }
             }}
-            renderItem={(item) => (
-              <MessageBox
-                item={item}
-                user={user && user}
-                sendEmoji={sendEmoji}
-              />
-            )}
+            renderItem={(item) => {
+              if (item.item.messageType === "Media") {
+                return (
+                  <ImageMessageBox
+                    item={item}
+                    user={user}
+                    sendEmoji={sendEmoji}
+                  />
+                );
+              } else {
+                return (
+                  <MessageBox item={item} user={user} sendEmoji={sendEmoji} />
+                );
+              }
+            }}
           />
 
           <View
@@ -247,7 +266,7 @@ const ChatScreen = ({ navigation, route }) => {
               flexDirection: "row",
               alignItems: "flex-start",
               height: (110 / 930) * screenHeight,
-              backgroundColor: "transparent", //alignSelf:'flex-start',
+              backgroundColor: "transparent",
               width: screenWidth,
               justifyContent: "center",
               paddingHorizontal: 10,
@@ -256,7 +275,7 @@ const ChatScreen = ({ navigation, route }) => {
           >
             <TouchableOpacity
               onPress={() => {
-                // setOpenModal(true)
+                setShowPopup(true);
               }}
             >
               <Image
@@ -278,27 +297,12 @@ const ChatScreen = ({ navigation, route }) => {
               }}
             >
               <TextInput
-                placeholder="Send message...." //value={message}
+                placeholder="Send message...."
                 multiline
                 value={inputMessage}
-                autoComplete="none"
-                onChangeText={(item) => {
-                  setInputMessage(item);
-                }}
+                onChangeText={(item) => setInputMessage(item)}
               />
             </View>
-            <TouchableOpacity
-            // onPress={recording ? stopRecording : startRecording}
-            >
-              <Image
-                source={require("../../assets/Images/micIcon.png")}
-                style={{
-                  height: 24,
-                  width: 24,
-                  marginTop: (8 / 930) * screenHeight,
-                }}
-              />
-            </TouchableOpacity>
             <TouchableOpacity onPress={() => sendMessage()}>
               <Image
                 source={require("../../assets/Images/blackSendIcon.png")}
@@ -308,6 +312,53 @@ const ChatScreen = ({ navigation, route }) => {
           </View>
         </KeyboardAvoidingView>
       </View>
+
+      {/* Full-Screen Image Preview Overlay */}
+      {previewImage && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            source={{ uri: previewImage }}
+            style={{ width: "100%", height: "100%", resizeMode: "contain" }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: 40,
+              flexDirection: "row",
+              justifyContent: "space-around",
+              width: "100%",
+              paddingHorizontal: 20,
+            }}
+          >
+            <TouchableOpacity onPress={() => setPreviewImage(null)}>
+              <Text style={{ fontSize: 18, color: "red" }}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={sendImageMessage}>
+              <Text style={{ fontSize: 18, color: "blue" }}>Send</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
+      <Modal visible={showPopup} transparent={true} animationType="slide">
+        <GaleryCamPopup
+          close={() => setShowPopup(false)}
+          handleBtnPress={(value) => {
+            if (value === "galery") pickImage();
+          }}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };
