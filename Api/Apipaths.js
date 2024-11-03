@@ -1,0 +1,30 @@
+const baseUrl = "http://185.28.22.219:8006/api/"
+
+export const Apipath = {
+    loginUser :baseUrl + "user/login",
+    checkEmailExists:baseUrl + "user/checkEmailExists",
+    sendVeerificationEmail:baseUrl + "user/sendVerificationEmail",
+    verifyEmail:baseUrl + "user/verifyEmail",
+    registerUser:baseUrl + "user/register",
+    uploadMedia: baseUrl + "user/upload_user_media",
+    getDashboardData : baseUrl + "dashboard/businessDashboard",
+    searchCustomers : baseUrl + "dashboard/searchCustomers",
+    addProfileView: baseUrl + "dashboard/addProfileView",
+    updateProfile: baseUrl + "user/updateProfile",
+    addNewCustomer : baseUrl + 'dashboard/addCustomer',
+    getAllCustomers:baseUrl + "dashboard/customersNear",
+    addReview:baseUrl +"dashboard/addReview",
+    getReviews:baseUrl +"review/loadReviews",
+    loadMessages:baseUrl + 'review/loadMessages',
+    sendMessage:baseUrl+"review/sendMessage",
+    addYap:baseUrl+"dashboard/addReview",
+    getProfile : baseUrl + "user/my_profile",
+    disputeReview:baseUrl+ "review/disputeReview",
+    paySettle:baseUrl+"review/paySettlementOffer",
+    loadChats:baseUrl+"review/loadChats",
+    getNotifications:baseUrl+"user/notifications",
+    searchHistory:baseUrl+"user/searchHistory"
+    
+    
+    
+}
