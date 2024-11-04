@@ -84,11 +84,11 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
         }}
       >
         {/* Placeholder with Activity Indicator or Error Fallback */}
-        {/* {imageLoading && !imageError && (
+        {imageLoading && !imageError && (
           <View style={styles.placeholderContainer}>
             <ActivityIndicator size="small" color="#888" />
           </View>
-        )} */}
+        )}
 
         {/* {imageError && (
           <View style={styles.placeholderContainer}>
@@ -97,7 +97,7 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
         )} */}
 
         {/* Log the image URL */}
-        {console.log("Image URL:", msg.media)}
+        {/* {console.log("Image URL:", msg.media)} */}
 
         {/* Image content with error handling */}
         <Image
@@ -110,12 +110,12 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
             backgroundColor: "#f0f0f0",
             // display: imageLoading ? "none" : "flex",
           }}
-          onLoad={() => {
-            console.log("Image loaded successfully");
+          onLoadStart={() => {
+            // console.log("Image loaded successfully");
             setImageLoading(false);
           }}
           onError={(error) => {
-            console.log("Image failed to load:", error);
+            // console.log("Image failed to load:", error);
             setImageLoading(false);
             setImageError(true);
           }}

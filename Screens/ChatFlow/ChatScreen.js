@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
+  StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import {
@@ -27,6 +28,10 @@ import ImageMessageBox from "../../components/Chat/ImageMessageBox";
 import axios from "axios";
 import { Apipath } from "../../Api/Apipaths";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "../../res/Colors";
+import { Audio } from 'expo-av';
+import VoiceMessagePlayer from "./VoiceMessagePlayer";
+
 
 const ChatScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
@@ -34,6 +39,11 @@ const ChatScreen = ({ navigation, route }) => {
   const [user, setUser] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [previewImage, setPreviewImage] = useState(null); // Selected image for preview
+  const [recording, setRecording] = useState();
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
+  const [recordingPopup, setRecordingPopup] = useState(false);
+
+
 
   const chat = route.params.chat;
   const chatId = chat.id;
@@ -53,14 +63,14 @@ const ChatScreen = ({ navigation, route }) => {
           if (messageIndex !== -1) {
             const updatedMessages = [...prevMessages];
             updatedMessages[messageIndex].emoji = messageData.message.emoji;
-            console.log("Message updated");
+            conse.log("Message updated");
             return updatedMessages;
           } else {
             return [...prevMessages, messageData.message];
           }
         });
       } else {
-        console.log(messageData.message);
+        conse.log(messageData.message);
       }
     });
 
@@ -90,6 +100,26 @@ const ChatScreen = ({ navigation, route }) => {
     }
   };
 
+  async function sendVoice(base64Audio) {
+
+    const data = await AsyncStorage.getItem("USER");
+    if (data) {
+      const u = JSON.parse(data);
+
+      socket.emit("sendMessage", {
+        token: u.token,
+        chatId: chatId,  // Replace with your actual chat ID
+        messageContent: "",       // Optional message content
+        audio: {
+          buffer: base64Audio,      // Base64-encoded audio data
+          originalname: "audio.m4a", // Audio filename with extension
+          mimetype: "audio/m4a"      // MIME type of the audio
+        }
+      })
+    }
+
+    console.log("Audio data sent via socket");
+  }
   const loadMessages = async () => {
     try {
       const data = await AsyncStorage.getItem("USER");
@@ -112,7 +142,7 @@ const ChatScreen = ({ navigation, route }) => {
         }
       }
     } catch (e) {
-      console.error("Error loading messages:", e);
+      //conse.error("Error loading messages:", e);
     }
   };
 
@@ -158,14 +188,14 @@ const ChatScreen = ({ navigation, route }) => {
         },
         token: u.token,
       };
-      console.log("Will send image message");
+      //conse.log("Will send image message");
       socket.emit("sendMessage", messageData);
       setPreviewImage(null); // Reset preview image
     }
   };
 
   const sendEmoji = (emoji, msgid) => {
-    // console.log("emoji ", emoji);
+    // //conse.log("emoji ", emoji);
     if (!user) {
       return;
     }
@@ -175,10 +205,73 @@ const ChatScreen = ({ navigation, route }) => {
       emoji: emoji, // The message content
     };
 
-    // console.log('Sending message data:', messageData);
+    // //conse.log('Sending message data:', messageData);
     // Emit the message to the socket server
     socket.emit("reactOnMessage", messageData);
   };
+
+  async function startRecording() {
+    try {
+      // Check for microphone permission
+      if (permissionResponse.status !== 'granted') {
+        const permission = await requestPermission();
+        if (permission.status !== 'granted') {
+          console.warn('Microphone permission not granted');
+          return;
+        }
+      }
+
+      // Prevent starting another recording if already in progress
+      if (recording) {
+        console.warn('Recording is already in progress');
+        return;
+      }
+
+      setRecordingPopup(true);
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      // Start a new recording
+      const { recording: newRecording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+
+      setRecording(newRecording); // Set the recording state to the new recording object.
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  }
+
+  async function stopRecording() {
+    if (!recording) return;
+
+    setRecordingPopup(false);
+    try {
+      await recording.stopAndUnloadAsync();
+      await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+      const uri = recording.getURI(); // Get the URI of the recorded audio file
+      console.log("Recorded message URI:", uri);
+
+      // Convert audio file to base64
+      const base64Audio = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Send base64 audio data over socket
+      sendVoice(base64Audio);
+
+      // Clear the recording instance after stopping
+      setRecording(undefined);
+    } catch (err) {
+      console.error('Failed to stop recording', err);
+    }
+  }
+
+
+
+
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -253,6 +346,11 @@ const ChatScreen = ({ navigation, route }) => {
                     sendEmoji={sendEmoji}
                   />
                 );
+              } else if (item.item.messageType === "Voice") {
+                return (
+                  
+                  <VoiceMessagePlayer item={item} user = {user}  timestamp={item.createdAt}/>
+                )
               } else {
                 return (
                   <MessageBox item={item} user={user} sendEmoji={sendEmoji} />
@@ -303,6 +401,14 @@ const ChatScreen = ({ navigation, route }) => {
                 onChangeText={(item) => setInputMessage(item)}
               />
             </View>
+
+            <TouchableOpacity style={{ marginTop: 12 / 930 * screenHeight }}
+              onPress={recording ? stopRecording : startRecording}
+            >
+              <Image source={require('../../assets/Images/micIcon.png')}
+                style={{ height: 24, width: 24, }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => sendMessage()}>
               <Image
                 source={require("../../assets/Images/blackSendIcon.png")}
@@ -322,15 +428,17 @@ const ChatScreen = ({ navigation, route }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            backgroundColor: "white",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
+          {/* <View style = {{backgroundColor:'red'}}> */}
           <Image
             source={{ uri: previewImage }}
             style={{ width: "100%", height: "100%", resizeMode: "contain" }}
           />
+
           <View
             style={{
               position: "absolute",
@@ -339,16 +447,18 @@ const ChatScreen = ({ navigation, route }) => {
               justifyContent: "space-around",
               width: "100%",
               paddingHorizontal: 20,
+              // backgroundColor:'white'
             }}
           >
-            <TouchableOpacity onPress={() => setPreviewImage(null)}>
-              <Text style={{ fontSize: 18, color: "red" }}>Cancel</Text>
+            <TouchableOpacity style={[GlobalStyles.capsuleBtn, { width: 150, backgroundColor: Colors.grayColor }]} onPress={() => setPreviewImage(null)}>
+              <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={sendImageMessage}>
-              <Text style={{ fontSize: 18, color: "blue" }}>Send</Text>
+            <TouchableOpacity onPress={sendImageMessage} style={[GlobalStyles.capsuleBtn, { width: 150 }]}>
+              <Text style={GlobalStyles.BtnText}>Send</Text>
             </TouchableOpacity>
           </View>
         </View>
+        // </View>
       )}
 
       <Modal visible={showPopup} transparent={true} animationType="slide">
@@ -359,8 +469,76 @@ const ChatScreen = ({ navigation, route }) => {
           }}
         />
       </Modal>
+
+
+
+      {/* record voice popup */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={recordingPopup}
+        onRequestClose={() => { }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity style={styles.stopButton} >
+              <Image source={require('../../assets/Images/recordinAnimations.gif')}
+                style={{ height: 50, width: 80 }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.modalText}>Recording...</Text>
+            <TouchableOpacity style={{ marginTop: 20 }}
+              onPress={() => {
+                stopRecording()
+              }}
+            >
+              <Image source={require('../../assets/Images/micIcon.png')}
+                style={{ height: 30, width: 30, tintColor: 'red' }}
+              />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 };
 
 export default ChatScreen;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // width:300
+  },
+  modalView: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5,
+    width: 300 / 430 * screenWidth,
+    height: 180 / 930 * screenHeight
+
+
+  },
+  stopButton: {
+    marginBottom: 20,
+  },
+  modalText: {
+    color: '#333333',
+    textAlign: 'center',
+    fontSize: 16,
+  }, voicecontainer: {
+    maxWidth: '70%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+})
