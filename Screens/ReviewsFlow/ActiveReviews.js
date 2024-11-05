@@ -20,7 +20,7 @@ const ActiveReviews = ({ navigation, reviews,role }) => {
       console.log('needs action')
       return (
         <View style={{
-          backgroundColor: '#FF570010', padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+          backgroundColor: '#FF570010', padding: 8/930*screenHeight, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
         }}>
           <Image source={require('../../assets/Images/notIcon.png')}
             style={{ height: 16, width: 16 }}

@@ -176,7 +176,7 @@ const TabbarContainer = ({ navigation }) => {
                         // setLoadImage(false)
                       }}
                       onLoadStart={() => {
-                        console.log('image loading')
+                        // console.log('image loading')
                         // setLoadImage(true)
                       }}
 

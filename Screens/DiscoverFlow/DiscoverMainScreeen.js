@@ -51,6 +51,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
   }, [])
 
   const getDashboardData = async () => {
+    console.log('trying to call dashboard apip')
     try {
       const data = await AsyncStorage.getItem("USER")
       if (data) {
@@ -237,7 +238,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                       </Text>
                                     </View>
                                     <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                      {item.yapScore ? item.yapScore : 'N/A'}
+                                      { item.totalYapScore}
                                     </Text>
                                   </View>
                                   <View style={{ flexDirection: 'column', gap: 4 }}>
@@ -245,7 +246,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                       Total Reviews
                                     </Text>
                                     <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                      {item.reviews}
+                                      {item.totalReviews}
                                     </Text>
                                   </View>
                                 </View>
@@ -320,7 +321,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 Yap score
                               </Text>
                               <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.yapScore}
+                                {item.totalYapScore}
                               </Text>
                             </View>
 
@@ -329,7 +330,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 Total Reviews
                               </Text>
                               <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.reviews}
+                                {item.totalReviews}
                               </Text>
                             </View>
                           </View>

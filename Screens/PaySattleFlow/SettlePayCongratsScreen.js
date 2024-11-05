@@ -12,7 +12,7 @@ const SettlePayCongratsScreen = ({ navigation, route }) => {
     console.log('review  is', status)
 
     const handleContinuePress = async () => {
-        navigation.pop(3)
+        navigation.pop(4)
     }
 
     return (

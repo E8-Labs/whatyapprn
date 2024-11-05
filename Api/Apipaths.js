@@ -23,7 +23,10 @@ export const Apipath = {
     paySettle:baseUrl+"review/paySettlementOffer",
     loadChats:baseUrl+"review/loadChats",
     getNotifications:baseUrl+"user/notifications",
-    searchHistory:baseUrl+"user/searchHistory"
+    searchHistory:baseUrl+"user/searchHistory",
+    getAdminDashboardData:baseUrl+"admin/adminDashboard",
+    getAdminAnalyticsData:baseUrl+"admin/adminAnalytics",
+    sendSettlementOffer:baseUrl + "review/sendSettlementOffer"
     
     
     

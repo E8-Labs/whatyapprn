@@ -7,7 +7,15 @@ import { CustomFonts } from '../../assets/font/Fonts'
 import { ScreenNames } from '../../res/ScreenNames'
 
 
-const YapSattelmentAmount = ({ navigation }) => {
+const YapSattelmentAmount = ({ navigation,route }) => {
+
+    const [amount,setAmount] = useState("")
+
+    const review = route.params.review
+    review.amount = amount
+
+    console.log('review on yap settlement amount screen', review)
+
     return (
         <SafeAreaView style={GlobalStyles.container}>
             <View style={GlobalStyles.container}>
@@ -43,6 +51,10 @@ const YapSattelmentAmount = ({ navigation }) => {
                         </Text>
                         <TextInput
                             placeholder='Type here'
+                            onChangeText={(text)=>{
+                                setAmount(text)
+                            }}
+                            autoFocus = {true}
                             placeholderTextColor={'black'}
                             style={{ width: 330 / 430 * screenWidth }}
                         />
@@ -50,7 +62,9 @@ const YapSattelmentAmount = ({ navigation }) => {
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {
-                            navigation.push(ScreenNames.ConfirmYapSattelmentOfferScreen)
+                            navigation.push(ScreenNames.ConfirmYapSattelmentOfferScreen,{
+                                review:review
+                            })
                         }}
                     >
                         <Text style={GlobalStyles.BtnText}>

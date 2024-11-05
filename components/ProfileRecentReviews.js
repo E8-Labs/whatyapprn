@@ -25,40 +25,59 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
     console.log('reviews on recent review screen are', reviews)
 
     const selectView = (item) => {
-        if ((item.reviewStatus !== ReviewTypes.Past && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.ResolvedByAdmin) && ((role === "business" && item.newActivityByCustomer) || (role === "customer" && item.newActivityByBusiness))) {
-            console.log('needs action')
+        console.log(`review id ${item.id} and status is ${item.reviewStatus}`)
+        if (item.reviewStatus === ReviewTypes.Disputed) {
             return (
                 <View style={{
-                    backgroundColor: '#FF570010', padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+                    paddingVertical: 5, backgroundColor: '#F4433610',
+                    alignItems: 'center', flexDirection: 'row', gap: 5,
+                    borderRadius: 20, paddingHorizontal: 20,
                 }}>
-                    <Image source={require('../assets/Images/notIcon.png')}
+                    <Image source={require('../assets/Images/disputeIcon.png')}
                         style={{ height: 16, width: 16 }}
                     />
-                    <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
-                        Needs review
+                    <Text style={[GlobalStyles.text14, { color: '#F44336' }]}>
+                        Dispute
                     </Text>
                 </View>
             )
-        } else if (item.reviewStatus === ReviewTypes.Resolved || item.reviewStatus === ReviewTypes.Past || item.reviewStatus === ReviewTypes.ResolvedByAdmin) {
-            console.log('resolved')
-            return (
-                <View style={{
-                    backgroundColor: Colors.greenColor10, padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
-                }}>
-                    <Image source={require('../assets/Images/greenTickIcon.png')}
-                        style={{ height: 16, width: 16 }}
-                    />
-                    <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.greenColor }}>
-                        Resolved
-                    </Text>
-                </View>
-            )
-        } else {
-            console.log("#######################################################")
-            console.log(`noting for ${item.service} | st: ${item.reviewStatus} Cust: ${item.newActivityByCustomer} Bus: ${item.newActivityByBusiness} role: ${role}`);
-            // console.log(`noting for2 ${item.service} | st: ${item.reviewStatus} Cust: ${newActivityByCustomer} Bus: ${newActivityByBusiness}`);
-            // console.log("#######################################################")
-        }
+        } else
+            if ((item.reviewStatus !== ReviewTypes.Past && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.ResolvedByAdmin) && ((role === "business" && item.newActivityByCustomer) || (role === "customer" && item.newActivityByBusiness))) {
+                console.log('needs action')
+                return (
+                    <View style={{
+                        backgroundColor: '#FF570010', padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+                    }}>
+                        <Image source={require('../assets/Images/notIcon.png')}
+                            style={{ height: 16, width: 16 }}
+                        />
+                        <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
+                            Needs review
+                        </Text>
+                    </View>
+                )
+            } else if (item.reviewStatus === ReviewTypes.Resolved || item.reviewStatus === ReviewTypes.Past || item.reviewStatus === ReviewTypes.ResolvedByAdmin) {
+                console.log('resolved')
+                return (
+                    <View style={{
+                        backgroundColor: Colors.greenColor10, padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+                    }}>
+                        <Image source={require('../assets/Images/greenTickIcon.png')}
+                            style={{ height: 16, width: 16 }}
+                        />
+                        <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.greenColor }}>
+                            Resolved
+                        </Text>
+                    </View>
+                )
+            }
+
+            else {
+                console.log("#######################################################")
+                console.log(`noting for ${item.service} | st: ${item.reviewStatus} Cust: ${item.newActivityByCustomer} Bus: ${item.newActivityByBusiness} role: ${role}`);
+                // console.log(`noting for2 ${item.service} | st: ${item.reviewStatus} Cust: ${newActivityByCustomer} Bus: ${newActivityByBusiness}`);
+                // console.log("#######################################################")
+            }
     }
 
 
@@ -73,8 +92,8 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                             data={reviews}
                             renderItem={({ item, index }) => (
                                 <TouchableOpacity
-                                    onPress={()=>{
-                                        navigation.push(ScreenNames.ReviewDetailsScreen,{
+                                    onPress={() => {
+                                        navigation.push(ScreenNames.ReviewDetailsScreen, {
                                             reviewDetails: {
                                                 review: item,
                                                 from: 'profile',
@@ -199,7 +218,9 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                                 role === "business" ? (
                                                                     <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                         onPress={() => {
-                                                                            navigation.push(ScreenNames.YapSattelmentAmount)
+                                                                            navigation.push(ScreenNames.YapSattelmentAmount,{
+                                                                                review:item
+                                                                            })
                                                                         }}
                                                                     >
                                                                         <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
@@ -207,7 +228,7 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                                         </Text>
                                                                     </TouchableOpacity>
                                                                 ) : (
-                                                                   role === "customer" && item.reviewStatus !== ReviewTypes.Resolved  && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
+                                                                    role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
                                                                     <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                         onPress={() => {
                                                                             navigation.push(ScreenNames.SettleReviewDetailsScreen, {
@@ -226,19 +247,20 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                             }
 
                                                             {
-                                                               item.reviewStatus === ReviewTypes.Active  && 
-                                                                    <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                        onPress={() => {
-                                                                            navigation.push(ScreenNames.DisputeScreen, {
-                                                                                review: item
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                            Dispute
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                                
+                                                                item.reviewStatus === ReviewTypes.Active &&
+                                                                <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                    onPress={() => {
+                                                                        navigation.push(ScreenNames.DisputeScreen, {
+                                                                            review: item,
+                                                                            from:'Profile'
+                                                                        })
+                                                                    }}
+                                                                >
+                                                                    <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                        Dispute
+                                                                    </Text>
+                                                                </TouchableOpacity>
+
                                                             }
 
                                                         </View>

@@ -52,13 +52,16 @@ const LoginScreen = ({ navigation }) => {
 
                 if (result) {
                     setLoading(false)
-                    console.log('result is', result.data)
+                    console.log('result is', result.data.data)
                     if (result.data.status === true) {
 
                         console.log('user data is', result.data)
                         AsyncStorage.setItem("USER", JSON.stringify(result.data.data))
-
-                        navigation.push(ScreenNames.TabbarContainer)
+                        if (result.data.data.user.role === "admin") {
+                            navigation.push(ScreenNames.AdminTabbarContainer)
+                        }else{
+                            navigation.push(ScreenNames.TabbarContainer)
+                        }
                     } else {
                         console.log('login api message is', result.data.message)
                         ShowMessage(result.data.message)

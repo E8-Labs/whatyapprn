@@ -113,8 +113,9 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                 })
                 if (response.data) {
                     setloading(false)
-                    console.log('search response is', response.data.data)
-                    setCustomers(response.data.data)
+                    // if(response.data.data.status === true ){}
+                    console.log('search response is', response.data)
+                    setCustomers(response.data.data || [])
                 }
             }
         } catch (e) {
@@ -159,6 +160,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                             />
                         </TouchableOpacity>
                         <TextInput
+                            autoFocus = {true}
                             placeholder='Search'
                             onChangeText={(text) => {
                                 setSearchQuery(text)
@@ -246,7 +248,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                     customers.map((item) => ( */}
                                 {
                                     !loading && (
-                                        customers.length > 0 ? (
+                                     
                                             <FlatList
                                                 scrollEnabled={false}
                                                 data={customers}
@@ -324,10 +326,10 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                             // onEndReachedThreshold={.1}
 
                                             />
-                                        ) : (
-                                            searchQuery &&
-                                            <NoResults navigation={navigation} />
-                                        )
+                                        // ) : (
+                                        //     searchQuery &&
+                                        //     <NoResults navigation={navigation} />
+                                        // )
                                     )
                                 }
 

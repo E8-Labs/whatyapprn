@@ -1,13 +1,16 @@
 import { View, Text, Image, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import React, { useState } from 'react'
-import { screenHeight, screenWidth } from '../../res/Constants'
+import { placeholderImage, screenHeight, screenWidth } from '../../res/Constants'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
 import { CustomFonts } from '../../assets/font/Fonts'
 import { ScreenNames } from '../../res/ScreenNames'
+import { ShowMessage } from '../../components/ShowMessage'
 
 
-const YapSattelmentFinalScreen = ({ navigation }) => {
+const YapSattelmentFinalScreen = ({ navigation,route }) => {
+    const review = route.params.review
+console.log('review', review)
     return (
         <SafeAreaView style={GlobalStyles.container}>
             <View style={[GlobalStyles.container]}>
@@ -29,18 +32,17 @@ const YapSattelmentFinalScreen = ({ navigation }) => {
                 </View>
                 
                 <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, marginTop: 150 / 930 * screenHeight, alignSelf: 'center', justifyContent: 'center' }}>
-                    <Image source={require('../../assets/Images/profileImage.png')}
+                    <Image source={review.business.profile_image?{uri:review.business.profile_image}:placeholderImage}
                         style={{ height: 58 / 930 * screenHeight, width: 58 / 930 * screenHeight, resizeMode: 'contain', borderRadius: 30 }}
                     />
-                    <Image source={require('../../assets/Images/profileImage2.png')}
+                    <Image source={review.customer.profile_image?{uri:review.customer.profile_image}:placeholderImage}
                         style={{
-                            height: 58 / 930 * screenHeight, width: 58 / 430 * screenHeight, resizeMode: 'contain', marginLeft: -25 / 430 * screenHeight,
-                            //borderWidth:2,borderColor:'red',
+                            height: 50 / 930 * screenHeight, width: 50 / 930 * screenHeight, resizeMode: 'cover', marginLeft: -10 / 430 * screenHeight,
                             borderRadius: 30
                         }}
                     />
                     <Image source={require('../../assets/Images/greenSentIcon.png')}
-                        style={[GlobalStyles.image24, { alignSelf: 'flex-end', marginLeft: -60 / 430 * screenWidth }]}
+                        style={[GlobalStyles.image24, { alignSelf: 'flex-end', marginLeft: -20 / 430 * screenWidth }]}
                     />
                 </View>
 
@@ -49,13 +51,14 @@ const YapSattelmentFinalScreen = ({ navigation }) => {
                 </Text>
 
                 <Text style = {[GlobalStyles.text17,{textAlign:'center',marginTop:20}]}>
-                    Your settlement offer of (amount ) was sent to  (customer name)
+                    Your settlement offer of {review.amount} was sent to  {review.customer.name}
                 </Text>
 
 
                 <TouchableOpacity style={GlobalStyles.capsuleBtn}
                     onPress={() => {
-                        navigation.push(ScreenNames.YapExperienceScreen)
+                        ShowMessage("Congrates! Offer sent","green")
+                        navigation.pop(3)
                     }}
                 >
                     <Text style={GlobalStyles.BtnText}>

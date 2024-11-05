@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CustomFonts } from '../../assets/font/Fonts'
 import ActiveReviews from './ActiveReviews'
 import ActiveSattlement from './ActiveSattlement'
@@ -12,48 +12,49 @@ import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import { ReviewTypes } from '../../res/ReviewsTypes'
+import { useFocusEffect } from '@react-navigation/native'
 
 const ReviewsMainScreen = ({ navigation }) => {
 
   const [selectedMenu, setselectedMenu] = useState("active")
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(false)
-  const [role,setRole] = useState('')
+  const [role, setRole] = useState('')
 
   const menues = [
     {
       id: 1,
       name: "Active",
-      value:ReviewTypes.Active
+      value: ReviewTypes.Active
     },
     {
       id: 2,
       name: "Settlement",
-      value:ReviewTypes.Settlement
+      value: ReviewTypes.Settlement
     },
     {
       id: 3,
       name: "Past",
-      value:ReviewTypes.Past
+      value: ReviewTypes.Past
     }
   ]
-
-  useEffect(() => {
-    getReviews()
-  }, [selectedMenu])
-
+  useFocusEffect(
+    useCallback(() => {
+      getReviews()
+    }, [selectedMenu])
+  )
   useEffect(() => {
     const checkUserRole = async () => {
-        const data = await AsyncStorage.getItem("USER")
-        if (data) {
-            let u = JSON.parse(data)
-            setRole(u.user.role)
-            console.log('user data in user role function is', u.user.role)
-        }
+      const data = await AsyncStorage.getItem("USER")
+      if (data) {
+        let u = JSON.parse(data)
+        setRole(u.user.role)
+        console.log('user data in user role function is', u.user.role)
+      }
     }
 
     checkUserRole()
-}, [])
+  }, [])
 
   const getReviews = async () => {
     try {
@@ -94,7 +95,7 @@ const ReviewsMainScreen = ({ navigation }) => {
     <View style={GlobalStyles.container} >
       {
         loading && (
-          <LoadingAnimation visible = {loading} />
+          <LoadingAnimation visible={loading} />
         )
       }
       <View>
@@ -176,12 +177,14 @@ const ReviewsMainScreen = ({ navigation }) => {
         <View style={{ marginTop: 20 / 930 * screenHeight, alignItems: 'center', marginBottom: 20 / 930 * screenHeight }}>
           {
             selectedMenu === ReviewTypes.Active ? (
-              <ActiveReviews navigation={navigation} reviews={reviews} role = {role} />
+              <ActiveReviews navigation={navigation} reviews={reviews} role={role} />
             ) : (
               selectedMenu === ReviewTypes.Settlement ? (
-                <ActiveSattlement navigation={navigation} reviews={reviews} role = {role} />
+                <ActiveSattlement navigation={navigation} reviews={reviews} role={role} />
               ) : (
-                <ActivePastReviews navigation={navigation} reviews={reviews} role = {role} />
+                selectedMenu === ReviewTypes.Past && (
+                  <ActivePastReviews navigation={navigation} reviews={reviews} role={role} />
+                )
               )
             )
           }

@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, SafeAreaView, FlatList, Modal } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CustomFonts } from '../../assets/font/Fonts'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
@@ -18,6 +18,7 @@ import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
+import { useFocusEffect } from '@react-navigation/native'
 
 const image1 = require('../../assets/Images/profileImage.png')
 const image2 = require('../../assets/Images/profileImage2.png')
@@ -67,10 +68,11 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     // let user = role && role === "business" ? usr.viewed : usr
     console.log('user on prfile datails screen ', user)
 
-
-    useEffect(() => {
-        getReviews()
-    }, [selectedMenu])
+    useFocusEffect(
+        useCallback(() => {
+            getReviews()
+        }, [selectedMenu])
+    )
 
     const getReviews = async () => {
         try {
@@ -192,24 +194,6 @@ const CustomerProfileDetails = ({ navigation, route }) => {
 
 
                         </View>
-
-                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth, alignSelf: 'flex-start', paddingTop: 20 / 930 * screenHeight }}>
-                            <TouchableOpacity>
-                                <Image source={require('../../assets/Images/messageIcon.png')}
-                                    style={GlobalStyles.image24}
-                                />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    navigation.push(ScreenNames.MyWalletScreen)
-                                }}
-                            >
-                                <Image source={require('../../assets/Images/walletIcon.png')}
-                                    style={GlobalStyles.image24}
-                                />
-                            </TouchableOpacity>
-                        </View> */}
                     </View>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: screenWidth - 40,
@@ -282,7 +266,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                     selectedMenu === ReviewTypes.Active ? (
                                         <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} />
                                     ) : (
-                                        <ProfileRecentReviews navigation={navigation} selectedMenu="past" reviews={reviews && reviews} role={role && role}/>
+                                        <ProfileRecentReviews navigation={navigation} selectedMenu="past" reviews={reviews && reviews} role={role && role} />
                                     )
                                 }
                             </>

@@ -105,52 +105,53 @@ const MessagesListScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-
-        <FlatList
-          style={{ marginBottom: 50 }}
-          showsVerticalScrollIndicator={false}
-          data={messages}
-          renderItem={({ item }) => (
-            <>
-              <TouchableOpacity onPress={() => handleOnPress(item)}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: screenWidth - 60,
-                    alignSelf: "center",
-                    paddingTop: 20,
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <Image
-                      source={
-                        item.Business.profile_image
-                          ? { uri: item.Business.profile_image }
-                          : placeholder
-                      }
-                      // onLoadStart={() => {
-                      //     setLoadImage(true)
-                      // }}
-                      // onLoadEnd={() => {
-                      //     setLoadImage(false)
-                      // }}
+        {
+          messages.length > 0 ? (
+            <FlatList
+              style={{ marginBottom: 50 }}
+              showsVerticalScrollIndicator={false}
+              data={messages}
+              renderItem={({ item }) => (
+                <>
+                  <TouchableOpacity onPress={() => handleOnPress(item)}>
+                    <View
                       style={{
-                        resizeMode: "cover",
-                        height: (49 / 930) * screenHeight,
-                        width: (49 / 930) * screenHeight,
-                        opacity: item.unread ? 100 : 0.8,
-                        borderRadius: 25,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: screenWidth - 60,
+                        alignSelf: "center",
+                        paddingTop: 20,
                       }}
-                    />
-                    {/* {
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        <Image
+                          source={
+                            item.Business.profile_image
+                              ? { uri: item.Business.profile_image }
+                              : placeholder
+                          }
+                          // onLoadStart={() => {
+                          //     setLoadImage(true)
+                          // }}
+                          // onLoadEnd={() => {
+                          //     setLoadImage(false)
+                          // }}
+                          style={{
+                            resizeMode: "cover",
+                            height: (49 / 930) * screenHeight,
+                            width: (49 / 930) * screenHeight,
+                            opacity: item.unread ? 100 : 0.8,
+                            borderRadius: 25,
+                          }}
+                        />
+                        {/* {
                                             loadImage ? (
                                                 <View style={{
                                                     height: 46 / 930 * height, width: 46 / 430 * width, marginLeft: -50, alignItems: 'center', justifyContent: 'center'
@@ -160,84 +161,92 @@ const MessagesListScreen = ({ navigation }) => {
                                             ) : null
                                         } */}
 
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        gap: 3,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 17,
-                          fontFamily: CustomFonts.meduim,
-                          color: item.unread ? "#000" : Colors.unreadColor,
-                        }}
-                      >
-                        {getSenderUserName(item)}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        lineBreakMode="tail"
-                        style={{
-                          fontSize: 12,
-                          fontFamily: CustomFonts.regular,
-                          width: (230 / 430) * screenWidth,
-                          color: item.unread ? "#000" : Colors.unreadColor,
-                        }}
-                      >
-                        {item.lastMessage}
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                      gap: 3,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontFamily: CustomFonts.regular,
-                        color: item.unread ? "#000" : Colors.lightBlack,
-                      }}
-                    >
-                      {moment(item.createdAt).format("h:mm A")}
-                    </Text>
-                    {item.unread ? (
+                        <View
+                          style={{
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            gap: 3,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.meduim,
+                              color: item.unread ? "#000" : Colors.unreadColor,
+                            }}
+                          >
+                            {getSenderUserName(item)}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            lineBreakMode="tail"
+                            style={{
+                              fontSize: 12,
+                              fontFamily: CustomFonts.regular,
+                              width: (230 / 430) * screenWidth,
+                              color: item.unread ? "#000" : Colors.unreadColor,
+                            }}
+                          >
+                            {item.lastMessage}
+                          </Text>
+                        </View>
+                      </View>
                       <View
                         style={{
-                          backgroundColor: Colors.orangeColor,
-                          height: 20,
-                          borderRadius: 50,
-                          width: 20,
-                          alignItems: "center",
-                          justifyContent: "center",
+                          flexDirection: "column",
+                          alignItems: "flex-end",
+                          gap: 3,
                         }}
                       >
                         <Text
                           style={{
-                            fontSize: 10,
-                            fontFamily: CustomFonts.meduim,
-                            color: "white",
+                            fontSize: 12,
+                            fontFamily: CustomFonts.regular,
+                            color: item.unread ? "#000" : Colors.lightBlack,
                           }}
                         >
-                          {item.unread}
+                          {moment(item.createdAt).format("h:mm A")}
                         </Text>
+                        {item.unread ? (
+                          <View
+                            style={{
+                              backgroundColor: Colors.orangeColor,
+                              height: 20,
+                              borderRadius: 50,
+                              width: 20,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 10,
+                                fontFamily: CustomFonts.meduim,
+                                color: "white",
+                              }}
+                            >
+                              {item.unread}
+                            </Text>
+                          </View>
+                        ) : (
+                          ""
+                        )}
                       </View>
-                    ) : (
-                      ""
-                    )}
-                  </View>
-                </View>
-              </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
 
-              <View style={[GlobalStyles.divider]}></View>
-            </>
-          )}
-        />
+                  <View style={[GlobalStyles.divider]}></View>
+                </>
+              )}
+            />
+          ) : (
+            <Text style={[GlobalStyles.text17,{marginTop:50,color:'black',}]}>
+              No message
+            </Text>
+          )
+        }
+
+
       </View>
     </SafeAreaView>
   );

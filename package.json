@@ -41,6 +41,7 @@
     "react-native-circular-progress": "^1.4.0",
     "react-native-circular-progress-indicator": "^4.4.2",
     "react-native-date-picker": "^5.0.7",
+    "react-native-element-dropdown": "^2.12.2",
     "react-native-emoji-selector": "^0.2.0",
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-image-picker": "^7.1.2",

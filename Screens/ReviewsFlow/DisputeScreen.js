@@ -7,10 +7,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import LoadingAnimation from '../../components/LoadingAnimation'
-const DisputeScreen = ({ navigation, review }) => {
+const DisputeScreen = ({ navigation, route }) => {
 
     const [resone, setResone] = useState("")
-    const[loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const review = route.params.review
+    // console.log('review is ', review)
 
     const disputeReview = async () => {
         try {
@@ -20,31 +23,37 @@ const DisputeScreen = ({ navigation, review }) => {
                 let u = JSON.parse(data)
 
                 let apidata = {
-                    reviewId: 18,
-                    // resone: resone
+                    reviewId: review.id,
+                    resone: resone
                 }
                 let path = Apipath.disputeReview
                 console.log('path is', path)
+                console.log('body data is', apidata)
+                // return
 
-// return
+                // return
                 const response = await axios.post(path, apidata, {
                     headers: {
                         'Authorization': 'Bearer ' + u.token,
-                        'Content-Type':'application/json'
+                        'Content-Type': 'application/json'
                     }
                 })
 
-                if(response.data){
+                if (response.data) {
                     setLoading(false)
-                    if(response.data.status === true){
+                    if (response.data.status === true) {
                         console.log('review dispute data is', response.data.data)
-                        navigation.pop()
-                    }else{
+                        if (route.params.from === "ReviewDetail") {
+                            navigation.pop(2)
+                        } else {
+                            navigation.pop()
+                        }
+                    } else {
                         console.log('dispute message is', response.data.message)
                     }
                 }
 
-                
+
             }
         } catch (e) {
             setLoading(false)
@@ -56,7 +65,7 @@ const DisputeScreen = ({ navigation, review }) => {
         <SafeAreaView style={GlobalStyles.container}>
             {
                 loading && (
-                    <LoadingAnimation visible = {loading} />
+                    <LoadingAnimation visible={loading} />
                 )
             }
             <View style={GlobalStyles.container}>
@@ -88,7 +97,7 @@ const DisputeScreen = ({ navigation, review }) => {
                 <TextInput style={[GlobalStyles.input, { height: 164 / 930 * screenHeight, marginTop: 50 / 930 * screenHeight, }]}
                     multiline
                     placeholder='Type Here'
-                    onChangeText={(text)=>{
+                    onChangeText={(text) => {
                         setResone(text)
                     }}
                 />

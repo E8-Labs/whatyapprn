@@ -56,6 +56,7 @@ const YapTransactionAmountScreen = ({ navigation,route }) => {
                             $
                         </Text>
                         <TextInput
+                        autoFocus = {true}
                         onChangeText={(text)=>{
                             setAmount(text)
                         }}

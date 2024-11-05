@@ -7,7 +7,9 @@ import { Colors } from '../../res/Colors'
 import { ScreenNames } from '../../res/ScreenNames'
 import { ReviewTypes } from '../../res/ReviewsTypes'
 
-const ActivePastReviews = ({ navigation, reviews }) => {
+const ActivePastReviews = ({ navigation, reviews,role }) => {
+
+  // console.log('reviews on past ', reviews)
 
     const image1 = require('../../assets/Images/profileImage.png')
     const image2 = require('../../assets/Images/profileImage2.png')
@@ -54,7 +56,7 @@ const ActivePastReviews = ({ navigation, reviews }) => {
         <View style={{ height: screenHeight * 0.62 }}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {
-                    reviews.lemgth > 0 ? (
+                    reviews.length > 0 ? (
                         reviews && reviews.map((item) => (
                             <TouchableOpacity key={item.id}
                                 onPress={() => {

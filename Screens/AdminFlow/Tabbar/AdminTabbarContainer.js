@@ -31,7 +31,7 @@ const AdminTabbarContainer = () => {
                         />
                     ),
                     tabBarLabel: ({ focused }) =>
-                        focused ? <Text style={styles.labelText}>Discover</Text> : '',
+                        focused ? <Text style={styles.labelText}>Dashboard</Text> : '',
                 }}
             />
 
