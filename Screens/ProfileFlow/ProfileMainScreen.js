@@ -65,7 +65,11 @@ const ProfileMainScreen = ({ navigation }) => {
               Credit Points
             </Text>
 
-            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.orangeColor }}>
+            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.orangeColor }}
+              onPress={()=>{
+                navigation.push(ScreenNames.BuyCreditScreen)
+              }}
+            >
               <Text style={[GlobalStyles.text14, { color: 'white' }]}>
                 Buy More
               </Text>

@@ -140,10 +140,7 @@ const AdminAnalyticsMainScreen = () => {
   };
 
   const getChartData = (dataType, value) => {
-    if (!analyticsData) return { labels: [], datasets: [{ data: [] }] };
-  
-    // console.log('Data type is:', dataType);
-    // console.log('Value type is:', value);
+    if (!analyticsData) return { labels: [], datasets: [{ data: [0] }] };
   
     let data;
     let type;
@@ -170,21 +167,15 @@ const AdminAnalyticsMainScreen = () => {
         else if (value === "3" && analyticsData.dauReviews) { data = analyticsData.dauReviews; type = "daily"; }
         break;
       default:
-        data = analyticsData.mauCustomer || []; // Fallback to empty array if undefined
+        data = analyticsData.mauCustomer || [];
         type = "monthly";
     }
   
-    // Log the selected data for debugging
-    // console.log('Selected data is:', data);
-  
-    // If data is still undefined, return an empty chart dataset to avoid errors
-    if (!data) {
-      // console.log(`No data available for ${dataType} with value type ${value}. Returning default empty data.`);
-      return { labels: [], datasets: [{ data: [] }] };
-    }
+    if (!data) return { labels: [], datasets: [{ data: [0] }] }; // Fallback
   
     return formatData(data, type);
   };
+  
   
 
   const revenueData = getChartData("Revenue", revValue);
@@ -196,19 +187,31 @@ const AdminAnalyticsMainScreen = () => {
   const chartConfig = {
     backgroundGradientFrom: "#fff",
     backgroundGradientTo: "#fff",
-    fillShadowGradient: Colors.orangeColor, // Solid fill for bars (tomato color)
-    fillShadowGradientOpacity: 1, // Solid color with full opacity
-    color: (opacity = 1) => `rgba(255, 87, 0, ${opacity})`, // Orange color for labels and other elements
-    barPercentage: 0.7, // Wider bars
+    fillShadowGradient: Colors.orangeColor,
+    fillShadowGradientOpacity: 1,
+    color: (opacity = 1) => `rgba(255, 87, 0, ${opacity})`,
+    barPercentage: 0.7,
     decimalPlaces: 0,
     propsForBackgroundLines: {
-      strokeDasharray: "", // Solid lines for grid
-      stroke: "#ECECEC", // Set grid lines color to gray
+      strokeDasharray: "", // Solid grid lines
+      stroke: "#ECECEC",
       strokeWidth: 1,
     },
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   };
 
+  const handleDropdownChange = (value, setStateFunction, dataType) => {
+    setStateFunction(value);
+  
+    // Recalculate the chart data based on the new dropdown value
+    const newChartData = getChartData(dataType, value);
+    if (newChartData && newChartData.labels && newChartData.datasets) {
+      setChartData(newChartData);
+    } else {
+      // Fallback to an empty dataset to avoid errors
+      setChartData({ labels: [], datasets: [{ data: [0] }] });
+    }
+  };
 
 
   return (
@@ -321,9 +324,7 @@ const AdminAnalyticsMainScreen = () => {
                   //   imageField="image"
                   placeholder=""
                   //   searchPlaceholder="Search..."
-                  onChange={e => {
-                    setRevValue(e.value);
-                  }}
+                  onChange={(e) => handleDropdownChange(e.value, setRevValue, "Revenue")}
                 />
               </View>
 
@@ -382,9 +383,7 @@ const AdminAnalyticsMainScreen = () => {
                   //   imageField="image"
                   placeholder=""
                   //   searchPlaceholder="Search..."
-                  onChange={e => {
-                    setBusinessValue(e.value);
-                  }}
+                  onChange={(e) => handleDropdownChange(e.value, setBusinessValue, "Business")}
                 />
               </View>
 
@@ -486,9 +485,7 @@ const AdminAnalyticsMainScreen = () => {
                   //   imageField="image"
                   placeholder=""
                   //   searchPlaceholder="Search..."
-                  onChange={e => {
-                    setCustomerValue(e.value);
-                  }}
+                  onChange={(e) => handleDropdownChange(e.value, setCustomerValue, "Customers")}
                 />
               </View>
 
@@ -590,9 +587,7 @@ const AdminAnalyticsMainScreen = () => {
                   //   imageField="image"
                   placeholder=""
                   //   searchPlaceholder="Search..."
-                  onChange={e => {
-                    setReviewValue(e.value);
-                  }}
+                  onChange={(e) => handleDropdownChange(e.value, setReviewValue, "Reviews")}
                 />
               </View>
 

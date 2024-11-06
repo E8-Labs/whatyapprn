@@ -80,6 +80,39 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
             }
     }
 
+    const selectSettleView = (item) => {
+        if (item.reviewStatus === ReviewTypes.Resolved || item.reviewStatus === ReviewTypes.ResolvedByAdmin || item.reviewStatus === ReviewTypes.Past) {
+            return (
+                <View style={{
+                    width: 330 / 430 * screenWidth, height: 38 / 930 * screenHeight, flexDirection: 'row', gap: 5,
+                    paddingHorizontal: 10 / 430 * screenWidth, backgroundColor: '#00000007', alignItems: 'center',
+                    borderRadius: 11
+                }}>
+                   
+                    <Text numberOfLines={2} style={[GlobalStyles.text17, { color: "black" }]}>
+                        Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount} was paid
+                    </Text>
+                </View>
+            )
+
+        } else {
+            return (
+                <View style={{
+                    width: 330 / 430 * screenWidth, height: 38 / 930 * screenHeight, flexDirection: 'row', gap: 5,
+                    paddingHorizontal: 10 / 430 * screenWidth, backgroundColor: '#FF570010', alignItems: 'center',
+                    borderRadius: 11
+                }}>
+                    <Image source={require('../assets/Images/dollarIcon.png')}
+                        style={{ height: 16, width: 16 }}
+                    />
+                    <Text numberOfLines={2} style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
+                        Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount} 
+                    </Text>
+                </View>
+            )
+        }
+    }
+
 
     return (
         <View>
@@ -192,18 +225,7 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                         </Text>
                                                         {
                                                             item.settlementOffer && (
-                                                                <View style={{
-                                                                    width: 330 / 430 * screenWidth, height: 38 / 930 * screenHeight, flexDirection: 'row', gap: 5,
-                                                                    paddingHorizontal: 10 / 430 * screenWidth, backgroundColor: '#FF570010', alignItems: 'center',
-                                                                    borderRadius: 11
-                                                                }}>
-                                                                    <Image source={require('../assets/Images/dollarIcon.png')}
-                                                                        style={{ height: 16, width: 16 }}
-                                                                    />
-                                                                    <Text numberOfLines={2} style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
-                                                                        Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount}
-                                                                    </Text>
-                                                                </View>
+                                                                selectSettleView(item)
                                                             )
                                                         }
 
@@ -218,8 +240,8 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                                 role === "business" ? (
                                                                     <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                         onPress={() => {
-                                                                            navigation.push(ScreenNames.YapSattelmentAmount,{
-                                                                                review:item
+                                                                            navigation.push(ScreenNames.YapSattelmentAmount, {
+                                                                                review: item
                                                                             })
                                                                         }}
                                                                     >
@@ -252,7 +274,7 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                                     onPress={() => {
                                                                         navigation.push(ScreenNames.DisputeScreen, {
                                                                             review: item,
-                                                                            from:'Profile'
+                                                                            from: 'Profile'
                                                                         })
                                                                     }}
                                                                 >

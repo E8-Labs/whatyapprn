@@ -296,7 +296,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 {item.user.name}
                                                             </Text>
                                                             <Text style={[GlobalStyles.text14, { color: Colors.orangeColor }]}>
-                                                                {item.role === "customer" ? "Cusotmer" : "Business"}
+                                                                {item.role === "customer" ? "Cusotmer" : "Business"} Response
                                                             </Text>
                                                         </View>
 
@@ -319,7 +319,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 </Text>
                                                             </View>
                                                             <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                {item.yapScore}
+                                                                {item.user.totalYapScore}
                                                             </Text>
                                                         </View>
 
@@ -345,13 +345,15 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                     alignSelf: 'flex-start'
                                 }}></View>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: screenWidth - 50 }}>
+                                <View style={{borderWidth:0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: screenWidth - 50,
+                                    marginTop:20
+                                 }}>
                                     <View style={{ width: 100 }}></View>
 
 
                                     {
-                                        role === "business" ? (
-                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                        role === "business" && review.reviewStatus !== ReviewTypes.Resolved  ? (
+                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                 onPress={() => {
                                                     navigation.push(ScreenNames.YapSattelmentAmount, {
                                                         review: review
@@ -363,8 +365,8 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                 </Text>
                                             </TouchableOpacity>
                                         ) : (
-                                            role === "customer" && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.Active && //review.reviewStatus !== ReviewTypes.ResolvedByAdmin && review.settlementOffer &&
-                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                            role === "customer" && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.Active && review.reviewStatus !== ReviewTypes.ResolvedByAdmin  && review.reviewStatus !== ReviewTypes.Resolved && review.settlementOffer &&
+                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                 onPress={() => {
                                                     navigation.push(ScreenNames.SettleReviewDetailsScreen, {
                                                         review: review
@@ -381,7 +383,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
 
                                     {
                                         review.reviewStatus === ReviewTypes.Active &&
-                                        <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                        <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                             onPress={() => {
                                                 navigation.push(ScreenNames.DisputeScreen, {
                                                     review: review,
@@ -396,11 +398,12 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
 
                                     }
                                     {
-                                        role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Past&& (
-                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                        role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Resolved&& (
+                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                 onPress={() => {
                                                     navigation.push(ScreenNames.ReviewReplyScreen, {
-                                                        review: review
+                                                        review: review,
+                                                        role:role
                                                     })
                                                 }}
                                             >
@@ -408,8 +411,8 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                     Reply
                                                 </Text>
                                             </TouchableOpacity>
-                                        ) : ( review.reviewStatus !== ReviewTypes.Past &&
-                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                        ) : ( review.reviewStatus !== ReviewTypes.Resolved &&
+                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                 onPress={() => {
                                                     navigation.push(ScreenNames.ReviewReplyScreen, {
                                                         review: review

@@ -46,7 +46,7 @@ const HalfCircularProgress = ({ progress,type }) => {
       </Svg>
       <View style={styles.textContainer}>
        
-        <Text style={styles.progressText}>{`${progress}%`}</Text>
+        <Text style={styles.progressText}>{`${progress}`}</Text>
         {
             type === 'Yap' ? (
                 <View style = {{flexDirection:'row',alignItems:'center',marginTop:6/930*screenHeight}}>

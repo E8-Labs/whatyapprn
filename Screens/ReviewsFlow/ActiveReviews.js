@@ -8,7 +8,7 @@ import { Colors } from '../../res/Colors'
 import { ScreenNames } from '../../res/ScreenNames'
 import { ReviewTypes } from '../../res/ReviewsTypes'
 
-const ActiveReviews = ({ navigation, reviews,role }) => {
+const ActiveReviews = ({ navigation, reviews, role }) => {
 
   const image1 = require('../../assets/Images/profileImage.png')
   const image2 = require('../../assets/Images/profileImage2.png')
@@ -20,7 +20,7 @@ const ActiveReviews = ({ navigation, reviews,role }) => {
       console.log('needs action')
       return (
         <View style={{
-          backgroundColor: '#FF570010', padding: 8/930*screenHeight, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+          backgroundColor: '#FF570010', padding: 8 / 930 * screenHeight, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
         }}>
           <Image source={require('../../assets/Images/notIcon.png')}
             style={{ height: 16, width: 16 }}
@@ -82,7 +82,7 @@ const ActiveReviews = ({ navigation, reviews,role }) => {
                   </View>
 
                   <View style={{ flexDirection: 'column', alignItems: 'center', width: 335 / 430 * screenWidth, }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap:15, width: 330 / 430 * screenWidth, }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, width: 330 / 430 * screenWidth, }}>
                       <Text numberOfLines={1} style={{
                         fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold, width: 120 / 430 * screenWidth,
                       }}>
@@ -101,6 +101,22 @@ const ActiveReviews = ({ navigation, reviews,role }) => {
                       <Text numberOfLines={2} style={[GlobalStyles.text14, { color: '#00000080' }]}>
                         {item.notesAboutCustomer}
                       </Text>
+
+                      {
+                        item.settlementOffer &&
+                        <View style={{
+                          width: 330 / 430 * screenWidth, height: 38 / 930 * screenHeight, flexDirection: 'row', gap: 5,
+                          paddingHorizontal: 10 / 430 * screenWidth, backgroundColor: '#FF570010', alignItems: 'center',
+                          borderRadius: 11, marginTop: 10
+                        }}>
+                          <Image source={require('../../assets/Images/dollarIcon.png')}
+                            style={{ height: 16, width: 16 }}
+                          />
+                          <Text numberOfLines={2} style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
+                            Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount}
+                          </Text>
+                        </View>
+                      }
                     </View>
                   </View>
                 </View>

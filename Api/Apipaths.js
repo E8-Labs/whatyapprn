@@ -26,7 +26,8 @@ export const Apipath = {
     searchHistory:baseUrl+"user/searchHistory",
     getAdminDashboardData:baseUrl+"admin/adminDashboard",
     getAdminAnalyticsData:baseUrl+"admin/adminAnalytics",
-    sendSettlementOffer:baseUrl + "review/sendSettlementOffer"
+    sendSettlementOffer:baseUrl + "review/sendSettlementOffer",
+    deleteSearch:baseUrl+'dashboard/deleteSearch'
     
     
     

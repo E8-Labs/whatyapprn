@@ -14,6 +14,7 @@ import LoadingAnimation from '../../components/LoadingAnimation'
 const ReviewReplyScreen = ({navigation,route}) => {
 
   const review = route.params.review
+  const role = route.params.role
   console.log('review on review reply message', review)
 
   const [message,setMessage] = useState("")
