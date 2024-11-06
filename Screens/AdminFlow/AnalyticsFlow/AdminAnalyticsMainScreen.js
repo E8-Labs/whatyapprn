@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { Apipath } from '../../../Api/Apipaths'
 import { Dropdown } from 'react-native-element-dropdown';
+import moment from 'moment'
 
 
 const AdminAnalyticsMainScreen = () => {
@@ -88,7 +89,7 @@ const AdminAnalyticsMainScreen = () => {
         })
         if (response.data) {
           if (response.data.status === true) {
-            console.log('analytics data is', response.data.data)
+            console.log('analytics data is', response.data.data.dauCustomer)
             setAnalyticsData(response.data.data)
             setRecentBusinesses(response.data.data.recentBusinesses)
             setRecentCustomers(response.data.data.recentCustomers)
@@ -120,14 +121,13 @@ const AdminAnalyticsMainScreen = () => {
         datasets: [{ data: monthlyData }],
       };
     } else if (type === "weekly") {
-      const labels = ["Wk1", "Wk2", "Wk3", "Wk4", "Wk5"];
-      const weeklyData = Array(5).fill(0);
+      const labels = [];
+      const weeklyData = [];
   
       data.forEach((entry) => {
-        const weekIndex = entry.week - 1;
-        if (weekIndex >= 0 && weekIndex < 5) {
-          weeklyData[weekIndex] = entry.count || 0; // Default to 0 if count is undefined
-        }
+        labels.push(entry.week)
+        weeklyData.push(entry.count)
+        
       });
   
       return {
@@ -135,8 +135,19 @@ const AdminAnalyticsMainScreen = () => {
         datasets: [{ data: weeklyData }],
       };
     } else if (type === "daily") {
-      const labels = data.map((entry) => entry.date.slice(5)); // Format as MM-DD
-      const dailyData = data.map((entry) => entry.count || 0); // Default to 0 if count is undefined
+      const labels = [] // Format as MM-DD
+      const dailyData =  [] // Default to 0 if count is undefined
+
+
+      data.forEach((entry) => {
+        let date = moment(entry.date).format("MM/DD")
+        labels.push(date)
+        dailyData.push(entry.count)
+        
+      });
+
+      console.log(`labels for ${type} are ${labels} `)
+      console.log(`datasets for ${type} are ${dailyData} `)
   
       return {
         labels,

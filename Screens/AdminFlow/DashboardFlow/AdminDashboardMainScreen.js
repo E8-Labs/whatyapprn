@@ -11,7 +11,7 @@ import axios from 'axios'
 import { Apipath } from '../../../Api/Apipaths'
 
 
-const AdminDashboardMainScreen = ({navigation}) => {
+const AdminDashboardMainScreen = ({ navigation }) => {
 
 
   const image = require('../../../assets/Images/profileImage.png')
@@ -75,6 +75,13 @@ const AdminDashboardMainScreen = ({navigation}) => {
       }
     }
   }
+
+  const logoutUser = async () => {
+
+    AsyncStorage.removeItem("USER")
+    navigation.replace(ScreenNames.LoginScreen)
+}
+
 
   return (
     <SafeAreaView style={[GlobalStyles.container, { backgroundColor: '#F9F9F9' }]}>
@@ -306,6 +313,14 @@ const AdminDashboardMainScreen = ({navigation}) => {
                 </TouchableOpacity>
               )}
             />
+
+            <TouchableOpacity style={{ marginLeft: 80 / 430 * screenWidth }}
+              onPress={logoutUser}
+            >
+              <Text style={[GlobalStyles.BtnText, { color: 'red' }]}>
+                Logout
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </View>

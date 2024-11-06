@@ -262,6 +262,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    shadowColor:'gray',
+    shadowOffset:{height:0,width:4},
+    shadowOpacity:0.4,
     alignItems: 'center',
     paddingTop: 20,
     zIndex: 1, // Ensures the modal is on top of other elements
