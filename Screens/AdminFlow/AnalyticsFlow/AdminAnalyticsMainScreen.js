@@ -29,6 +29,8 @@ const AdminAnalyticsMainScreen = () => {
   const [customerValue, setCustomerValue] = useState("1")
   const [reviewValue, setReviewValue] = useState("1")
 
+  const [chartData, setChartData] = useState({ labels: [], datasets: [{ data: [] }] });
+
   let opened = 30
   let closed = 70
   let totalDisputes = 100
@@ -105,12 +107,14 @@ const AdminAnalyticsMainScreen = () => {
     if (type === "monthly") {
       const labels = monthNames;
       const monthlyData = Array(12).fill(0);
-
+  
       data.forEach((entry) => {
         const monthIndex = entry.month - 1;
-        monthlyData[monthIndex] = entry.count;
+        if (monthIndex >= 0 && monthIndex < 12) {
+          monthlyData[monthIndex] = entry.count || 0; // Default to 0 if count is undefined
+        }
       });
-
+  
       return {
         labels,
         datasets: [{ data: monthlyData }],
@@ -118,29 +122,31 @@ const AdminAnalyticsMainScreen = () => {
     } else if (type === "weekly") {
       const labels = ["Wk1", "Wk2", "Wk3", "Wk4", "Wk5"];
       const weeklyData = Array(5).fill(0);
-
+  
       data.forEach((entry) => {
         const weekIndex = entry.week - 1;
-        weeklyData[weekIndex] = entry.count;
+        if (weekIndex >= 0 && weekIndex < 5) {
+          weeklyData[weekIndex] = entry.count || 0; // Default to 0 if count is undefined
+        }
       });
-
+  
       return {
         labels,
         datasets: [{ data: weeklyData }],
       };
     } else if (type === "daily") {
-      const labels = data.map((entry) => entry.date.slice(5)); // MM-DD format
-      const dailyData = data.map((entry) => entry.count);
-
+      const labels = data.map((entry) => entry.date.slice(5)); // Format as MM-DD
+      const dailyData = data.map((entry) => entry.count || 0); // Default to 0 if count is undefined
+  
       return {
         labels,
         datasets: [{ data: dailyData }],
       };
     }
   };
-
+  
   const getChartData = (dataType, value) => {
-    if (!analyticsData) return { labels: [], datasets: [{ data: [0] }] };
+    if (!analyticsData) return { labels: [], datasets: [{ data: [0] }] }; // Empty dataset fallback
   
     let data;
     let type;
@@ -167,11 +173,11 @@ const AdminAnalyticsMainScreen = () => {
         else if (value === "3" && analyticsData.dauReviews) { data = analyticsData.dauReviews; type = "daily"; }
         break;
       default:
-        data = analyticsData.mauCustomer || [];
+        data = [];
         type = "monthly";
     }
   
-    if (!data) return { labels: [], datasets: [{ data: [0] }] }; // Fallback
+    if (!data || data.length === 0) return { labels: [], datasets: [{ data: [0] }] }; // Fallback to empty dataset
   
     return formatData(data, type);
   };
