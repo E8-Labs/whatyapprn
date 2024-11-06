@@ -1,346 +1,457 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, Modal, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { GlobalStyles } from '../../assets/styles/GlobalStyles'
-import { placeholderImage, screenHeight, screenWidth } from '../../res/Constants'
-import { CustomFonts } from '../../assets/font/Fonts'
-import { Colors } from '../../res/Colors'
-import FilterPoopup from '../../components/FilterPoopup'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
-import { Apipath } from '../../Api/Apipaths'
-import LoadingAnimation from '../../components/LoadingAnimation'
-import { ScreenNames } from '../../res/ScreenNames'
-import NoResults from '../../components/NoResults'
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ScrollView,
+  Modal,
+  FlatList,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { GlobalStyles } from "../../assets/styles/GlobalStyles";
+import {
+  placeholderImage,
+  screenHeight,
+  screenWidth,
+} from "../../res/Constants";
+import { CustomFonts } from "../../assets/font/Fonts";
+import { Colors } from "../../res/Colors";
+import FilterPoopup from "../../components/FilterPoopup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { Apipath } from "../../Api/Apipaths";
+import LoadingAnimation from "../../components/LoadingAnimation";
+import { ScreenNames } from "../../res/ScreenNames";
+import NoResults from "../../components/NoResults";
 
-
-const profileImage = require('../../assets/Images/profileImage.png')
+const profileImage = require("../../assets/Images/profileImage.png");
 
 const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
+  const [selectedCat, setSelectedCat] = useState({
+    id: 1,
+    name: "Search By Name",
+  });
 
-    const [selectedCat, setSelectedCat] = useState({
-        id: 1,
-        name: 'Search By Name',
-    })
+  const [showFilterPopup, setShowFilterPopup] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setloading] = useState(false);
+  const [pastSearch, setPastSearch] = useState([]);
 
-    const [showFilterPopup, setShowFilterPopup] = useState(false)
-    const [customers, setCustomers] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
-    const [loading, setloading] = useState(false)
-    const [pastSearch, setPastSearch] = useState([])
+  const searchCatigories = [
+    {
+      id: 1,
+      name: "Search By Name",
+    },
+    {
+      id: 2,
+      name: "Driver License",
+    },
+    {
+      id: 3,
+      name: "State License",
+    },
+  ];
+  useEffect(() => {
+    setCustomers([]);
+    let timer = setTimeout(() => {
+      if (searchQuery) {
+        console.log("timer finished");
 
+        searchCustomers(0);
+      } else {
+        setCustomers([]);
+      }
+    }, 500);
 
-    const searchCatigories = [
-        {
-            id: 1,
-            name: 'Search By Name',
-        },
-        {
-            id: 2,
-            name: 'Driver License',
-        },
-        {
-            id: 3,
-            name: 'State License',
-        },
-    ]
-    useEffect(() => {
-        let timer = setTimeout(() => {
-            if (searchQuery) {
-                console.log('timer finished')
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-                searchCustomers()
-            } else {
-                setCustomers([])
-            }
-        }, 500);
+  useEffect(() => {
+    getPastSearches();
+    searchCustomers(0);
+  }, []);
 
-        return () => clearTimeout(timer)
-    }, [searchQuery])
+  const getPastSearches = async () => {
+    console.log("trying to gt past searches");
 
-    useEffect(() => {
-        getPastSearches()
-    }, [])
+    const data = await AsyncStorage.getItem("USER");
+    if (data) {
+      let u = JSON.parse(data);
+      let path = Apipath.searchHistory;
+      console.log("Auth token is", u.token);
+      console.log("path is", path);
+      try {
+        const response = await axios.get(path, {
+          headers: {
+            Authorization: "Bearer " + u.token,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("trying to gt past searches 3");
 
-    const getPastSearches = async () => {
-        console.log('trying to gt past searches')
-
-        const data = await AsyncStorage.getItem("USER")
-        if (data) {
-           
-                let u = JSON.parse(data)
-                let path = Apipath.searchHistory 
-                console.log('Auth token is',u.token);
-                console.log('path is',path);
-            try{
-                const response = await axios.get(path, {
-                    headers: {
-                        'Authorization': "Bearer " + u.token,
-                        "Content-Type" : "application/json"
-                    }
-                })
-                console.log('trying to gt past searches 3')
-
-
-                if (response.data) {
-                    if (response.data.status === true) {
-                        console.log('search history is', response.data.data)
-                    } else {
-                        console.log('search history messsage is', response.data.message)
-                    }
-                }
-            } catch (e) {
-                console.log('error in past sarch api', e)
-            }
+        if (response.data) {
+          if (response.data.status === true) {
+            console.log("search history is", response.data.data);
+          } else {
+            console.log("search history messsage is", response.data.message);
+          }
         }
-
-
+      } catch (e) {
+        console.log("error in past sarch api", e);
+      }
     }
+  };
 
-    const searchCustomers = async () => {
-        try {
-            console.log('trying to search customer')
-            setloading(true)
-            const data = await AsyncStorage.getItem("USER")
-            if (data) {
-                let u = JSON.parse(data)
-
-                let path = Apipath.searchCustomers + "?searchType=name&searchQuery=" + searchQuery + "&offset=" + customers.length + "&role=customer"
-                console.log('path is', path)
-                const response = await axios.get(path, {
-                    headers: {
-                        'Authorization': "Bearer " + u.token
-                    }
-                })
-                if (response.data) {
-                    setloading(false)
-                    // if(response.data.data.status === true ){}
-                    console.log('search response is', response.data)
-                    setCustomers(response.data.data || [])
-                }
-            }
-        } catch (e) {
-            setloading(false)
-            console.log('error in search customers', e)
-        }
+  const searchCustomers = async (offset = -1) => {
+    if (offset == -1) {
+      offset = customers.length;
     }
+    try {
+      console.log("trying to search customer");
+      setloading(true);
+      const data = await AsyncStorage.getItem("USER");
+      if (data) {
+        let u = JSON.parse(data);
 
-    const handleOnpress = (item) => {
-        console.log('item is', item)
-        if (from === "tabbar") {
-            navigation.push(ScreenNames.YapServiceScreen, {
-                user: item
-            })
+        let path = Apipath.searchCustomers;
+        if (searchQuery.length > 0) {
+          path =
+            `${path}?searchType=name&searchQuery=${searchQuery}` +
+            "&offset=" +
+            offset +
+            "&role=customer";
+        } else {
+          path = `${path}?` + "offset=" + offset + "&role=customer";
         }
-        else {
-            navigation.push(ScreenNames.CustomerProfileDetails, {
-                user: item
-            })
+
+        console.log("path is", path);
+        const response = await axios.get(path, {
+          headers: {
+            Authorization: "Bearer " + u.token,
+          },
+        });
+        if (response.data) {
+          setloading(false);
+          // if(response.data.data.status === true ){}
+          console.log("search response is", response.data);
+          setCustomers(response.data.data || []);
         }
+      }
+    } catch (e) {
+      setloading(false);
+      console.log("error in search customers", e);
     }
+  };
 
-    return (
-        <SafeAreaView style={GlobalStyles.container}>
+  const handleOnpress = (item) => {
+    console.log("item is", item);
+    if (from === "tabbar") {
+      navigation.push(ScreenNames.YapServiceScreen, {
+        user: item,
+      });
+    } else {
+      navigation.push(ScreenNames.CustomerProfileDetails, {
+        user: item,
+      });
+    }
+  };
+
+  return (
+    <SafeAreaView style={GlobalStyles.container}>
+      {loading && <LoadingAnimation visible={loading} />}
+      <View style={[GlobalStyles.container, { width: screenWidth - 40 }]}>
+        <View
+          style={[
+            GlobalStyles.input,
             {
-                loading && (
-                    <LoadingAnimation visible={loading} />
-                )
-            }
-            <View style={[GlobalStyles.container, { width: screenWidth - 40 }]}>
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: screenWidth - 40,
+            },
+          ]}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <TouchableOpacity
+              onPress={() => {
+                hideAnimation();
+              }}
+            >
+              <Image
+                source={require("../../assets/Images/backArrow.png")}
+                style={GlobalStyles.image24}
+              />
+            </TouchableOpacity>
+            <TextInput
+              autoFocus={true}
+              placeholder="Search"
+              onChangeText={(text) => {
+                setSearchQuery(text);
+              }}
+              width={(300 / 430) * screenWidth}
+              placeholderTextColor={"black"}
+            />
+          </View>
 
-                <View style={[GlobalStyles.input, {
-                    flexDirection: 'row', alignItems: 'center',
-                    justifyContent: 'space-between', width: screenWidth - 40
-                }]}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                        <TouchableOpacity onPress={() => {
-                            hideAnimation()
-                        }}>
-                            <Image source={require('../../assets/Images/backArrow.png')}
-                                style={GlobalStyles.image24}
-                            />
-                        </TouchableOpacity>
-                        <TextInput
-                            autoFocus = {true}
-                            placeholder='Search'
-                            onChangeText={(text) => {
-                                setSearchQuery(text)
-                            }}
-                            width={300 / 430 * screenWidth}
-                            placeholderTextColor={'black'}
+          <TouchableOpacity
+            onPress={() => {
+              setShowFilterPopup(true);
+            }}
+          >
+            <Image
+              source={require("../../assets/Images/filterIcon.png")}
+              style={GlobalStyles.image24}
+            />
+          </TouchableOpacity>
+        </View>
 
-                        />
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            setShowFilterPopup(true)
-                        }}
+        {/* Filter popup*/}
+        <Modal
+          visible={showFilterPopup}
+          animationType="slide"
+          transparent={true}
+        >
+          <FilterPoopup
+            close={() => {
+              setShowFilterPopup(false);
+            }}
+          />
+        </Modal>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 15,
+            alignSelf: "flex-start",
+            marginTop: (15 / 930) * screenHeight,
+          }}
+        >
+          {searchCatigories.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={{
+                backgroundColor:
+                  item.id === selectedCat.id ? "#FF570010" : "transparent",
+                padding: 10,
+                borderRadius: 30,
+              }}
+              onPress={() => {
+                setSelectedCat(item);
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 12,
+                  fontFamily: CustomFonts.PoppinsMedium,
+                }}
+              >
+                {item.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={{ height: screenHeight * 0.7 }}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+            <View style={{ width: screenWidth - 40, alignItems: "center" }}>
+              <Text
+                style={[
+                  GlobalStyles.text14,
+                  {
+                    alignSelf: "flex-start",
+                    marginTop: (30 / 930) * screenHeight,
+                  },
+                ]}
+              >
+                Past Search
+              </Text>
+              <View style={{ flexDirection: "column", gap: 20, marginTop: 30 }}>
+                {pastSearch.map((item) => (
+                  <View
+                    key={item.id}
+                    style={{
+                      width: screenWidth - 40,
+                      alignItems: "center",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: (10 / 430) * screenWidth,
+                      }}
                     >
-                        <Image source={require('../../assets/Images/filterIcon.png')}
-                            style={GlobalStyles.image24}
-                        />
+                      <Image source={item.url} style={GlobalStyles.image24} />
+                      <Text style={GlobalStyles.text14}>{item.name}</Text>
+                    </View>
+                    <TouchableOpacity>
+                      <Image
+                        source={require("../../assets/Images/crossIcon.png")}
+                        style={GlobalStyles.image24}
+                      />
                     </TouchableOpacity>
-
-                </View>
-
-                {/* Filter popup*/}
-                <Modal
-                    visible={showFilterPopup}
-                    animationType='slide'
-                    transparent={true}
-                >
-                    <FilterPoopup close={() => {
-                        setShowFilterPopup(false)
-                    }} />
-                </Modal>
-                <View style={{
-                    flexDirection: 'row', alignItems: 'center', gap: 15, alignSelf: 'flex-start',
-                    marginTop: 15 / 930 * screenHeight
-                }}>
-                    {
-                        searchCatigories.map((item) => (
-                            <TouchableOpacity key={item.id} style={{
-                                backgroundColor: item.id === selectedCat.id ? '#FF570010' : 'transparent', padding: 10, borderRadius: 30
-                            }}
-                                onPress={() => {
-                                    setSelectedCat(item)
-                                }}
-                            >
-                                <Text style={{ color: 'black', fontSize: 12, fontFamily: CustomFonts.PoppinsMedium }}>
-                                    {item.name}
-                                </Text>
-                            </TouchableOpacity>
-                        ))
-                    }
-                </View>
-                <View style={{ height: screenHeight * 0.7 }}>
-                    <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                        <View style={{ width: screenWidth - 40, alignItems: 'center' }}>
-                            <Text style={[GlobalStyles.text14, { alignSelf: 'flex-start', marginTop: 30 / 930 * screenHeight }]}>
-                                Past Search
-                            </Text>
-                            <View style={{ flexDirection: 'column', gap: 20, marginTop: 30 }} >
-                                {
-                                    pastSearch.map((item) => (
-                                        <View key={item.id} style={{
-                                            width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'
-                                        }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
-                                                <Image source={item.url}
-                                                    style={GlobalStyles.image24}
-                                                />
-                                                <Text style={GlobalStyles.text14}>
-                                                    {item.name}
-                                                </Text>
-                                            </View>
-                                            <TouchableOpacity>
-                                                <Image source={require('../../assets/Images/crossIcon.png')}
-                                                    style={GlobalStyles.image24}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    ))
-                                }
-
-                            </View>
-                            <View style={{ marginTop: 40, flexDirection: 'column', gap: 30 }}>
-                                {/* {
+                  </View>
+                ))}
+              </View>
+              <View style={{ marginTop: 40, flexDirection: "column", gap: 30 }}>
+                {/* {
                                     customers.map((item) => ( */}
-                                {
-                                    !loading && (
-                                     
-                                            <FlatList
-                                                scrollEnabled={false}
-                                                data={customers}
-                                                renderItem={({ item }) => (
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            handleOnpress(item)
-                                                        }}
-                                                    >
-                                                        <View key={item.id} style={{
-                                                            width: screenWidth - 40, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between',
-                                                            marginTop: 30 / 930 * screenHeight
-                                                        }}>
-                                                            <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                                                                style={{
-                                                                    height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, resizeMode: 'cover', borderRadius: 20
-                                                                }}
-                                                            />
-                                                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 15 / 930 * screenHeight }}>
-                                                                <Text style={[GlobalStyles.text17, { color: 'black' }]}>
-                                                                    {item.name}
-                                                                </Text>
-                                                                <Text style={[GlobalStyles.text17, { color: '#00000080' }]}>
-                                                                    {item.city ? item.city : "N/A"}
-                                                                </Text>
-                                                                <View style={{
-                                                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                                                                    width: 200 / 430 * screenWidth
-                                                                }}>
-                                                                    <View style={{ flexDirection: 'column', gap: 5 }}>
-                                                                        <View style={{ flexDirection: 'row', }}>
-                                                                            <Image source={require('../../assets/Images/yIcon.png')}
-                                                                                style={GlobalStyles.yIcon}
-                                                                            />
-                                                                            <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                                                                ap score
-                                                                            </Text>
-                                                                        </View>
-                                                                        <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                                                            {item.yapScore ? item.yapScore : 'N/A'}
-                                                                        </Text>
-                                                                    </View>
+                {!loading && (
+                  <FlatList
+                    scrollEnabled={false}
+                    data={customers}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          handleOnpress(item);
+                        }}
+                      >
+                        <View
+                          key={item.id}
+                          style={{
+                            width: screenWidth - 40,
+                            alignItems: "flex-start",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            marginTop: (30 / 930) * screenHeight,
+                          }}
+                        >
+                          <Image
+                            source={
+                              item.profile_image
+                                ? { uri: item.profile_image }
+                                : placeholderImage
+                            }
+                            style={{
+                              height: (30 / 930) * screenHeight,
+                              width: (30 / 430) * screenWidth,
+                              resizeMode: "cover",
+                              borderRadius: 20,
+                            }}
+                          />
+                          <View
+                            style={{
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                              gap: (15 / 930) * screenHeight,
+                            }}
+                          >
+                            <Text
+                              style={[GlobalStyles.text17, { color: "black" }]}
+                            >
+                              {item.name}
+                            </Text>
+                            <Text
+                              style={[
+                                GlobalStyles.text17,
+                                { color: "#00000080" },
+                              ]}
+                            >
+                              {item.city ? item.city : "N/A"}
+                            </Text>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: (200 / 430) * screenWidth,
+                              }}
+                            >
+                              <View style={{ flexDirection: "column", gap: 5 }}>
+                                <View style={{ flexDirection: "row" }}>
+                                  <Image
+                                    source={require("../../assets/Images/yIcon.png")}
+                                    style={GlobalStyles.yIcon}
+                                  />
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      fontFamily: CustomFonts.InterMedium,
+                                      color: "#00000080",
+                                    }}
+                                  >
+                                    ap score
+                                  </Text>
+                                </View>
+                                <Text
+                                  style={{
+                                    fontSize: 20,
+                                    fontFamily: CustomFonts.IntriaBold,
+                                  }}
+                                >
+                                  {item.yapScore ? item.yapScore : "N/A"}
+                                </Text>
+                              </View>
 
-                                                                    <View style={{ flexDirection: 'column', gap: 5 }}>
-                                                                        <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
-                                                                            Total Reviews
-                                                                        </Text>
-                                                                        <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                                                            {item.reviews}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-
-                                                            <View style={{
-                                                                flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end',
-                                                                height: 110 / 930 * screenHeight
-                                                            }}>
-                                                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
-                                                                    Spent over {item.spent}
-                                                                </Text>
-
-                                                                {/* <TouchableOpacity> */}
-                                                                <Image source={require('../../assets/Images/farwordBtn.png')}
-                                                                    style={GlobalStyles.image37}
-                                                                />
-                                                                {/* </TouchableOpacity> */}
-                                                            </View>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                )}
-
-
-                                            // onEndReached={searchCustomers}
-                                            // onEndReachedThreshold={.1}
-
-                                            />
-                                        // ) : (
-                                        //     searchQuery &&
-                                        //     <NoResults navigation={navigation} />
-                                        // )
-                                    )
-                                }
-
+                              <View style={{ flexDirection: "column", gap: 5 }}>
+                                <Text
+                                  style={{
+                                    fontSize: 13,
+                                    fontFamily: CustomFonts.InterRegular,
+                                  }}
+                                >
+                                  Total Reviews
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 20,
+                                    fontFamily: CustomFonts.IntriaBold,
+                                  }}
+                                >
+                                  {item.reviews}
+                                </Text>
+                              </View>
                             </View>
+                          </View>
+
+                          <View
+                            style={{
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              alignItems: "flex-end",
+                              height: (110 / 930) * screenHeight,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                fontFamily: CustomFonts.InterMedium,
+                              }}
+                            >
+                              Spent over {item.spent}
+                            </Text>
+
+                            {/* <TouchableOpacity> */}
+                            <Image
+                              source={require("../../assets/Images/farwordBtn.png")}
+                              style={GlobalStyles.image37}
+                            />
+                            {/* </TouchableOpacity> */}
+                          </View>
                         </View>
-                    </ScrollView>
-                </View>
+                      </TouchableOpacity>
+                    )}
+
+                    // onEndReached={searchCustomers}
+                    // onEndReachedThreshold={.1}
+                  />
+                  // ) : (
+                  //     searchQuery &&
+                  //     <NoResults navigation={navigation} />
+                  // )
+                )}
+              </View>
             </View>
-        </SafeAreaView>
+          </ScrollView>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
 
-    )
-}
-
-export default SearchScreen
+export default SearchScreen;
