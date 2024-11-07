@@ -4,9 +4,9 @@ import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { ScreenNames } from '../../res/ScreenNames'
 
-const ProfileCongratsScreen = ({navigation}) => {
+const ProfileCongratsScreen = ({ navigation }) => {
     return (
-        <SafeAreaView style = {GlobalStyles.container}>
+        <SafeAreaView style={GlobalStyles.container}>
             <View style={GlobalStyles.container}>
                 <View style={{
                     marginTop: 80 / 930 * screenHeight, width: screenWidth - 50, alignItems: 'center', justifyContent: 'center',
@@ -20,13 +20,18 @@ const ProfileCongratsScreen = ({navigation}) => {
                         Congrats
                     </Text>
                     <Text style={[GlobalStyles.subheading14, {
-                        textAlign: 'center', marginTop: 50,width:screenWidth-80
+                        textAlign: 'center', marginTop: 50, width: screenWidth - 80
                     }]}>
-                        Lorem ipsum dolor sit amet consectetur. Eleifend blandit erat mus vulputate semper maecenas gravida. Dignissim venenatis quam ultricies nibh feugiat euismod pretium.
+                        You've successfully subscribed your business.
+                    </Text>
+                    <Text style={[GlobalStyles.subheading14, {
+                        textAlign: 'center', marginTop: 0, width: screenWidth - 80
+                    }]}>
+                        Enjoy!
                     </Text>
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
-                        onPress={()=>{
+                        onPress={() => {
                             navigation.push(ScreenNames.TabbarContainer)
                         }}
                     >

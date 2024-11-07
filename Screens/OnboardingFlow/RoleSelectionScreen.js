@@ -29,14 +29,14 @@ const RoleSelectionScreen = ({ navigation }) => {
 
         let r = ''
 
-        if (selected === 1){
+        if (selected === 1) {
             r = 'customer'
-        }else if (selected === 2){
+        } else if (selected === 2) {
             r = 'business'
         }
         navigation.push(ScreenNames.EmailScreen, {
             user: {
-                role:r
+                role: r
             }
         })
     }
@@ -53,7 +53,7 @@ const RoleSelectionScreen = ({ navigation }) => {
                     />
                 </TouchableOpacity>
                 <Text style={[GlobalStyles.heading, { marginTop: 20 }]}>
-                    Select a role
+                    Select account type
                 </Text>
 
                 <View style={{ marginTop: 30 / 930 * screenHeight }}>

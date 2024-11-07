@@ -34,7 +34,7 @@ const BusinessWebScreen = ({ navigation, route }) => {
 
     const checkIsValidUrl = (url) => {
         console.log('trying to check url')
-        let urlRegex = new RegExp(/((http|https):\/\/)(www\.)?[a-zA-Z0-9@:%._\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\+~#?&//=]*)/);
+        let urlRegex = new RegExp(/((https?:\/\/)?(www\.)?[a-zA-Z0-9@:%._\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\+~#?&//=]*)?)/);
         let validUrl = urlRegex.test(url)
 
         if (validUrl) {
@@ -77,7 +77,7 @@ const BusinessWebScreen = ({ navigation, route }) => {
 
 
                     <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterMedium, }}>
-                        4 of 5
+                        2 of 3
                     </Text>
                 </View>
 

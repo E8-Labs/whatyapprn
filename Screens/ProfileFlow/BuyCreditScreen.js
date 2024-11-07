@@ -7,13 +7,8 @@ import React, { useState } from 'react'
 import { Colors } from '../../res/Colors'
 import { ScreenNames } from '../../res/ScreenNames'
 
-const BuyCreditScreen = ({navigation}) => {
-  const [selectedPlan, setselectedPlan] = useState({
-    id: 1,
-    name: "YEARLY",
-    price: '$999/yr',
-    disc: '12Months at $50/Month'
-  })
+const BuyCreditScreen = ({ navigation }) => {
+  const [selectedPlan, setselectedPlan] = useState({})
 
   const selectedImage = require('../../assets/Images/selectedIcon.png')
   const unSelectedImage = require('../../assets/Images/unSelectedIcon.png')
@@ -32,7 +27,7 @@ const BuyCreditScreen = ({navigation}) => {
     }, {
       id: 3,
       name: "UNLIMITED",
-      price: '$5',
+      price: '$20',
     },
   ]
 
@@ -62,18 +57,12 @@ const BuyCreditScreen = ({navigation}) => {
               Buy Credit
             </Text>
 
-            <Text style = {[GlobalStyles.text17,{marginTop:20/930*screenHeight}]}>
+            <Text style={[GlobalStyles.text17, { marginTop: 20 / 930 * screenHeight }]}>
               You get free 5 credit renewed every month
             </Text>
 
             <View style={{ marginTop: 50 / 930 * screenHeight }}>
 
-              <Image source={require('../../assets/Images/recommendedImage.png')}
-                style={{
-                  height: 30 / 930 * screenHeight, width: 164 / 430 * screenWidth, resizeMode: 'contain',
-                  alignSelf: 'flex-end', marginRight: 25 / 430 * screenWidth
-                }}
-              />
 
               {
                 plans.map((item) => (
@@ -82,6 +71,21 @@ const BuyCreditScreen = ({navigation}) => {
                       setselectedPlan(item)
                     }}
                   >
+                    {item.id === 1 && (
+                      <Image
+                        source={require("../../assets/Images/recommendedImage.png")}
+                        style={{
+                          height: (30 / 930) * screenHeight,
+                          width: (164 / 430) * screenWidth,
+                          resizeMode: "contain",
+                          zIndex: 2,
+                          alignSelf: "flex-end",
+                          marginRight: (0 / 430) * screenWidth,
+                          marginBottom: (-45 / 930) * screenHeight,
+                          // position: 'relative', top: 0, bottom: 50,
+                        }}
+                      />
+                    )}
                     <View style={{
                       borderWidth: 1, borderColor: selectedPlan.id === item.id ? Colors.orangeColor : Colors.grayColor,
                       borderRadius: 5, alignItems: 'center',
@@ -106,7 +110,7 @@ const BuyCreditScreen = ({navigation}) => {
                         </View>
 
 
-                        <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 15, justifyContent: 'center', alignSelf: 'flex-start' }}>
+                        <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 15, justifyContent: 'center', alignSelf: 'flex-start',marginTop:5 }}>
 
                           <Image source={selectedPlan.id === item.id ? selectedImage : unSelectedImage}
                             style={GlobalStyles.image24}

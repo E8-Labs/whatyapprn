@@ -76,7 +76,7 @@ const BusinessLocation = ({ navigation, route }) => {
                         }]}>
 
                             <Text style={GlobalStyles.text14}>
-                                {city ? (city) : 'Address'} {state ? `,${state}` : ""}
+                                {address?address:'Address'}
 
                             </Text>
 

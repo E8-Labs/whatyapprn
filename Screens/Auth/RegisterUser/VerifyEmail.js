@@ -117,7 +117,7 @@ const VerifyEmail = ({ navigation, route }) => {
 
 
           <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterMedium, }}>
-            2 of 5
+            
           </Text>
         </View>
 

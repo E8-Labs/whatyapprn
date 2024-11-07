@@ -93,7 +93,7 @@ const LoginScreen = ({ navigation }) => {
                                 marginLeft: 10 / 430 * screenWidth, marginTop: 15 / 930 * screenHeight
                             }]} />
                         <Text style={GlobalStyles.heading}>
-                            Welcome back bud
+                            Welcome back
                         </Text>
 
                         <View style={[GlobalStyles.input, {

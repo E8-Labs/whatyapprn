@@ -31,7 +31,7 @@ export const GlobalStyles = {
         , color: 'white'
     },
     heading: {
-        fontSize: 32 / 930 * screenHeight,
+        fontSize: 30 / 930 * screenHeight,
         marginTop: 20 * screenHeight / 930,
         width: screenWidth - 50,
         fontFamily: CustomFonts.PoppinsMedium,

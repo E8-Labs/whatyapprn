@@ -112,7 +112,7 @@ const PasswordScreen = ({ navigation, route }) => {
 
 
                     <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterMedium, }}>
-                        5 of 5
+                        {user.role !== 'customer'?"3 of 3":''}
                     </Text>
                 </View>
 

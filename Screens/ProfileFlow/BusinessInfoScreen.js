@@ -33,6 +33,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+
     const [showpass, setShowpass] = useState(false)
     const [loading, setLoading] = useState(false)
 
@@ -54,6 +55,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     useEffect(() => {
         let u = user
         const setValues = () => {
+            console.log('user city is', u.city)
             setCity(u.city)
             setState(u.state)
             setEmail(u.email)
@@ -89,7 +91,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyap camera access to complite profile');
             return;
         }
         console.log('trying to open galery')
@@ -114,7 +116,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     const captureImage = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyap camera access to complite profile');
             return;
         }
 

@@ -13,19 +13,20 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
 
 
     const [details, setDetails] = useState("")
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+
 
     const user = route.params.user
     user.about_business = details
     console.log('user on about screen is', user)
 
     const handleContinuePress = async () => {
-        if(!details){
+        if (!details) {
             ShowMessage("Please describe your business in detail")
             return
         }
 
-        if(user.from === 'profile'){
+        if (user.from === 'profile') {
             let data = {
                 about_business: details,
             }
@@ -51,7 +52,7 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
             navigation.push(ScreenNames.NotificationPermitionScreeen, {
                 user: user
             })
-        }else{
+        } else {
             console.log('no data')
         }
     }
@@ -59,7 +60,7 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
     return (
         <SafeAreaView style={GlobalStyles.container}>
             {
-                loading && <LoadingAnimation visible = {loading} />
+                loading && <LoadingAnimation visible={loading} />
             }
             <View style={GlobalStyles.container}>
                 <View style={GlobalStyles.completeProfileTopBar}>
@@ -92,17 +93,22 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
                     </Text>
 
                     <Text style={GlobalStyles.subheading14}>
-                        Describe your business in detail.
+                        Describe your business in detail
                     </Text>
 
                     <TextInput
                         multiline
+                        maxLength={500}
                         onChangeText={(text) => {
                             setDetails(text)
                         }}
                         style={[GlobalStyles.input, { height: 160 / 930 * screenHeight }]}
                         placeholder='Enter description here'
                     />
+
+                    <Text style={{fontSize:14,fontFamily:CustomFonts.InterMedium,alignSelf:'flex-end'}}>
+                        {details.length}/500
+                    </Text>
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={handleContinuePress}

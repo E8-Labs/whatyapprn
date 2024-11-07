@@ -17,6 +17,7 @@ import { ScreenNames } from "../../res/ScreenNames";
 import Purchases from "react-native-purchases";
 import usePurchases from "../../res/hooks/usePurchases";
 import { ApiKeys } from "../../Api/keys";
+// import { ApiKeys } from "../../Api/keys";
 
 const RevenueCatApiKey = ApiKeys.RevenueCatApiKey; //"appl_xmLtPRVaCdpCrklyeHGUMguQRlb";
 const ProfilePlansScreen = ({ navigation }) => {
@@ -31,7 +32,7 @@ const ProfilePlansScreen = ({ navigation }) => {
     {
       id: 2,
       name: "MONTHLY",
-      price: "$999/m",
+      price: "$99/m",
       disc: "",
       identifier: "Yearly_Premium_1118",
     },

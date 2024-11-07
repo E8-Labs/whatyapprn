@@ -40,7 +40,7 @@ const EmployeesScreen = ({ navigation, route }) => {
         },
         {
             id: 4,
-            name: '101 - 150',
+            name: '101 - 250',
             number: '150'
         },
         {

@@ -16,7 +16,7 @@ const GaleryCamPopup = ({ close, handleBtnPress }) => {
 
                 <View style={{ width: screenWidth - 40, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * screenHeight }}>
                     <Text style={GlobalStyles.text17}>
-                        Which file do you want to upload?
+                        Select one of the options
                     </Text>
                     <TouchableOpacity onPress={close}>
                         <Image source={require('../assets/Images/crossIcon.png')}
@@ -52,7 +52,7 @@ const GaleryCamPopup = ({ close, handleBtnPress }) => {
                                 style={GlobalStyles.image37}
                             />
                             <Text style={[GlobalStyles.text17, { marginTop: 25 / 930 * screenHeight }]}>
-                                Galery
+                                Gallery
                             </Text>
                         </View>
                     </TouchableOpacity>

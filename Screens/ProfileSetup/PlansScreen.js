@@ -13,12 +13,7 @@ import { CustomFonts } from "../../assets/font/Fonts";
 import { ScreenNames } from "../../res/ScreenNames";
 
 const PlansScreen = ({ navigation }) => {
-  const [selectedPlan, setselectedPlan] = useState({
-    id: 1,
-    name: "YEARLY",
-    price: "$999/yr",
-    disc: "12 Months at $50/Month",
-  });
+  const [selectedPlan, setselectedPlan] = useState({});
 
   const selectedImage = require("../../assets/Images/selectedIcon.png");
   const unSelectedImage = require("../../assets/Images/unSelectedIcon.png");
@@ -46,146 +41,150 @@ const PlansScreen = ({ navigation }) => {
             flexDirection: "column",
             alignItems: "center",
             height: screenHeight - 100,
-            justifyContent: "flex-end",
           }}
         >
-          <Text style={GlobalStyles.heading}>Subscription Plan</Text>
-          <Text
-            style={[
-              GlobalStyles.subheading14,
-              { marginTop: 10, marginBottom: (50 / 930) * screenHeight },
-            ]}
-          >
-            Lorem ipsum dor simet insnet
-          </Text>
-
-          {plans.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() => {
-                setselectedPlan(item);
-              }}
+          <Image source={require('../../assets/Images/logo.png')}
+            style={{ height: 50, width: 250, alignSelf: 'center', marginTop: 100 / 930 * screenHeight }}
+          />
+          <View style={{ position: 'absolute', bottom: 50 }}>
+            <Text style={GlobalStyles.heading}>Subscription Plan</Text>
+            <Text
+              style={[
+                GlobalStyles.subheading14,
+                { marginTop: 10, marginBottom: (50 / 930) * screenHeight },
+              ]}
             >
-              {item.id === 1 && (
-                <Image
-                  source={require("../../assets/Images/recommendedImage.png")}
-                  style={{
-                    height: (30 / 930) * screenHeight,
-                    width: (164 / 430) * screenWidth,
-                    resizeMode: "contain",
-                    zIndex: 2,
-                    alignSelf: "flex-end",
-                    marginRight: (30 / 430) * screenWidth,
-                    marginBottom: (-45 / 930) * screenHeight,
-                    // position: 'relative', top: 0, bottom: 50,
-                  }}
-                />
-              )}
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor:
-                    selectedPlan.id === item.id
-                      ? Colors.orangeColor
-                      : Colors.grayColor,
-                  borderRadius: 5,
-                  alignItems: "center",
-                  paddingVertical: 15,
-                  paddingHorizontal: 10,
-                  marginTop: (30 / 930) * screenHeight,
-                  zIndex: 1,
+              Choose the right plan for your business
+            </Text>
+
+            {plans.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => {
+                  setselectedPlan(item);
                 }}
               >
+                {item.id === 1 && (
+                  <Image
+                    source={require("../../assets/Images/recommendedImage.png")}
+                    style={{
+                      height: (30 / 930) * screenHeight,
+                      width: (164 / 430) * screenWidth,
+                      resizeMode: "contain",
+                      zIndex: 2,
+                      alignSelf: "flex-end",
+                      marginRight: (30 / 430) * screenWidth,
+                      marginBottom: (-45 / 930) * screenHeight,
+                      // position: 'relative', top: 0, bottom: 50,
+                    }}
+                  />
+                )}
                 <View
                   style={{
-                    width: screenWidth - (80 / 430) * screenWidth,
-                    flexDirection: "row",
+                    borderWidth: 1,
+                    borderColor:
+                      selectedPlan.id === item.id
+                        ? Colors.orangeColor
+                        : Colors.grayColor,
+                    borderRadius: 5,
                     alignItems: "center",
-                    justifyContent: "space-between",
+                    paddingVertical: 15,
+                    paddingHorizontal: 10,
+                    marginTop: (30 / 930) * screenHeight,
+                    zIndex: 1,
                   }}
                 >
                   <View
                     style={{
-                      flexDirection: "column",
+                      width: screenWidth - (80 / 430) * screenWidth,
+                      flexDirection: "row",
                       alignItems: "center",
-                      gap: 15,
+                      justifyContent: "space-between",
                     }}
                   >
-                    <Text
+                    <View
                       style={{
-                        fontSize: 17,
-                        fontFamily: CustomFonts.PoppinsSemiBold,
-                        fontWeight: "700",
-                        color: Colors.orangeColor,
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 15,
                       }}
                     >
-                      {item.name}
-                    </Text>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          fontFamily: CustomFonts.PoppinsSemiBold,
+                          fontWeight: "700",
+                          color: Colors.orangeColor,
+                        }}
+                      >
+                        {item.name}
+                      </Text>
 
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        fontFamily: CustomFonts.PoppinsSemiBold,
-                        fontWeight: "700",
-                        color: "black",
-                      }}
-                    >
-                      {item.price}
-                    </Text>
-                  </View>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          fontFamily: CustomFonts.PoppinsSemiBold,
+                          fontWeight: "700",
+                          color: "black",
+                        }}
+                      >
+                        {item.price}
+                      </Text>
+                    </View>
 
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                      gap: 15,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Image
-                      source={
-                        selectedPlan.id === item.id
-                          ? selectedImage
-                          : unSelectedImage
-                      }
-                      style={GlobalStyles.image24}
-                    />
-                    <Text
+                    <View
                       style={{
-                        fontSize: 17,
-                        fontFamily: CustomFonts.InterRegular,
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        gap: 15,
+                        justifyContent: "center",
                       }}
                     >
-                      {item.disc}
-                    </Text>
+                      <Image
+                        source={
+                          selectedPlan.id === item.id
+                            ? selectedImage
+                            : unSelectedImage
+                        }
+                        style={GlobalStyles.image24}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          fontFamily: CustomFonts.InterRegular,
+                        }}
+                      >
+                        {item.disc}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity
+              style={GlobalStyles.capsuleBtn}
+              onPress={() => {
+                navigation.push(ScreenNames.ProfileCongratsScreen);
+              }}
+            >
+              <Text style={GlobalStyles.BtnText}>Subscribe</Text>
             </TouchableOpacity>
-          ))}
 
-          <TouchableOpacity
-            style={GlobalStyles.capsuleBtn}
-            onPress={() => {
-              navigation.push(ScreenNames.ProfileCongratsScreen);
-            }}
-          >
-            <Text style={GlobalStyles.BtnText}>Subscribe</Text>
-          </TouchableOpacity>
-
-          <Text
-            style={{
-              width: screenWidth - 40,
-              fontSize: 13,
-              fontFamily: CustomFonts.InterRegular,
-              marginTop: 30,
-              textAlign: "center",
-            }}
-          >
-            This subscription automically renews unless auto-renew is turn off
-            ateast 24hrs before current period eands. Payment is charged to your
-            iTunes Account.
-          </Text>
+            <Text
+              style={{
+                width: screenWidth - 40,
+                fontSize: 13,
+                fontFamily: CustomFonts.InterRegular,
+                marginTop: 30,
+                textAlign: "center",
+              }}
+            >
+              This subscription automically renews unless auto-renew is turn off
+              ateast 24hrs before current period eands. Payment is charged to your
+              iTunes Account.
+            </Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>

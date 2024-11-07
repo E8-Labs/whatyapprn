@@ -67,7 +67,7 @@ const UploadMediaScreen = ({navigation,route}) => {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyap camera access to complite profile');
             return;
         }
         console.log('trying to open galery')
@@ -97,7 +97,7 @@ const UploadMediaScreen = ({navigation,route}) => {
     const pickVideo = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyap camera access to complite profile');
             return;
         }
         console.log('trying to open galery')
@@ -220,7 +220,7 @@ const UploadMediaScreen = ({navigation,route}) => {
 
 
                     <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterMedium, }}>
-                        1 of 5
+                        1 of 3
                     </Text>
                 </View>
 

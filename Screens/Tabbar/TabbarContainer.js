@@ -220,7 +220,7 @@ const TabbarContainer = ({ navigation }) => {
             { transform: [{ translateY: slideAnim }] },
           ]}
         >
-          <View style={styles.dragIndicator} />
+        
           <AddReviewMainScreen closeModal={closeModal} handleBtnPress={(value) => {
             if (value === "customer") {
               navigation.push(ScreenNames.LicenseScreen, {

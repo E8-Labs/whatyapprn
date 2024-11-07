@@ -120,22 +120,37 @@ export default function OnboardingSlideScreen({ navigation }) {
 
 
                     </ScrollView>
-                    <TouchableOpacity style={[GlobalStyles.rectButton, {
-                        marginTop: 30 / 930 * screenHeight, alignSelf: 'flex-end', marginRight: 20 / 430 * screenWidth
-                    }]}
-                        onPress={handleNext}
-                    >
-                        <Text style={GlobalStyles.BtnText}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
-                    {/* </View> */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
+                        {
+                            currentIndex > 0 ? (
+                                <TouchableOpacity
+                                    onPress={handleBack}
+                                >
+                                    <Text style={[GlobalStyles.BtnText, { color: '#000' }]}>
+                                        Go Back
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <View></View>
+                            )
+                        }
+
+                        <TouchableOpacity style={[GlobalStyles.rectButton, {
+                            marginTop: 0 / 930 * screenHeight,
+                        }]}
+                            onPress={handleNext}
+                        >
+                            <Text style={GlobalStyles.BtnText}>
+                                Continue
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                     <TouchableOpacity //style={[GlobalStyles.rectButton, {  }]}
                         onPress={() => {
                             navigation.navigate(ScreenNames.LoginScreen)
                         }}
                     >
-                        <Text style={[GlobalStyles.BtnText, { color: '#000', alignSelf: 'center', marginTop: 20/930*screenHeight }]}>
+                        <Text style={[GlobalStyles.BtnText, { color: '#000', alignSelf: 'center', marginTop: 20 / 930 * screenHeight }]}>
                             Skip
                         </Text>
                     </TouchableOpacity>

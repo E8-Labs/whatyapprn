@@ -36,7 +36,7 @@ const UploadImageScreen = ({ navigation, route }) => {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyapp camera access to complite profile');
             return;
         }
         console.log('trying to open galery')
@@ -61,7 +61,7 @@ const UploadImageScreen = ({ navigation, route }) => {
     const captureImage = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Soulmatch camera access to complite profile');
+            alert('Please allow Whatyap camera access to complite profile');
             return;
         }
 
@@ -125,24 +125,26 @@ const UploadImageScreen = ({ navigation, route }) => {
                         width: screenWidth - 50
                     }}>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15,width:270/430*screenWidth, }}>
-                            <Image source={image ? { uri: image } : require('../../../assets/Images/placeholderImage.png')}
-                                style={{
-                                    height: 88 / 930 * screenHeight,
-                                    width: 88 / 430 * screenWidth,
-                                    resizeMode: 'cover',
-                                    borderRadius: 50
-                                }}
-                            />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, width: 270 / 430 * screenWidth, }}>
+
+                            <TouchableOpacity onPress={() => {
+                                setShowPopup(true)
+                            }}>
+                                <Image source={image ? { uri: image } : require('../../../assets/Images/placeholderImage.png')}
+                                    style={{
+                                        height: 88 / 930 * screenHeight,
+                                        width: 88 / 430 * screenWidth,
+                                        resizeMode: 'cover',
+                                        borderRadius: 50
+                                    }}
+                                />
+                            </TouchableOpacity>
                             <View style={{ flexDirection: 'column', gap: 10 / 930 * screenHeight }}>
                                 <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium }}>
                                     Upload profile photo
                                 </Text>
                                 <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000050" }}>
                                     Max size is 2mb
-                                </Text>
-                                <Text style={GlobalStyles.subheading14}>
-                                    This is optional
                                 </Text>
 
                             </View>
@@ -167,15 +169,21 @@ const UploadImageScreen = ({ navigation, route }) => {
                         }}
                     />
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{color:Colors.lightBlack}}>*</Text>
-                        <Text style={{
-                            fontSize: 13, fontFamily: CustomFonts.InterRegular, textAlign: 'left', width: screenWidth - 60,
-                            marginTop: -20 / 930 * screenHeight, color: Colors.lightBlack,alignSelf:'flex-end'
-                        }}>
-                            Required
-                        </Text>
-                    </View>
+                    {
+                        !username && (
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: Colors.lightBlack }}>*</Text>
+                                <Text style={{
+                                    fontSize: 13, fontFamily: CustomFonts.InterRegular, textAlign: 'left', width: screenWidth - 60,
+                                    marginTop: -20 / 930 * screenHeight, color: Colors.lightBlack, alignSelf: 'flex-end'
+                                }}>
+                                    Required
+                                </Text>
+                            </View>
+                        )
+                    }
+
+
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={handleContinuePress}

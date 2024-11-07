@@ -44,7 +44,7 @@ const CustomerEmailScreen = ({ navigation, route }) => {
             email: e
         }
         try {
-            // setLoading(true)
+            setLoading(true)
 
             const response = await axios.post(Apipath.checkEmailExists, apiData, {
                 headers: {
@@ -62,6 +62,7 @@ const CustomerEmailScreen = ({ navigation, route }) => {
                 }
             }
         } catch (e) {
+            setLoading(false)
             setError("Cannot check if email exists.")
             console.log('error in  check email api', e)
         }

@@ -9,7 +9,7 @@ export const ShowMessage = (message, backgroundColor = 'red',  textColor = 'whit
       textColor: textColor,
       shadow: true,
       shadowColor:'grey',
-      // opacity:1,
+      opacity:1,
       animation: true,
       hideOnPress: true,
       delay: 0,

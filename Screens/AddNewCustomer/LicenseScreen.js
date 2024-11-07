@@ -51,6 +51,7 @@ const LicenseScreen = ({ navigation, route }) => {
 
         if (!result.canceled) {
             const ImageUrl = result.assets[0].uri;
+            setIsCameraActive(false)
             setImageUri(ImageUrl);
             extractText(ImageUrl);
         }
@@ -124,17 +125,18 @@ const LicenseScreen = ({ navigation, route }) => {
                     <View style={styles.bottomControls}>
                         <View style={styles.actionButtonsContainer}>
 
-                            <TouchableOpacity style={styles.actionButtons} onPress={takePicture}>
+                            <TouchableOpacity style={[styles.actionButtons, { opacity: 0 }]} //onPress={takePicture}
+                            >
                                 <Text style={styles.actionText}>SCAN</Text>
                             </TouchableOpacity>
-                            
+
                             <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
                                 <Image source={require('../../assets/Images/captureBtn.png')}
                                     style={{ height: 76 / 930 * screenHeight, width: 76 / 930 * screenHeight }}
                                 />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.actionButtons} //onPress={pickImage}
+                            <TouchableOpacity style={styles.actionButtons} onPress={pickImage}
                             >
                                 <Text style={styles.actionText}>UPLOAD</Text>
                             </TouchableOpacity>

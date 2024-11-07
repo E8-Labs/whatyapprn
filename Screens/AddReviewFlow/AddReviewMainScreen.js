@@ -15,7 +15,7 @@ const AddReviewMainScreen = ({ visible, closeModal ,handleBtnPress}) => {
   //     visible={visible}
   //     animationType='slide'
   //   >
-  //     <View style={[GlobalStyles.container, { backgroundColor: '#00000055', justifyContent: 'flex-end' }]}>
+      // <View style={[GlobalStyles.container, { backgroundColor: '#00000055', justifyContent: 'flex-end' }]}>
         <View style={{
           width: screenWidth, alignItems: 'center', backgroundColor: 'transparent', alignItems:'flex-start',
           height:310/930*screenHeight,//backgroundColor:'green',
@@ -49,7 +49,7 @@ const AddReviewMainScreen = ({ visible, closeModal ,handleBtnPress}) => {
         </View>
 
 
-    //   </View>
+      // </View>
     // </Modal>
   )
 }
