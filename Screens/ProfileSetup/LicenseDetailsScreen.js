@@ -20,65 +20,66 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
     const [weburl, setWeburl] = useState('')
     const [name, setName] = useState('')
     const [lNumber, setLNumber] = useState('')
-    const [loading,setLoading] = useState(false)
-    const [user,setUser] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [user, setUser] = useState("")
+    const [error, setError] = useState("")
 
     const from = route.params.user.from
-    // console.log('from', from)
+    console.log('from', from)
     useEffect(() => {
         let u = route.params.user.user
         setUser(u)
         console.log('user details on license details screen', u)
-        setName(u.licenseDetails?u.licenseDetails.name:'')
-        setLNumber(u.licenseDetails?u.licenseDetails.driverLicense:'')
+        setName(u.licenseDetails ? u.licenseDetails.name : '')
+        setLNumber(u.licenseDetails ? u.licenseDetails.driverLicense : '')
     }, [])
 
-    // user.business_website = weburl
+    user.business_website = weburl
 
-    const handleContinuePress = async() => {
+    const handleContinuePress = async () => {
 
-        if(!name || name === "Name not found"){
-            ShowMessage("First edit your name")
+        if (!name || name === "Name not found") {
+            setError("Fill in the name")
             return
         }
-        if(!lNumber){
-            ShowMessage("First edit your license number")
+        if (!lNumber) {
+            setError("Fill in the license number")
             return
         }
         // return
-        if(from === "AddCustomer"){
+        if (from === "AddCustomer") {
             console.log('user is', user)
             // return
-            navigation.push(ScreenNames.CustomerEmailScreen,{
-                user:{
-                    name:name,
-                    licenseNumber:lNumber,
-                    licenseImage:user.licenseImage
+            navigation.push(ScreenNames.CustomerEmailScreen, {
+                user: {
+                    name: name,
+                    licenseNumber: lNumber,
+                    licenseImage: user.licenseImage
                 }
             })
             return
         }
         try {
-            setLoading(true)
+            // setLoading(true)
             let formdata = new FormData()
 
-           
-                formdata.append("email", user.email)
-                formdata.append('password', user.password)
-                formdata.append('role', "customer")
-                formdata.append('username', name)
-                formdata.append('phone', "")
-                formdata.append('name', name)
-                formdata.append('driver_license_id', lNumber)
 
-                    formdata.append('driver_license', {
-                        name: 'image',
-                        type: 'JPEG',
-                        uri: user.licenseImage
-                    })
+            formdata.append("email", user.email)
+            formdata.append('password', user.password)
+            formdata.append('role', "customer")
+            formdata.append('username', name)
+            formdata.append('phone', "")
+            formdata.append('name', name)
+            formdata.append('driver_license_id', lNumber)
+
+            formdata.append('driver_license', {
+                name: 'image',
+                type: 'JPEG',
+                uri: user.licenseImage
+            })
 
             console.log('form data is', formdata)
-            // return
+            return
 
             const response = await axios.post(Apipath.registerUser, formdata, {
                 headers: {
@@ -90,14 +91,14 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
                 console.log('user register api response is', response.data)
                 if (response.data.status === true) {
                     AsyncStorage.setItem("USER", JSON.stringify(response.data.data))
-                    
-                    navigation.push(ScreenNames.AuthCongratsScreen,{
-                        from:'LicenseDetailsScreen'
+
+                    navigation.push(ScreenNames.AuthCongratsScreen, {
+                        from: 'LicenseDetailsScreen'
                     })
-                    
+
                 } else {
                     console.log('register api message is', response.data.message)
-                    ShowMessage(response.data.message)
+                    setError(response.data.message)
                 }
             }
 
@@ -107,86 +108,91 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
         }
     }
 
-return (
-    <SafeAreaView style={GlobalStyles.container}>
-        {
-            loading && <LoadingAnimation visible = {loading} />
-        }
-        <View style={GlobalStyles.container}>
-            <View style={GlobalStyles.completeProfileTopBar}>
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.goBack()
-                    }}
-                >
-                    <Image source={require('../../assets/Images/backArrow.png')}
-                        style={GlobalStyles.image24}
-                    />
-                </TouchableOpacity>
+    return (
+        <SafeAreaView style={GlobalStyles.container}>
+            {
+                loading && <LoadingAnimation visible={loading} />
+            }
+            <View style={GlobalStyles.container}>
+                <View style={GlobalStyles.completeProfileTopBar}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.goBack()
+                        }}
+                    >
+                        <Image source={require('../../assets/Images/backArrow.png')}
+                            style={GlobalStyles.image24}
+                        />
+                    </TouchableOpacity>
 
-                <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaRegular }}>
-                    Verify Identity
-                </Text>
-                <View></View>
-            </View>
+                    <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaRegular }}>
+                        Verify Identity
+                    </Text>
+                    <View></View>
+                </View>
 
-            <View style={{
-                width: screenWidth - 50, alignItems: 'center', flexDirection: 'column', gap: 30 / 930 * screenHeight,
-                marginTop: 50 / 930 * screenHeight
-            }}>
-                <Text style={GlobalStyles.heading24}>
-                    License Details
-                </Text>
-                {/* <Text style={GlobalStyles.subheading14}>
+                <View style={{
+                    width: screenWidth - 50, alignItems: 'center', flexDirection: 'column', gap: 30 / 930 * screenHeight,
+                    marginTop: 50 / 930 * screenHeight
+                }}>
+                    <Text style={GlobalStyles.heading24}>
+                        License Details
+                    </Text>
+                    {/* <Text style={GlobalStyles.subheading14}>
                     Make sure license details are correctly sccaned
                 </Text> */}
-                <View style={[GlobalStyles.input, {
-                    flexDirection: 'row', alignContent: 'center', gap: 8 / 430 * screenWidth
-                }]}>
-                    <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
-                        Name:
-                    </Text>
-                    <TextInput
-                        placeholder='Name'
-                        autoCapitalize='none'
-                        value={name}
-                        //  secureTextEntry={!showPass}
-                        onChangeText={(text) => {
-                            setName(text)
-                        }}
-                        style={{ width: 310 / 430 * screenWidth }}
-                    />
-                </View>
+                    <View style={[GlobalStyles.input, {
+                        flexDirection: 'row', alignContent: 'center', gap: 8 / 430 * screenWidth
+                    }]}>
+                        <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+                            Name:
+                        </Text>
+                        <TextInput
+                            placeholder='Name'
+                            autoCapitalize='none'
+                            value={name}
+                            //  secureTextEntry={!showPass}
+                            onChangeText={(text) => {
+                                setName(text)
+                            }}
+                            style={{ width: 310 / 430 * screenWidth }}
+                        />
+                    </View>
 
-                <View style={[GlobalStyles.input, {
-                    flexDirection: 'row', alignContent: 'center', gap: 8 / 430 * screenWidth
-                }]}>
-                    <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
-                        License Number:
-                    </Text>
-                    <TextInput
-                        placeholder='License number'
-                        autoCapitalize='none'
-                        value={lNumber}
-                        //  secureTextEntry={!showPass}
-                        onChangeText={(text) => {
-                            setLNumber(text)
-                        }}
-                        style={{ width: 290 / 430 * screenWidth }}
-                    />
-                </View>
+                    <View style={[GlobalStyles.input, {
+                        flexDirection: 'row', alignContent: 'center', gap: 8 / 430 * screenWidth
+                    }]}>
+                        <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+                            License Number:
+                        </Text>
+                        <TextInput
+                            placeholder='License number'
+                            autoCapitalize='none'
+                            value={lNumber}
+                            //  secureTextEntry={!showPass}
+                            onChangeText={(text) => {
+                                setLNumber(text)
+                            }}
+                            style={{ width: 290 / 430 * screenWidth }}
+                        />
 
-                <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 10 / 930 * screenHeight }]}
-                    onPress={handleContinuePress}
-                >
-                    <Text style={GlobalStyles.BtnText}>
-                        Continue
-                    </Text>
-                </TouchableOpacity>
+                    </View>
+
+                    {
+                        error && <Text style={GlobalStyles.errorText}>{error}</Text>
+                    }
+
+                    <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 10 / 930 * screenHeight }]}
+                        onPress={handleContinuePress}
+                    >
+                        <Text style={GlobalStyles.BtnText}>
+                            Continue
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    </SafeAreaView>
-)
+        </SafeAreaView>
+    )
 }
 
 export default LicenseDetailsScreen

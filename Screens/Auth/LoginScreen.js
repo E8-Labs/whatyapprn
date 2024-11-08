@@ -29,10 +29,10 @@ const LoginScreen = ({ navigation }) => {
         const validEmail = emailRegex.test(email)
 
         if (!email || !password) {
-            ShowMessage("Enter email or password", "red",)
+            setError("Enter email and password")
             return
         } else if (!validEmail) {
-            ShowMessage("Enter valid email")
+            setError(" Invalid email")
             return
         } else {
             try {
@@ -64,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
                         }
                     } else {
                         console.log('login api message is', result.data.message)
-                        ShowMessage(result.data.message)
+                        setError(result.data.message)
                     }
                 }
             } catch (e) {
@@ -109,6 +109,7 @@ const LoginScreen = ({ navigation }) => {
                                 }}
                                 onChangeText={(text) => {
                                     setEmail(text)
+                                    setError("")
                                 }}
                             />
                             <Image source={require('../../assets/Images/emailIcon.png')}
@@ -132,6 +133,7 @@ const LoginScreen = ({ navigation }) => {
                                 }}
                                 onChangeText={(text) => {
                                     setPassword(text)
+                                    setError("")
                                 }}
                             />
                             <TouchableOpacity
@@ -147,6 +149,8 @@ const LoginScreen = ({ navigation }) => {
                                 />
                             </TouchableOpacity>
                         </View>
+
+                        {error&&<Text style = {[GlobalStyles.errorText,{marginTop:10}]}>{error}</Text>}
 
                         <TouchableOpacity style={{ marginTop: 30 / 930 * screenHeight, alignSelf: 'flex-start', marginLeft: 10 / 430 * screenWidth }}>
                             <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>

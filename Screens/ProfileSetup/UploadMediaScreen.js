@@ -1,8 +1,9 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, Modal, ScrollView,
-    Keyboard,Platform,
-    TouchableWithoutFeedback
- } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import {
+    View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, Modal, ScrollView,
+    Keyboard, Platform,
+    TouchableWithoutFeedback, StyleSheet
+} from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { CustomFonts } from '../../assets/font/Fonts'
@@ -10,6 +11,7 @@ import { Colors } from '../../res/Colors'
 import { ScreenNames } from '../../res/ScreenNames'
 import GaleryCamPopup from '../../components/GaleryCamPopup'
 import UploadMediaPopup from '../../components/UploadMediaPopup'
+import { Dropdown } from 'react-native-element-dropdown'
 
 import * as ImagePicker from 'expo-image-picker'
 import * as VideoThumbnails from 'expo-video-thumbnails';
@@ -19,9 +21,9 @@ import { Apipath } from '../../Api/Apipaths'
 import LoadingAnimation from '../../components/LoadingAnimation'
 
 
-const UploadMediaScreen = ({navigation,route}) => {
+const UploadMediaScreen = ({ navigation, route }) => {
 
-    const from = route.params.from
+    // const from = route.params.from
 
     const [showPopup, setShowPopup] = useState(false)
     const [showCaptionPopup, setShowCaptionPopup] = useState(false)
@@ -29,40 +31,46 @@ const UploadMediaScreen = ({navigation,route}) => {
     const [selectedVideo, setSelectedVideo] = useState('')
     const [thumbnail, setThumbnail] = useState('')
     const [selectedImageNme, setSelectedImageNme] = useState('')
-    const [caption,setCaption] = useState('')
+    const [caption, setCaption] = useState('')
 
-    const [loading,setLoading] = useState(false)
-    const[media,setMedia] = useState([])
-    const [popupHeight,setPopupHeight] = useState(screenHeight*0.5)
-    
+    const [loading, setLoading] = useState(false)
+    const [media, setMedia] = useState([])
+    const [popupHeight, setPopupHeight] = useState(screenHeight * 0.5)
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [deletePosition, setDeletePosition] = useState({ top: 0, left: 50 });
+    const [selectedItemIndex, setSelectedItemIndex] = useState(null);
 
-    useEffect(()=>{
+    const threeDotRefs = useRef([]);
+
+
+
+    useEffect(() => {
         console.log('media array is', media)
-    },[media])
+    }, [media])
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
-          Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
-          (event) => {
-            console.log('keryboard open')
-            setPopupHeight(screenHeight*0.85)
-          }
+            Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+            (event) => {
+                console.log('keryboard open')
+                setPopupHeight(screenHeight * 0.85)
+            }
         );
 
         const KeyboardDidHideListener = Keyboard.addListener(
             Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
             (event) => {
                 console.log('keybord hide')
-              setPopupHeight(screenHeight*0.5)
+                setPopupHeight(screenHeight * 0.5)
 
             }
         );
         return () => {
-          keyboardDidShowListener.remove();
-          KeyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+            KeyboardDidHideListener.remove();
         };
-      }, []);
-    
+    }, []);
+
 
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -137,25 +145,23 @@ const UploadMediaScreen = ({navigation,route}) => {
     };
 
 
-    const uploadMedia =async () =>{
+    const uploadMedia = async () => {
 
         let m = {
-            image:thumbnail?thumbnail:selectedImage,
-            caption:caption,
-            name:selectedImageNme
+            image: thumbnail ? thumbnail : selectedImage,
+            caption: caption,
+            name: selectedImageNme
         }
 
 
-
-        setMedia([...media, m])
         setShowCaptionPopup(false)
 
         // return
 
         setLoading(true)
-        try{
+        try {
             let data = await AsyncStorage.getItem("USER")
-            if(data){
+            if (data) {
                 let u = JSON.parse(data)
                 console.log('user data is', u)
 
@@ -163,48 +169,120 @@ const UploadMediaScreen = ({navigation,route}) => {
 
                 const formdata = new FormData()
 
-                formdata.append("media",{
-                    name:'media',
-                    uri:selectedImage
+                formdata.append("media", {
+                    name: 'media',
+                    uri: selectedImage
                 })
-                formdata.append("caption",caption)
+                formdata.append("caption", caption)
+                formdata.append("name", selectedImageNme)
                 thumbnail && (
-                    formdata.append("thumbnail",{
-                        name:'thumb',
-                        uri:thumbnail
+                    formdata.append("thumbnail", {
+                        name: 'thumb',
+                        uri: thumbnail
                     })
                 )
 
-                console.log('from data is',formdata )
-// return
-                const response = await axios.post(Apipath.uploadMedia,formdata,{
-                    headers:{
-                        "Authorization":'Bearer '+ token
+                console.log('from data is', formdata)
+                // return
+                const response = await axios.post(Apipath.uploadMedia, formdata, {
+                    headers: {
+                        "Authorization": 'Bearer ' + token
                     }
                 })
                 setLoading(false)
-                if(response){
+                if (response) {
                     setLoading(false)
+                    setMedia([...media, response.data.data])
                     console.log('response of upload media is', response.data)
                 }
             }
-        }catch(e){
+        } catch (e) {
             setLoading(false)
             console.log('error in upload media', e)
         }
+    }
+
+    const handleThreeDotPress = (index) => {
+        if (threeDotRefs.current[index]) {
+            threeDotRefs.current[index].measure((fx, fy, width, height, px, py) => {
+                let leftPosition = px;
+
+                // Adjust position if it goes off the screen
+                if (px + 70 > screenWidth) {  // Assuming modal width is ~120
+                    leftPosition = screenWidth - 80; // Padding to keep modal within bounds
+                }
+
+                setDeletePosition({ top: py + height, left: leftPosition });
+                setSelectedItemIndex(index);  // Set the index of the selected item
+                setShowDeletePopup(true);
+            });
+        }
+    };
+
+    const deleteMediaItem = async () => {
+
+
+
+        if (selectedItemIndex !== null) {
+            const mediaItem = media[selectedItemIndex];
+            const mediaId = mediaItem.id;  // Ensure media items have an `id` property
+
+            setShowDeletePopup(false);
+            setSelectedItemIndex(null);
+            setMedia(prevMedia => prevMedia.filter(item => item.id !== mediaId));
+
+            console.log('medaiItem', mediaId)
+            // return
+
+            const data = await AsyncStorage.getItem("USER")
+            if (data) {
+                let u = JSON.parse(data)
+
+                let apidata = {
+                    media_id: mediaId
+                }
+                let path = Apipath.deleteMedia
+                console.log('path', path)
+
+                try {
+                    const response = await axios.post(Apipath.deleteMedia, apidata, {
+                        headers: {
+                            "Authorization": 'Bearer ' + u.token
+                        }
+                    })
+
+                    if (response.data.status === 200) {
+
+                        // setMedia(prevMedia => prevMedia.filter(item => item.id !== mediaId));
+                        console.log("delete media data is", response.data.data);
+                    } else {
+                        console.log('message is', response.data.message);
+                    }
+                } catch (error) {
+                    console.log('Error deleting media item:', error);
+                    console.log('Error', 'An error occurred while trying to delete the media item');
+                }
+            }
+        }
+    };
+
+    const getName = (url) => {
+        const lastPart = url ? url.split('/').pop() : '';
+        console.log(lastPart);
+        return lastPart
     }
 
     return (
         <SafeAreaView style={GlobalStyles.container}>
             {
                 loading && (
-                    <LoadingAnimation visible = {loading} />
+                    <LoadingAnimation visible={loading} />
                 )
             }
             <View style={GlobalStyles.container}>
                 <View style={GlobalStyles.completeProfileTopBar}>
                     <TouchableOpacity
-                        style = {{opacity:0}}
+                        style={{ opacity: 0 }}
                         onPress={() => {
                             navigation.goBack()
                         }}
@@ -254,55 +332,92 @@ const UploadMediaScreen = ({navigation,route}) => {
                             </Text>
                         </View>
                     </TouchableOpacity>
-                    <ScrollView style = {{
-                        
-                        height:screenHeight*0.5,width:screenWidth-40,
-                        // borderWidth:1
-                    }} showsVerticalScrollIndicator = {false}>
-                        {
-                            media&&media.map((item) => (
-                                <View key={item.id} style={{
-                                    width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                                    marginTop: 20 / 930 * screenHeight
-                                }}>
-                                    <Image source={{uri:item.image}}
-                                        style={{
-                                            height: 75 / 930 * screenHeight, width: 73 / 430 * screenWidth, resizeMode: 'contain'
-                                        }}
-                                    />
+                    <ScrollView style={{
 
-                                    <View style={{ width: 270 / 430 * screenWidth, alignItems: 'flex-start', flexDirection: 'column', gap: 8 }}>
-                                        <Text style={{
-                                            fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
-                                            opacity: 0.7
-                                        }}>
-                                            {item.name}
-                                        </Text>
-                                        <Text numberOfLines={2} style={[GlobalStyles.text17, { width: 250 / 430 * screenWidth }]}>
-                                            {item.caption}
-                                        </Text>
-                                    </View>
-                                    <TouchableOpacity style={{ alignSelf: 'flex-start' }}>
-                                        <Image source={require('../../assets/Images/threeDotsImage.png')}
-                                            style={GlobalStyles.image24}
+                        height: screenHeight * 0.5, width: screenWidth - 40,
+                        // borderWidth:1
+                    }} showsVerticalScrollIndicator={false}>
+                        {
+                            media && media.map((item, index) => (
+                                <>
+                                    <View key={item.id} style={{
+                                        width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                                        marginTop: 20 / 930 * screenHeight
+                                    }}>
+                                        <Image source={{ uri: item.thumb_url }}
+                                            style={{
+                                                height: 75 / 930 * screenHeight, width: 73 / 430 * screenWidth, resizeMode: 'contain'
+                                            }}
                                         />
-                                    </TouchableOpacity>
-                                </View>
+
+                                        <View style={{ width: 270 / 430 * screenWidth, alignItems: 'flex-start', flexDirection: 'column', gap: 8 }}>
+                                            <Text style={{
+                                                fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
+                                                opacity: 0.7
+                                            }}>
+                                                {getName(item.url)}
+                                            </Text>
+                                            <Text numberOfLines={2} style={[GlobalStyles.text17, { width: 250 / 430 * screenWidth }]}>
+                                                {item.caption}
+                                            </Text>
+                                        </View>
+                                        <TouchableOpacity
+                                            ref={(el) => (threeDotRefs.current[index] = el)}
+                                            style={{ alignSelf: 'flex-start' }}
+                                            onPress={() => handleThreeDotPress(index)}
+                                        >
+                                            <Image source={require('../../assets/Images/threeDotsImage.png')}
+                                                style={GlobalStyles.image24}
+                                            />
+                                        </TouchableOpacity>
+
+                                        {/* delete popup */}
+
+
+
+                                    </View>
+                                    <Modal
+                                        visible={showDeletePopup}
+                                        transparent={true}
+                                        animationType='fade'
+                                    >
+                                        <TouchableWithoutFeedback onPress={() => {
+                                            console.log('pressed')
+                                            setShowDeletePopup(false)
+                                        }} //style = {{height:screenHeight,width:screenWidth}}
+                                        >
+                                            {/* <View style={styles.modalOverlay} /> */}
+                                            {/* </TouchableWithoutFeedback>  */}
+
+                                            <View style={[styles.deleteModal, { top: deletePosition.top, left: deletePosition.left }]}>
+                                                <TouchableOpacity onPress={() => {
+                                                    deleteMediaItem()
+                                                }}>
+                                                    <Text style={styles.deleteText}>Delete</Text>
+                                                </TouchableOpacity>
+
+                                            </View>
+                                        </TouchableWithoutFeedback>
+
+                                    </Modal>
+                                </>
+
+
                             ))
                         }
                     </ScrollView>
-                    <TouchableOpacity style = {[GlobalStyles.capsuleBtn,{marginTop:0}]}
-                        onPress={()=>{
-                            if(from === "profile"){
+                    <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 0 }]}
+                        onPress={() => {
+                            if (from === "profile") {
                                 navigation.goBack()
                                 return
                             }
-                            navigation.push(ScreenNames.BusinessIndustryScreen,{
-                                from:'uploadMedia'
+                            navigation.push(ScreenNames.BusinessIndustryScreen, {
+                                from: 'uploadMedia'
                             })
                         }}
                     >
-                        <Text style = {GlobalStyles.BtnText}>
+                        <Text style={GlobalStyles.BtnText}>
                             Continue
                         </Text>
                     </TouchableOpacity>
@@ -335,72 +450,72 @@ const UploadMediaScreen = ({navigation,route}) => {
                     transparent={true}
                     animationType='slide'
                 >
-                    <TouchableWithoutFeedback style = {{height:screenHeight,width:screenWidth}}
-                        onPress={()=>{
+                    <TouchableWithoutFeedback style={{ height: screenHeight, width: screenWidth }}
+                        onPress={() => {
                             Keyboard.dismiss()
                         }}
                     >
-                    <View style={[GlobalStyles.container, {
-                        backgroundColor: '#00000055', justifyContent: 'flex-end'
-                    }]}>
-                        <View style={{
-                            backgroundColor: 'white', alignItems: 'center',height:popupHeight&&popupHeight,
-                            paddingVertical: 20, width: screenWidth, paddingHorizontal: 20
-                        }}>
+                        <View style={[GlobalStyles.container, {
+                            backgroundColor: '#00000055', justifyContent: 'flex-end'
+                        }]}>
+                            <View style={{
+                                backgroundColor: 'white', alignItems: 'center', height: popupHeight && popupHeight,
+                                paddingVertical: 20, width: screenWidth, paddingHorizontal: 20
+                            }}>
 
-                            <View style={{ width: screenWidth - 40, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * screenHeight }}>
-                                <Text style={GlobalStyles.text17}>
-                                    Provide Caption
-                                </Text>
-                                <TouchableOpacity onPress={() => {
-                                    setShowCaptionPopup(false)
-                                }}>
-                                    <Image source={require('../../assets/Images/crossIcon.png')}
-                                        style={GlobalStyles.image24}
+                                <View style={{ width: screenWidth - 40, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * screenHeight }}>
+                                    <Text style={GlobalStyles.text17}>
+                                        Provide Caption
+                                    </Text>
+                                    <TouchableOpacity onPress={() => {
+                                        setShowCaptionPopup(false)
+                                    }}>
+                                        <Image source={require('../../assets/Images/crossIcon.png')}
+                                            style={GlobalStyles.image24}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+
+
+                                <View style={{ width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10, justifyContent: 'flex-start' }}>
+                                    <Image source={{ uri: thumbnail ? thumbnail : selectedImage }}
+                                        style={{
+                                            height: 73 / 930 * screenHeight, width: 73 / 430 * screenWidth, resizeMode: 'cover',
+
+                                        }}
                                     />
-                                </TouchableOpacity>
-                            </View>
+                                    <Text style={{
+                                        fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
+                                        opacity: 0.8
+                                    }}>
+                                        {selectedImageNme}
+                                    </Text>
 
-
-                            <View style={{ width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10, justifyContent: 'flex-start' }}>
-                                <Image source={{ uri:thumbnail?thumbnail: selectedImage}}
-                                    style={{
-                                        height: 73 / 930 * screenHeight, width: 73 / 430 * screenWidth, resizeMode: 'cover',
-
+                                </View>
+                                <TextInput
+                                    multiline
+                                    placeholder='caption'
+                                    style={[GlobalStyles.input, {
+                                        marginTop: 10,
+                                        height: 195 / 930 * screenHeight
+                                    }]}
+                                    onChangeText={(text) => {
+                                        setCaption(text)
                                     }}
                                 />
-                                <Text style={{
-                                    fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
-                                    opacity: 0.8
-                                }}>
-                                    {selectedImageNme}
-                                </Text>
 
+                                <TouchableOpacity style={GlobalStyles.capsuleBtn}
+                                    onPress={() => {
+                                        uploadMedia()
+                                        // setShowCaptionPopup(false)
+                                    }}
+                                >
+                                    <Text style={GlobalStyles.BtnText}>
+                                        Continue
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
-                            <TextInput
-                                multiline
-                                placeholder='caption'
-                                style={[GlobalStyles.input, {
-                                    marginTop: 10,
-                                    height: 195 / 930 * screenHeight
-                                }]}
-                                onChangeText={(text)=>{
-                                    setCaption(text)
-                                }}
-                            />
-
-                            <TouchableOpacity style={GlobalStyles.capsuleBtn}
-                                onPress={() => {
-                                    uploadMedia()
-                                    // setShowCaptionPopup(false)
-                                }}
-                            >
-                                <Text style={GlobalStyles.BtnText}>
-                                    Continue
-                                </Text>
-                            </TouchableOpacity>
                         </View>
-                    </View>
                     </TouchableWithoutFeedback>
                 </Modal>
             </View>
@@ -409,3 +524,30 @@ const UploadMediaScreen = ({navigation,route}) => {
 }
 
 export default UploadMediaScreen
+
+const styles = StyleSheet.create({
+    modalOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    deleteModal: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    deleteText: {
+        fontSize: 16,
+        color: 'red',
+        fontWeight: 'bold'
+    }
+})

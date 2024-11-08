@@ -8,21 +8,22 @@ import { ScreenNames } from '../../res/ScreenNames'
 import { ShowMessage } from '../../components/ShowMessage'
 
 
-const SattlementAmountScreen = ({ navigation ,route}) => {
+const SattlementAmountScreen = ({ navigation, route }) => {
     const yap = route.params.yap
     console.log('yap on settlement amount screen is', yap)
 
-    const [amount,setAmount] = useState("")
+    const [amount, setAmount] = useState("")
+    const [error, setError] = useState('')
 
     yap.settlementAmount = amount
 
-    const handleContinuePress = () =>{
-        if(!amount){
-            ShowMessage("Enter final dollar amount to settle")
+    const handleContinuePress = () => {
+        if (!amount) {
+            setError("Amount required")
             return
         }
-        navigation.push(ScreenNames.YapExperienceScreen,{
-            yap:yap
+        navigation.push(ScreenNames.YapExperienceScreen, {
+            yap: yap
         })
     }
 
@@ -47,10 +48,10 @@ const SattlementAmountScreen = ({ navigation ,route}) => {
                 </View>
                 <View style={{ flexDirection: 'column', alignItems: 'center', width: screenWidth - 40, gap: 20 / 930 * screenHeight }}>
                     <Text style={[GlobalStyles.heading24, { marginTop: 50 / 930 * screenHeight }]}>
-                    Settlement Offer
+                        Settlement Offer
                     </Text>
 
-                    <Text style={[GlobalStyles.text14,{alignSelf:'flex-start'}]}>  Enter final dollar amount to settle for
+                    <Text style={[GlobalStyles.text14, { alignSelf: 'flex-start' }]}>  Enter final dollar amount to settle for
                     </Text>
 
                     <View style={[GlobalStyles.input, { flexDirection: 'row', alignItems: 'center', gap: 10 }]}>
@@ -60,16 +61,21 @@ const SattlementAmountScreen = ({ navigation ,route}) => {
                         <TextInput
                             placeholder='0.0'
                             placeholderTextColor={'black'}
-                            onChangeText={(text)=>{
+                            onChangeText={(text) => {
                                 setAmount(text)
+                                setError("")
                             }}
                             style={{ width: 330 / 430 * screenWidth }}
                         />
-                    </View>
 
+
+                    </View>
+                    {
+                        error && <Text style={GlobalStyles.errorText}>{error}</Text>
+                    }
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {
-                           handleContinuePress()
+                            handleContinuePress()
                         }}
                     >
                         <Text style={GlobalStyles.BtnText}>

@@ -13,13 +13,15 @@ const YapTransactionDate = ({ navigation, route }) => {
 
     const [showCalender, setShowcalender] = useState(false)
     const [selectedDate, setSelectedDate] = useState("Date")
+    const [error,setError] = useState("")
 
     const yap = route.params.yap
     yap.dateOfTransaction = selectedDate
 
+
     const handleContinuePress = () => {
         if (selectedDate === "Date") {
-            ShowMessage("Select the date of transaction")
+            setError("Date of transaction reqiuired")
             return
         }
         navigation.push(ScreenNames.YapMediaUploadScreen,{
@@ -80,6 +82,7 @@ const YapTransactionDate = ({ navigation, route }) => {
                         mode='date'
                         onConfirm={(date) => {
                             setShowcalender(false)
+                            setError("")
                             console.log('date is', date)
                             let d = moment(date).format("MM/DD/YYYY")
                             setSelectedDate(d)
@@ -88,6 +91,10 @@ const YapTransactionDate = ({ navigation, route }) => {
                             setShowcalender(false)
                         }}
                     />
+
+                    {
+                        error&&<Text style = {GlobalStyles.errorText}>{error}</Text>
+                    }
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {

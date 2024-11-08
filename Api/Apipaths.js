@@ -27,7 +27,8 @@ export const Apipath = {
     getAdminDashboardData:baseUrl+"admin/adminDashboard",
     getAdminAnalyticsData:baseUrl+"admin/adminAnalytics",
     sendSettlementOffer:baseUrl + "review/sendSettlementOffer",
-    deleteSearch:baseUrl+'dashboard/deleteSearch'
+    deleteSearch:baseUrl+'dashboard/deleteSearch',
+    deleteMedia:baseUrl+'user/delete_media',
     
     
     

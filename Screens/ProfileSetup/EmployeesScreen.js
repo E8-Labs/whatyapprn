@@ -17,6 +17,7 @@ const EmployeesScreen = ({ navigation, route }) => {
 
     const [selected, setSelected] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [error,setError] = useState("")
 
     const user = route.params.user
     user.business_employees = selected
@@ -54,7 +55,7 @@ const EmployeesScreen = ({ navigation, route }) => {
     const handleContinuePress = async () => {
 
         if (!selected) {
-            ShowMessage("Please select number of emloyees")
+            setError("Select number of emloyees")
             return
         }
         if (user.from === 'profile') {
@@ -119,6 +120,7 @@ const EmployeesScreen = ({ navigation, route }) => {
                                 <TouchableOpacity key={item.id}
                                     onPress={() => {
                                         setSelected(item.number)
+                                        setError("")
                                     }}
                                 >
                                     <View style={{
@@ -137,6 +139,10 @@ const EmployeesScreen = ({ navigation, route }) => {
                                     </View>
                                 </TouchableOpacity>
                             ))
+                        }
+
+                        {
+                            error && <Text style = {GlobalStyles.errorText}>{error}</Text>
                         }
                     </View>
 

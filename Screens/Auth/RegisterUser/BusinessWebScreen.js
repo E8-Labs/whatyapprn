@@ -49,7 +49,7 @@ const BusinessWebScreen = ({ navigation, route }) => {
 
     const handleContinuePress = () => {
         if (error) {
-            ShowMessage(error)
+            setError(error)
             return
         }
         navigation.push(ScreenNames.PasswordScreen, {

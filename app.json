@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "WhatYap",
-    "slug": "WhatYap",
+    "name": "testApp",
+    "slug": "testApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/WhatYapLogo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -13,39 +13,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.salman-e8.WhatYap"
+      "bundleIdentifier": "com.salman-e8.testApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "permissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
-      ]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      ["expo-font"],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Allow $(PRODUCT_NAME) to open the Photos",
-          "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
-          "//": "Disables the microphone permission",
-          "microphonePermission": true
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ]
-    ]
+    }
   }
 }

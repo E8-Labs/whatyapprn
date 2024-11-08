@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     },
     bottomLeftCorner: {
         position: 'absolute',
-        bottom: screenHeight * 0.2,
+        bottom: screenHeight * 0.4,
         left: screenWidth * 0.1,
         borderBottomWidth: 3,
         borderLeftWidth: 3,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     },
     bottomRightCorner: {
         position: 'absolute',
-        bottom: screenHeight * 0.2,
+        bottom: screenHeight * 0.4,
         right: screenWidth * 0.1,
         borderBottomWidth: 3,
         borderRightWidth: 3,
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
         height: 202 / 930 * screenHeight,
         width: screenWidth - 40,
         borderRadius: 10,
-        resizeMode: 'cover',
+        resizeMode: 'contain',
     },
     uploadPlaceholder: {
         backgroundColor: '#050A0810',

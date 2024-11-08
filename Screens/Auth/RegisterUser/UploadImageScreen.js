@@ -16,16 +16,17 @@ const UploadImageScreen = ({ navigation, route }) => {
     const [showPopup, setShowPopup] = useState(false)
     const [image, setImage] = useState('')
     const [username, setUsername] = useState('')
+    const [error,setError] = useState("")
 
     const user = route.params.user
     user.username = username,
         user.media = image
-    // console.log('user on image screen is', user)
+    console.log('user on image screen is', user)
 
     const handleContinuePress = () => {
 
         if (!username) {
-            ShowMessage("Enter business name")
+            setError("Business name required")
             return
         }
         navigation.push(ScreenNames.BusinessWebScreen, {
@@ -164,12 +165,16 @@ const UploadImageScreen = ({ navigation, route }) => {
                     <TextInput
                         placeholder='*Business Name'
                         style={GlobalStyles.input}
+                        onFocus={()=>{
+                            setShowPopup(false)
+                        }}
                         onChangeText={(text) => {
                             setUsername(text)
+                            setError("")
                         }}
                     />
 
-                    {
+                    {/* {
                         !username && (
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ color: Colors.lightBlack }}>*</Text>
@@ -181,6 +186,10 @@ const UploadImageScreen = ({ navigation, route }) => {
                                 </Text>
                             </View>
                         )
+                    } */}
+
+                    {
+                        error && <Text style = {GlobalStyles.errorText}>{error}</Text>
                     }
 
 

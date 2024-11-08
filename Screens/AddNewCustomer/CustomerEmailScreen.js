@@ -44,8 +44,6 @@ const CustomerEmailScreen = ({ navigation, route }) => {
             email: e
         }
         try {
-            setLoading(true)
-
             const response = await axios.post(Apipath.checkEmailExists, apiData, {
                 headers: {
                     "Content-Type": "application/json"
@@ -74,16 +72,16 @@ const CustomerEmailScreen = ({ navigation, route }) => {
         const validEmail = emailRegex.test(email)
 
         if (!email || error) {
-            ShowMessage("Enter valid email")
+            setError("Enter valid email")
             return
         }
 
         if (!validEmail) {
             setIsAvailable(false)
-            ShowMessage("Enter valid email")
+            setError("Enter valid email")
             return
         }
-        // setLoading(true)
+        setLoading(true)
         try {
             const data = await AsyncStorage.getItem("USER")
             if (data) {

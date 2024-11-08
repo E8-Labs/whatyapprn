@@ -11,12 +11,13 @@ import { ShowMessage } from '../../components/ShowMessage'
 const YapServiceScreeen = ({ navigation,route }) => {
 
     const [service,setService] = useState("")
+    const [error,setError] = useState("")
 
     const user = route.params.user
 
     const handleContinuePress = () =>{
         if(!service){
-            ShowMessage("Enter service")
+            setError("Service name required")
             return
         }
         navigation.push(ScreenNames.YapTransactionAmountScreen,{
@@ -55,11 +56,18 @@ const YapServiceScreeen = ({ navigation,route }) => {
                         multiline
                         onChangeText={(text)=>{
                             setService(text)
+                            setError("")
                         }}
                         placeholder='Type here'
                         placeholderTextColor={'black'}
                         style={[GlobalStyles.input,{height:140/930*screenHeight}]}
                     />
+
+                    {
+                        error && (
+                            <Text style = {GlobalStyles.errorText}>{error}</Text>
+                        )
+                    }
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {

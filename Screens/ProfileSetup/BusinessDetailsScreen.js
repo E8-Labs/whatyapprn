@@ -14,6 +14,7 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
 
     const [details, setDetails] = useState("")
     const [loading, setLoading] = useState(false)
+    const[error,setError] = useState('')
 
 
     const user = route.params.user
@@ -22,7 +23,8 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
 
     const handleContinuePress = async () => {
         if (!details) {
-            ShowMessage("Please describe your business in detail")
+            // ShowMessage("Please describe your business in detail")
+            setError("Business description required")
             return
         }
 
@@ -101,10 +103,14 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
                         maxLength={500}
                         onChangeText={(text) => {
                             setDetails(text)
+                            setError("")
                         }}
                         style={[GlobalStyles.input, { height: 160 / 930 * screenHeight }]}
                         placeholder='Enter description here'
                     />
+                    {
+                        error&&<Text style = {GlobalStyles.errorText}>{error}</Text>
+                    }
 
                     <Text style={{fontSize:14,fontFamily:CustomFonts.InterMedium,alignSelf:'flex-end'}}>
                         {details.length}/500

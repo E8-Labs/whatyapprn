@@ -18,6 +18,7 @@ const BusinessIndustryScreen = ({navigation,route}) => {
 
     const [selected,setSelected] = useState(null)
     const [loading,setLoading] = useState(false)
+    const [error,setError] = useState("")
 
     const industries = [
         {
@@ -55,7 +56,7 @@ const BusinessIndustryScreen = ({navigation,route}) => {
             return
         }
         if(!selected){
-            ShowMessage("Please select your business industry")
+            setError("Select a business industry")
             return
         }
         navigation.push(ScreenNames.EmployeesScreen,{
@@ -108,6 +109,7 @@ const BusinessIndustryScreen = ({navigation,route}) => {
                                 <TouchableOpacity key={item.id} 
                                     onPress={()=>{
                                         setSelected(item.name)
+                                        setError("")
                                     }}
                                 >
                                     <View style={{
@@ -126,6 +128,9 @@ const BusinessIndustryScreen = ({navigation,route}) => {
                                     </View>
                                 </TouchableOpacity>
                             ))
+                        }
+                        {
+                            error && <Text style = {GlobalStyles.errorText}>{error}</Text>
                         }
                     </View>
 

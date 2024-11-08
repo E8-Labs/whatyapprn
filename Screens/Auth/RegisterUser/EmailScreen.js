@@ -106,21 +106,19 @@ const EmailScreen = ({ navigation, route }) => {
     }
   }
 
-
-
   const handleContinuePress = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const validEmail = emailRegex.test(email)
 
     if (!email || error) {
-      ShowMessage("Enter valid email")
+      setError("Email required")
       return
     }
 
     if (!validEmail) {
       setIsAvailable(false)
-      ShowMessage("Enter valid email")
+      setError("Enter valid email")
       return
     }
 

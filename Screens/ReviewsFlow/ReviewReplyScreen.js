@@ -19,11 +19,12 @@ const ReviewReplyScreen = ({navigation,route}) => {
 
   const [message,setMessage] = useState("")
   const [loading,setLoading] = useState(false)
+  const [error,setError] = useState("")
 
 
   const sendMessage =async () =>{
     if(!message){
-      ShowMessage("Enter message")
+      setError("Message required")
       return
     }
     try{
@@ -165,6 +166,9 @@ console.log('body is is', body)
             }]}
 
           />
+          {
+            error&& <Text style = {GlobalStyles.errorText}>{error}</Text>
+          }
 
           <TouchableOpacity style={[GlobalStyles.capsuleBtn, { width: screenWidth - 40 }]}
               onPress={sendMessage}

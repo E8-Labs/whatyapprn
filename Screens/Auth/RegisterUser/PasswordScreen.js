@@ -16,12 +16,13 @@ const eyeSlash = require('../../../assets/Images/eye-slash.png')
 
 const PasswordScreen = ({ navigation, route }) => {
 
-   
+
     // console.log('user on password screen is', user)
 
     const [showPass, setShowPass] = useState(false)
     const [password, setPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
     const user = route.params.user
     user.password = password
@@ -29,12 +30,12 @@ const PasswordScreen = ({ navigation, route }) => {
 
     const handleContinuePress = async () => {
         if (!password) {
-            ShowMessage("Enter password")
+            setError("Password required")
             return
         }
-        if(user.role === 'customer'){
-            navigation.push(ScreenNames.LicenseScreen,{
-                user:user
+        if (user.role === 'customer') {
+            navigation.push(ScreenNames.LicenseScreen, {
+                user: user
             })
             return
         }
@@ -42,21 +43,21 @@ const PasswordScreen = ({ navigation, route }) => {
             setLoading(true)
             let formdata = new FormData()
 
-           
-                formdata.append("email", user.email)
-                formdata.append('password', password)
-                formdata.append('role', "business")
-                formdata.append('username', user.username)
-                formdata.append('phone', "")
-                formdata.append('name', user.username)
-                formdata.append("business_website", user.business_website)
-                user.media && (
-                    formdata.append('media', {
-                        name: 'image',
-                        type: 'JPEG',
-                        uri: user.media
-                    })
-                )
+
+            formdata.append("email", user.email)
+            formdata.append('password', password)
+            formdata.append('role', "business")
+            formdata.append('username', user.username)
+            formdata.append('phone', "")
+            formdata.append('name', user.username)
+            formdata.append("business_website", user.business_website)
+            user.media && (
+                formdata.append('media', {
+                    name: 'image',
+                    type: 'JPEG',
+                    uri: user.media
+                })
+            )
 
             console.log('form data is', formdata)
 
@@ -70,14 +71,14 @@ const PasswordScreen = ({ navigation, route }) => {
                 console.log('user register api response is', response.data)
                 if (response.data.status === true) {
                     AsyncStorage.setItem("USER", JSON.stringify(response.data.data))
-                    
-                    navigation.push(ScreenNames.AuthCongratsScreen,{
-                        from:'PasswordScreen'
+
+                    navigation.push(ScreenNames.AuthCongratsScreen, {
+                        from: 'PasswordScreen'
                     })
-                    
+
                 } else {
                     console.log('register api message is', response.data.message)
-                    ShowMessage(response.data.message)
+                    setError(response.data.message)
                 }
             }
 
@@ -144,6 +145,10 @@ const PasswordScreen = ({ navigation, route }) => {
                             />
                         </TouchableOpacity>
                     </View>
+
+                    {
+                        error && <Text style={GlobalStyles.errorText}>{error}</Text>
+                    }
 
                     <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 10 / 930 * screenHeight }]}
                         onPress={handleContinuePress}

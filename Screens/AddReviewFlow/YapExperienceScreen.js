@@ -20,10 +20,11 @@ const YapExperienceScreen = ({ navigation ,route}) => {
 
     const [experience,setExperience] = useState("")
     const [loading,setLoading] = useState(false)
+    const [error,setError] = useState("")
 
     const handleContinuePress = async () =>{
         if(!experience){
-            ShowMessage("Tell us your experience ealing with this customer")
+            setError("Experience required")
             return 
         }
         setLoading(true)
@@ -71,7 +72,7 @@ const YapExperienceScreen = ({ navigation ,route}) => {
                         }
                     }else{
                         console.log('add response message is', response.data.message)
-                        ShowMessage(response.data.message)
+                        setError(response.data.message)
                     }
                 }
             }
@@ -116,11 +117,16 @@ const YapExperienceScreen = ({ navigation ,route}) => {
                         multiline
                         onChangeText={(text)=>{
                             setExperience(text)
+                            setError("")
                         }}
                         placeholder='Type here'
                         placeholderTextColor={'black'}
                         style={[GlobalStyles.input, { height: 140 / 930 * screenHeight }]}
                     />
+
+                    {
+                        error && <Text style = {GlobalStyles.errorText}>{error}</Text>
+                    }
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {

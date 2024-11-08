@@ -27,7 +27,7 @@ const YapScoreScreen = ({ navigation,route }) => {
 
     const handleContinuePress = () =>{
         if(rating === 0){
-            ShowMessage("Please give a yap score")
+            setError("Yap score required")
             return
         }
 

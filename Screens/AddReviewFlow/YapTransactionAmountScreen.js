@@ -8,21 +8,22 @@ import { ScreenNames } from '../../res/ScreenNames'
 import { ShowMessage } from '../../components/ShowMessage'
 
 
-const YapTransactionAmountScreen = ({ navigation,route }) => {
+const YapTransactionAmountScreen = ({ navigation, route }) => {
 
-    const [amount,setAmount] = useState("")
+    const [amount, setAmount] = useState("")
+    const [error, setError] = useState("")
 
     const yap = route.params.yap
     yap.transactionAmount = amount
 
 
-    const handleContinuePress = () =>{
-        if(!amount){
-            ShowMessage("Enter transaction amount")
+    const handleContinuePress = () => {
+        if (!amount) {
+            setError("Transaction amount required")
             return
         }
-        navigation.push(ScreenNames.YapTransactionDate,{
-            yap:yap
+        navigation.push(ScreenNames.YapTransactionDate, {
+            yap: yap
         })
 
     }
@@ -56,16 +57,22 @@ const YapTransactionAmountScreen = ({ navigation,route }) => {
                             $
                         </Text>
                         <TextInput
-                        autoFocus = {true}
-                        onChangeText={(text)=>{
-                            setAmount(text)
-                        }}
+                            autoFocus={true}
+                            onChangeText={(text) => {
+                                setAmount(text)
+                                setError("")
+                            }}
                             placeholder='0.0'
                             placeholderTextColor={'black'}
                             style={{ width: 330 / 430 * screenWidth }}
                         />
-                    </View>
 
+                    </View>
+                    {
+                        error && (
+                            <Text style={GlobalStyles.errorText}>{error}</Text>
+                        )
+                    }
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {
                             handleContinuePress()

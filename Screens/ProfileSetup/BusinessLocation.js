@@ -16,6 +16,7 @@ const BusinessLocation = ({ navigation, route }) => {
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
     const [address, setAddress] = useState("")
+    const[error,setError] = useState('')
 
     const user = route.params.user
     user.business_address = address
@@ -23,7 +24,7 @@ const BusinessLocation = ({ navigation, route }) => {
 
     const handleContinuePress = () => {
         if (!address) {
-            ShowMessage("Please select your business location")
+            setError("Please select your business location")
             return
         }
         navigation.push(ScreenNames.BusinessDetailsScreen, {
@@ -86,6 +87,10 @@ const BusinessLocation = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
 
+                    {
+                        error && <Text style = {GlobalStyles.errorText}>{error}</Text>
+                    }
+
 
                     <Modal
                         transparent={true}
@@ -118,6 +123,7 @@ const BusinessLocation = ({ navigation, route }) => {
                                 setState(address.shortState)
                                 setCity(address.city)
                                 setAddress(completeAddress)
+                                setError("")
                             }}
 
                         />
