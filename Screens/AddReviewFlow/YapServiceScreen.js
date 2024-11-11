@@ -58,10 +58,12 @@ const YapServiceScreeen = ({ navigation,route }) => {
                             setService(text)
                             setError("")
                         }}
+                        maxLength={250}
                         placeholder='Type here'
                         placeholderTextColor={'black'}
                         style={[GlobalStyles.input,{height:140/930*screenHeight}]}
                     />
+                    <Text style = {[GlobalStyles.text17,{alignSelf:'flex-end'}]}>{service.length}/250</Text>
 
                     {
                         error && (

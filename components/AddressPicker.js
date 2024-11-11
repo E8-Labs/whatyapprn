@@ -130,6 +130,7 @@ const AddressPicker = ({ closeModal, PickAddress, }) => {
                     key: GOOGLE_PLACES_API_KEY,
                     language: 'en', // language of the results
                 }}
+                fetchDetails = {true}
                 onPress={handlePlaceSelect}
                 onFail={(error) => console.error(error)}
                 enablePoweredByContainer={false}

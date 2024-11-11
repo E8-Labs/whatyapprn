@@ -6,6 +6,7 @@ import { CustomFonts } from '../../../assets/font/Fonts'
 import { Colors } from '../../../res/Colors'
 import { ScreenNames } from '../../../res/ScreenNames'
 import { ShowMessage } from '../../../components/ShowMessage'
+import { updateProfile } from '../../../components/UpdateProfile'
 
 const eye = require('../../../assets/Images/eye.png')
 const eyeSlash = require('../../../assets/Images/eye-slash.png')
@@ -15,9 +16,12 @@ const BusinessWebScreen = ({ navigation, route }) => {
     const [weburl, setWeburl] = useState('')
     const [error, setError] = useState("")
     const [isValidUrl, setIsValidUrl] = useState(false)
+    const [loading,setLoading] = useState(false)
 
     const user = route.params.user
     user.business_website = weburl
+
+    let from = route.params.from
 
     useEffect(() => {
         console.log('use effect called')
@@ -47,10 +51,22 @@ const BusinessWebScreen = ({ navigation, route }) => {
 
     }
 
-    const handleContinuePress = () => {
+    const handleContinuePress =async () => {
+        
         if (error) {
             setError(error)
             return
+        }
+        if(from === "Login"){
+            let apidata = {
+                business_website:weburl
+            }
+            setLoading(true)
+            let data = await updateProfile(apidata)
+            if(data){
+                setLoading(false)
+                navigation.push(ScreenNames.AuthCongratsScreen)
+            }
         }
         navigation.push(ScreenNames.PasswordScreen, {
             user: user

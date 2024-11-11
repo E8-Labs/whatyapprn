@@ -32,7 +32,9 @@ const ProfileCongratsScreen = ({ navigation }) => {
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {
-                            navigation.push(ScreenNames.TabbarContainer)
+                            navigation.push(ScreenNames.TabbarContainer,{
+                                from:'congratsScreen'
+                               })
                         }}
                     >
                         <Text style={GlobalStyles.BtnText}>

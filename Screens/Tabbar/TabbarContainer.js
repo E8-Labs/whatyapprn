@@ -16,7 +16,7 @@ import CustomerProfileDetails from '../ProfileFlow/CustomerProfileDetails';
 import ProfileStackScreen from '../../components/ProfileStackScreen';
 import SearchScreen from '../DiscoverFlow/SearchScreen';
 
-const TabbarContainer = ({ navigation }) => {
+const TabbarContainer = ({ navigation,route }) => {
   const Tab = createBottomTabNavigator();
   const [modalVisible, setModalVisible] = useState(false);
   const [user, setUser] = useState("")
@@ -25,6 +25,8 @@ const TabbarContainer = ({ navigation }) => {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
 
   const [loadImage, setLoadImage] = useState(false)
+
+  const from = route.params.from
 
   const openModal = () => {
     console.log("Add button pressed");
@@ -76,7 +78,7 @@ const TabbarContainer = ({ navigation }) => {
           }} from={"tabbar"} navigation={navigation} />
         ) : (
           <Tab.Navigator
-            initialRouteName="Discover"
+            initialRouteName={from === "addReview"?"Reviews":"Discover"}
             screenOptions={{
               headerShown: false,
               tabBarStyle: { height: 100 / 930 * screenHeight },

@@ -175,7 +175,8 @@ const ReviewsMainScreen = ({ navigation }) => {
         </View>
 
         <View style={{ marginTop: 20 / 930 * screenHeight, alignItems: 'center', marginBottom: 20 / 930 * screenHeight }}>
-          {
+        <ActiveReviews navigation={navigation} reviews={reviews} role={role}/>
+          {/* {
             selectedMenu === ReviewTypes.Active ? (
               <ActiveReviews navigation={navigation} reviews={reviews} role={role} />
             ) : (
@@ -187,7 +188,7 @@ const ReviewsMainScreen = ({ navigation }) => {
                 )
               )
             )
-          }
+          } */}
         </View>
       </View>
     </View>

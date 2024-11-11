@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { placeholderImage, screenHeight, screenWidth } from '../../res/Constants'
@@ -7,12 +7,80 @@ import { Colors } from '../../res/Colors'
 import { Rating } from 'react-native-ratings'
 import { CustomFonts } from '../../assets/font/Fonts'
 import { ScreenNames } from '../../res/ScreenNames'
+import { ReviewTypes } from '../../res/ReviewsTypes'
 
 
 const SettleReviewDetailsScreen = ({ navigation, route }) => {
 
-    const item = route.params.review
+    const [updated, setUpdatedData] = useState(null)
+
+    let item = route.params.review
+    let role = route.params.role
     console.log('item is', item)
+
+    const selectView = (item) => {
+        console.log(`review id ${item.id} and status is ${item.reviewStatus}`)
+        if (item.reviewStatus === ReviewTypes.Disputed) {
+            return (
+                <View style={{
+                    paddingVertical: 5, backgroundColor: '#F4433610',
+                    alignItems: 'center', flexDirection: 'row', gap: 5,
+                    borderRadius: 20, paddingHorizontal: 20,
+                }}>
+                    <Image source={require('../../assets/Images/disputeIcon.png')}
+                        style={{ height: 16, width: 16 }}
+                    />
+                    <Text style={[GlobalStyles.text14, { color: '#F44336' }]}>
+                        Dispute
+                    </Text>
+                </View>
+            )
+        } else
+            if ((item.reviewStatus !== ReviewTypes.Past && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.ResolvedByAdmin) && ((role === "business" && item.newActivityByCustomer) || (role === "customer" && item.newActivityByBusiness))) {
+                console.log('needs action')
+                return (
+                    <View style={{
+                        backgroundColor: '#FF570010', padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+                    }}>
+                        <Image source={require('../../assets/Images/notIcon.png')}
+                            style={{ height: 16, width: 16 }}
+                        />
+                        <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
+                            Needs review
+                        </Text>
+                    </View>
+                )
+            } else if (item.reviewStatus === ReviewTypes.Resolved || item.reviewStatus === ReviewTypes.Past || item.reviewStatus === ReviewTypes.ResolvedByAdmin) {
+                console.log('resolved')
+                return (
+                    <View style={{
+                        backgroundColor: Colors.greenColor10, padding: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 4
+                    }}>
+                        <Image source={require('../../assets/Images/greenTickIcon.png')}
+                            style={{ height: 16, width: 16 }}
+                        />
+                        <Text style={{ fontSize: 12, fontFamily: CustomFonts.InterMedium, color: Colors.greenColor }}>
+                            Resolved
+                        </Text>
+                    </View>
+                )
+            }
+
+            else {
+                console.log("#######################################################")
+                console.log(`noting for ${item.service} | st: ${item.reviewStatus} Cust: ${item.newActivityByCustomer} Bus: ${item.newActivityByBusiness} role: ${role}`);
+                // console.log(`noting for2 ${item.service} | st: ${item.reviewStatus} Cust: ${newActivityByCustomer} Bus: ${newActivityByBusiness}`);
+                // console.log("#######################################################")
+            }
+    }
+
+    const updateView = (data) => {
+        console.log('data from dispute screen is', data)
+        item.reviewStatus = "disputed"
+        setUpdatedData(data)
+        selectView(data)
+    }
+
 
     return (
         <SafeAreaView style={GlobalStyles.container}>
@@ -39,7 +107,7 @@ const SettleReviewDetailsScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'column', height: screenHeight * 0.7,}}>
+                <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'column', height: screenHeight * 0.7, }}>
                     {/* { */}
                     <View style={{
                         marginTop: 40 / 930 * screenHeight, width: screenWidth - 40, alignItems: 'center', flexDirection: 'column',
@@ -72,11 +140,17 @@ const SettleReviewDetailsScreen = ({ navigation, route }) => {
 
                             <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
 
-                                <TouchableOpacity>
-                                    <Image source={require('../../assets/Images/threeDotsImage.png')}
-                                        style={GlobalStyles.image24}
-                                    />
-                                </TouchableOpacity>
+                                {selectView(item)}
+                                {
+                                    role === "admin" && (
+                                        <TouchableOpacity>
+                                            <Image source={require('../../assets/Images/threeDotsImage.png')}
+                                                style={GlobalStyles.image24}
+                                            />
+                                        </TouchableOpacity>
+                                    )
+                                }
+
                             </View>
                         </View>
 
@@ -140,27 +214,36 @@ const SettleReviewDetailsScreen = ({ navigation, route }) => {
                 </View>
 
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn]}
-                    onPress={()=>{
-                        navigation.push(ScreenNames.PaySettleAmountScreen,{
-                            review:item
+                    onPress={() => {
+                        navigation.push(ScreenNames.PaySettleAmountScreen, {
+                            review: item,
                         })
                     }}
                 >
 
                     <Text style={[GlobalStyles.BtnText]}>
-                        Pay Settlement(${item.settlementOfferObject&&item.settlementOfferObject.amount})
+                        Pay Settlement(${item.settlementOfferObject && item.settlementOfferObject.amount})
                     </Text>
                 </TouchableOpacity>
+                {
+                    item.reviewStatus !== ReviewTypes.Disputed && (
+                        <TouchableOpacity style={{ alignSelf: 'center', marginTop: 20 }}
+                            onPress={() => {
+                                navigation.push(ScreenNames.DisputeScreen, {
+                                    review: item,
+                                    updatedView: updateView
+                                    // from:'sattle'
+                                })
+                            }}
+                        >
+                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                Dispute
+                            </Text>
+                        </TouchableOpacity>
+                    )
+                }
 
-                <TouchableOpacity style = {{alignSelf:'center',marginTop:20}}
-                    onPress={()=>{
-                        navigation.goBack()
-                    }}
-                >
-                    <Text style = {[GlobalStyles.BtnText,{color:Colors.orangeColor}]}>
-                        Reject
-                    </Text>
-                </TouchableOpacity>
+
             </View>
         </SafeAreaView>
     )

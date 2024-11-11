@@ -4,7 +4,7 @@ import { Colors } from '../res/Colors'
 import { CustomFonts } from '../assets/font/Fonts'
 import { Image } from 'expo-image'
 import React, { useState, useRef } from 'react'
-import { screenWidth, screenHeight } from '../res/Constants'
+import { screenWidth, screenHeight, placeholderImage } from '../res/Constants'
 import { Rating } from 'react-native-ratings'
 import { ScreenNames } from '../res/ScreenNames'
 import MessagePopup from './MessagePopup'
@@ -88,7 +88,7 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                     paddingHorizontal: 10 / 430 * screenWidth, backgroundColor: '#00000007', alignItems: 'center',
                     borderRadius: 11
                 }}>
-                   
+
                     <Text numberOfLines={2} style={[GlobalStyles.text17, { color: "black" }]}>
                         Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount} was paid
                     </Text>
@@ -106,7 +106,7 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                         style={{ height: 16, width: 16 }}
                     />
                     <Text numberOfLines={2} style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
-                        Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount} 
+                        Settlement Offer ${item.settlementOfferObject && item.settlementOfferObject.amount}
                     </Text>
                 </View>
             )
@@ -144,11 +144,44 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                 <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                     <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
                                                         <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
-                                                            <Image source={{ uri: item.thumbUrl }}
+                                                            <Image source={item.business.profile_image?{ uri: item.business.profile_image }:placeholderImage}
                                                                 style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
                                                             />
-
                                                         </View>
+                                                        <Text style={{
+                                                           fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
+                                                            //borderWidth:1
+                                                        }}>
+                                                            {item.business.name}
+                                                        </Text>
+
+
+                                                    </View>
+
+                                                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
+
+                                                        {selectView(item)}
+
+                                                        {
+                                                            role === "admin" && (
+                                                                <TouchableOpacity>
+                                                                    <Image source={require('../assets/Images/threeDotsImage.png')}
+                                                                        style={GlobalStyles.image24}
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            )
+                                                        }
+                                                    </View>
+                                                </View>
+
+                                                <View style={{ flexDirection: 'row', width: screenWidth - 40, alignSelf: 'center', marginTop: 15 / 930 * screenHeight }}>
+                                                    <>
+                                                        <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth }}></View>
+                                                        <View style={{ width: 1, backgroundColor: '#B9B9B9', marginLeft: -2 }}></View>
+                                                    </>
+
+
+                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10, marginLeft: 20, width: 330 / 430 * screenWidth }}>
                                                         <Rating
                                                             type='custom'
                                                             style={{ alignSelf: 'flex-start' }}
@@ -158,40 +191,12 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                             ratingColor='#FFC107'
                                                             imageSize={25}
                                                             readonly={true}
-                                                            startingValue={item.productRating}
+                                                            startingValue={item.yapScore || 0}
                                                             fractions={0}
                                                             showRating={false}
                                                         // onFinishRating={ratingCompleted}
 
                                                         />
-                                                    </View>
-
-                                                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
-
-                                                        {selectView(item)}
-
-                                                        <TouchableOpacity>
-                                                            <Image source={require('../assets/Images/threeDotsImage.png')}
-                                                                style={GlobalStyles.image24}
-                                                            />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{ flexDirection: 'row', width: screenWidth - 40, alignSelf: 'center', marginTop: 15 / 930 * screenHeight }}>
-
-
-                                                    {/* top dot */}
-                                                    {/* {
-                                                        index === 0 && ( */}
-                                                    <>
-                                                        <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth }}></View>
-                                                        <View style={{ width: 1, backgroundColor: '#B9B9B9', marginLeft: -2 }}></View>
-                                                    </>
-                                                    {/* )
-                                                    } */}
-
-                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10, marginLeft: 20, width: 330 / 430 * screenWidth }}>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                                             <Text style={{
                                                                 width: 260 / 430 * screenWidth, fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
@@ -207,17 +212,17 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                         </Text>
 
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                            {/* {
-                                                                item.images.map((img) => (
-                                                                    <Image key={img.id} source={img.url}
+                                                            {
+                                                                item.media.map((img) => (
+                                                                    <Image key={img.id} source={{uri:img.thumb_url}}
                                                                         style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
                                                                     />
                                                                 ))
-                                                            } */}
+                                                            }
 
-                                                            <Image source={{ uri: item.mediaUrl }}
+                                                            {/* <Image source={{ uri: item.mediaUrl }}
                                                                 style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
-                                                            />
+                                                            /> */}
                                                         </View>
 
                                                         <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
@@ -228,6 +233,38 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                                 selectSettleView(item)
                                                             )
                                                         }
+                                                        <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 17 / 430 * screenWidth, marginTop: 10 / 930 * screenHeight }}>
+
+                                                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
+                                                                {/* <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}> */}
+                                                                <Image source={item.customer.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
+                                                                    style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
+                                                                />
+                                                                <Text style={[GlobalStyles.text17, { color: '#000' }]}>
+                                                                    {item.customer.name}
+                                                                </Text>
+                                                            </View>
+
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+
+                                                                <View style={{
+                                                                    paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                    backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                }}>
+                                                                    <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                                        <Image source={require('../assets/Images/yIcon.png')}
+                                                                            style={GlobalStyles.yIcon}
+                                                                        />
+                                                                        <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                            ap score
+                                                                        </Text>
+                                                                    </View>
+                                                                    <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
+                                                                        {item.customer.totalYapScore}
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                        </View>
 
                                                         <View style={{
                                                             flexDirection: 'row', width: screenWidth - 100, alignItems: 'center', gap: 30 / 430 * screenWidth,
@@ -237,53 +274,61 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                                                             <View style={{ width: 50 }}></View>
 
                                                             {
-                                                                role === "business" ? (
-                                                                    <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                        onPress={() => {
-                                                                            navigation.push(ScreenNames.YapSattelmentAmount, {
-                                                                                review: item
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                            Create Settlement Offer
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                                ) : (
-                                                                    role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
-                                                                    <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                        onPress={() => {
-                                                                            navigation.push(ScreenNames.SettleReviewDetailsScreen, {
-                                                                                review: item
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                            Settle
-                                                                        </Text>
-                                                                    </TouchableOpacity>
+                                                                item.reviewStatus !== ReviewTypes.Disputed && (
+                                                                    <>
+                                                                        {
+                                                                            // role === "business" ? (
+                                                                            //   <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                            //     onPress={() => {
+                                                                            //       navigation.push(ScreenNames.YapSattelmentAmount, {
+                                                                            //         review: item
+                                                                            //       })
+                                                                            //     }}
+                                                                            //   >
+                                                                            //     <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                            //       Create Settlement Offer
+                                                                            //     </Text>
+                                                                            //   </TouchableOpacity>
+                                                                            // ) : (
+                                                                            role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
+                                                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                onPress={() => {
+                                                                                    navigation.push(ScreenNames.SettleReviewDetailsScreen, {
+                                                                                        review: item
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                    Settle
+                                                                                </Text>
+                                                                            </TouchableOpacity>
 
 
 
+                                                                            // )
+                                                                        }
+
+                                                                        {
+                                                                            item.reviewStatus === ReviewTypes.Active &&
+                                                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                onPress={() => {
+                                                                                    navigation.push(ScreenNames.DisputeScreen, {
+                                                                                        review: item,
+                                                                                        from: 'Profile'
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                    Dispute
+                                                                                </Text>
+                                                                            </TouchableOpacity>
+
+                                                                        }
+                                                                    </>
                                                                 )
                                                             }
 
-                                                            {
-                                                                item.reviewStatus === ReviewTypes.Active &&
-                                                                <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                    onPress={() => {
-                                                                        navigation.push(ScreenNames.DisputeScreen, {
-                                                                            review: item,
-                                                                            from: 'Profile'
-                                                                        })
-                                                                    }}
-                                                                >
-                                                                    <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                        Dispute
-                                                                    </Text>
-                                                                </TouchableOpacity>
 
-                                                            }
 
                                                         </View>
 

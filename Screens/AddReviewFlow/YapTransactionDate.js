@@ -77,7 +77,7 @@ const YapTransactionDate = ({ navigation, route }) => {
                     <DatePicker
                         modal
                         open={showCalender}
-                        minimumDate={date}
+                        maximumDate={date}
                         date={date}
                         mode='date'
                         onConfirm={(date) => {

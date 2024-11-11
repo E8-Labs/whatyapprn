@@ -30,7 +30,8 @@ const UploadImageScreen = ({ navigation, route }) => {
             return
         }
         navigation.push(ScreenNames.BusinessWebScreen, {
-            user: user
+            user: user,
+            from:'UploadImage'
         })
     }
 

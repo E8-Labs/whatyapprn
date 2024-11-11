@@ -100,7 +100,7 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
 
                     <TextInput
                         multiline
-                        maxLength={500}
+                        maxLength={250}
                         onChangeText={(text) => {
                             setDetails(text)
                             setError("")
@@ -113,7 +113,7 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
                     }
 
                     <Text style={{fontSize:14,fontFamily:CustomFonts.InterMedium,alignSelf:'flex-end'}}>
-                        {details.length}/500
+                        {details.length}/250
                     </Text>
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}

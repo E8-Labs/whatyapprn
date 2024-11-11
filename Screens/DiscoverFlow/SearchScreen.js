@@ -29,11 +29,6 @@ import NoResults from "../../components/NoResults";
 const profileImage = require("../../assets/Images/profileImage.png");
 
 const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
-  const [selectedCat, setSelectedCat] = useState({
-    id: 1,
-    name: "Search By Name",
-    value: "name"
-  });
 
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [customers, setCustomers] = useState([]);
@@ -41,19 +36,6 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
   const [loading, setloading] = useState(false);
   const [pastSearch, setPastSearch] = useState([]);
 
-  const searchCatigories = [
-    {
-      id: 1,
-      name: "Search By Name",
-      value: 'name'
-    },
-    {
-      id: 2,
-      name: "Driver License",
-      value: 'license'
-    },
-
-  ];
   useEffect(() => {
     setCustomers([]);
     let timer = setTimeout(() => {
@@ -171,7 +153,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
         let path = Apipath.searchCustomers;
         if (searchQuery.length > 0) {
           path =
-            `${path}?searchType=${selectedCat.value}&searchQuery=${searchQuery}` +
+            `${path}?searchQuery=${searchQuery}` +
             "&offset=" +
             offset +
             "&role=customer";
@@ -238,8 +220,9 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
               />
             </TouchableOpacity>
             <TextInput
+            value={searchQuery}
               autoFocus={true}
-              placeholder="Search"
+              placeholder="Search by name, diver/state license"
               onChangeText={(text) => {
                 setSearchQuery(text);
               }}
@@ -281,7 +264,10 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
             marginTop: (15 / 930) * screenHeight,
           }}
         >
-          {searchCatigories.map((item) => (
+        </View>
+        <View style={{ height: screenHeight * 0.7 }}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+            {/* {searchCatigories.map((item) => (
             <TouchableOpacity
               key={item.id}
               style={{
@@ -304,54 +290,62 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                 {item.name}
               </Text>
             </TouchableOpacity>
-          ))}
-        </View>
-        <View style={{ height: screenHeight * 0.7 }}>
-          <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+          ))} */}
             <View style={{ width: screenWidth - 40, alignItems: "center" }}>
-              <Text
-                style={[
-                  GlobalStyles.text14,
-                  {
-                    alignSelf: "flex-start",
-                    marginTop: (30 / 930) * screenHeight,
-                  },
-                ]}
-              >
-                Past Search
-              </Text>
-              <View style={{ flexDirection: "column", gap: 20, marginTop: 30 }}>
-                {pastSearch.map((item) => (
-                  <View
-                    key={item.id}
-                    style={{
-                      width: screenWidth - 40,
-                      alignItems: "center",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: (10 / 430) * screenWidth,
-                      }}
+              {
+                pastSearch.length > 0 && (
+                  <>
+                    <Text
+                      style={[
+                        GlobalStyles.text14,
+                        {
+                          alignSelf: "flex-start",
+                          marginTop: (20 / 930) * screenHeight,
+                        },
+                      ]}
                     >
-                      <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage} style={GlobalStyles.image24} />
-                      <Text style={GlobalStyles.text14}>{item.searchQuery}</Text>
+                      Past Search
+                    </Text>
+                    <View style={{ flexDirection: "column", gap: 20, marginTop: 20 }}>
+                      {pastSearch.map((item) => (
+                        <View
+                          key={item.id}
+                          style={{
+                            width: screenWidth - 40,
+                            alignItems: "center",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <TouchableOpacity onPress={()=>{
+                            setSearchQuery(item.searchQuery)
+                          }}>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: (10 / 430) * screenWidth,
+                              }}
+                            >
+                              <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage} style={GlobalStyles.image24} />
+                              <Text style={GlobalStyles.text14}>{item.searchQuery}</Text>
+                            </View>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => deleteSearch(item)}
+                          >
+                            <Image
+                              source={require("../../assets/Images/crossIcon.png")}
+                              style={GlobalStyles.image24}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ))}
                     </View>
-                    <TouchableOpacity
-                      onPress={() => deleteSearch(item)}
-                    >
-                      <Image
-                        source={require("../../assets/Images/crossIcon.png")}
-                        style={GlobalStyles.image24}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
+                  </>
+                )
+              }
+
               <View style={{ marginTop: 40, flexDirection: "column", gap: 30 }}>
                 {
                   // customers.map((item) => (
@@ -373,7 +367,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                 alignItems: "flex-start",
                                 flexDirection: "row",
                                 justifyContent: "space-between",
-                                marginTop: (30 / 930) * screenHeight,
+                                marginTop: (0 / 930) * screenHeight,
                               }}
                             >
                               <Image

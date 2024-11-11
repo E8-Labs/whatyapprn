@@ -58,12 +58,16 @@ const YapTransactionAmountScreen = ({ navigation, route }) => {
                         </Text>
                         <TextInput
                             autoFocus={true}
+                            value={amount}
                             onChangeText={(text) => {
-                                setAmount(text)
+                                if (/^\d*\.?\d{0,2}$/.test(text)) {
+                                    setAmount(text)
+                                }
                                 setError("")
                             }}
-                            placeholder='0.0'
+                            placeholder='0.00'
                             placeholderTextColor={'black'}
+                            keyboardType='numeric'
                             style={{ width: 330 / 430 * screenWidth }}
                         />
 

@@ -13,9 +13,14 @@ const DisputeScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false)
 
     const review = route.params.review
+    const updateView = route.params.updatedView
+    // console.log('updateView function is', updateView)
     // console.log('review is ', review)
 
     const disputeReview = async () => {
+
+        // navigation.pop()
+        // return
         try {
             setLoading(true)
             const data = await AsyncStorage.getItem("USER")
@@ -43,11 +48,12 @@ const DisputeScreen = ({ navigation, route }) => {
                     setLoading(false)
                     if (response.data.status === true) {
                         console.log('review dispute data is', response.data.data)
-                        if (route.params.from === "ReviewDetail") {
-                            navigation.pop(2)
+                        if (updateView) {
+                            updateView(response.data.data)
                         } else {
-                            navigation.pop()
+                            console.log('unable to fecth function')
                         }
+                        navigation.pop()
                     } else {
                         console.log('dispute message is', response.data.message)
                     }

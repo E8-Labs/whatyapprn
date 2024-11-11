@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ScreenNames } from '../../res/ScreenNames'
 import * as Progress from 'react-native-progress';
 import { getProfile } from '../../components/GetProfile'
+import { useFocusEffect } from '@react-navigation/native'
 
 
 const ProfileMainScreen = ({ navigation }) => {
@@ -18,18 +19,19 @@ const ProfileMainScreen = ({ navigation }) => {
     AsyncStorage.removeItem("USER")
     navigation.replace(ScreenNames.LoginScreen)
   }
+  useFocusEffect(
+    React.useCallback(() => {
 
-  useEffect(() => {
+      const getUserProfile = async () => {
+        let user = await getProfile()
+        console.log('user profile on profile main screen is', user)
+        setUser(user)
+      }
 
-    const getUserProfile = async () => {
-      let user = await getProfile()
-      console.log('user profile on profile main screen is', user)
-      setUser(user)
-    }
+      getUserProfile()
 
-    getUserProfile()
-
-  }, [])
+    }, [])
+  )
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -66,7 +68,7 @@ const ProfileMainScreen = ({ navigation }) => {
             </Text>
 
             <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.orangeColor }}
-              onPress={()=>{
+              onPress={() => {
                 navigation.push(ScreenNames.BuyCreditScreen)
               }}
             >
@@ -161,7 +163,7 @@ const ProfileMainScreen = ({ navigation }) => {
 
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
-        <View style = {{flexDirection:'row',alignItems:'center',width:screenWidth-40,justifyContent:'space-between'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
           <TouchableOpacity
             onPress={logoutUser}
           >
@@ -171,10 +173,10 @@ const ProfileMainScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={logoutUser}
+          // onPress={logoutUser}
           >
             <Text style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
-            Send Feedback
+              Send Feedback
             </Text>
           </TouchableOpacity>
         </View>

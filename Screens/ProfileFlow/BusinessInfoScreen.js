@@ -144,12 +144,22 @@ const BusinessInfoScreen = ({ navigation, route }) => {
 
     const saveChanges = async () => {
         let data = new FormData()
-
+        console.log('image', image)
+// return
         data.append("name", name)
         data.append("media", image)
+
+        // data.append('media', {
+        //     name: 'image',
+        //     type: 'JPEG',
+        //     uri: image
+        // })
+
         data.append("city", city)
         data.append("state", state)
-
+        // data.append("profile_image",image)
+        console.log('data', data)
+        // return
         setLoading(true)
         let response = await updateProfile(data)
         console.log('response is', response)
@@ -177,7 +187,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                         />
                     </TouchableOpacity>
 
-                    <Text style={[GlobalStyles.text14,{color:'#00000080'}]}>
+                    <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
                         Business Information
                     </Text>
                     <View></View>
@@ -190,7 +200,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                         }}>
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-                                <Image source={image? { uri: image } : placeholderImage}
+                                <Image source={image ? { uri: image } : placeholderImage}
                                     style={{
                                         height: 88 / 930 * screenHeight,
                                         width: 88 / 430 * screenWidth,
@@ -223,7 +233,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                             width: screenWidth - 40, alignItems: 'center', justifyContent: 'space-between', marginTop: 30 / 930 * screenHeight,
                             flexDirection: 'row'
                         }}>
-                            <Text style={[GlobalStyles.text14,{color:'#00000080'}]}>
+                            <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
                                 Media
                             </Text>
 
@@ -249,7 +259,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                                     <Image source={item.type === 'image' ? item.url : item.thumb_url}
                                         style={{
                                             height: 75 / 930 * screenHeight, width: 73 / 430 * screenWidth, resizeMode: 'cover',
-                                            borderRadius:10
+                                            borderRadius: 10
                                         }}
                                     />
 
@@ -278,7 +288,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                             width: screenWidth - 40, alignItems: 'center', justifyContent: 'space-between', marginTop: 30 / 930 * screenHeight,
                             flexDirection: 'row'
                         }}>
-                            <Text style={[GlobalStyles.text14,{color:'#00000080'}]}>
+                            <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
                                 Industry
                             </Text>
 
@@ -304,15 +314,15 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                             width: screenWidth - 40, alignItems: 'center', justifyContent: 'space-between', marginTop: 30 / 930 * screenHeight,
                             flexDirection: 'row'
                         }}>
-                            <Text style={[GlobalStyles.text14,{color:'#00000080'}]}>
+                            <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
                                 Number of Employee
                             </Text>
 
                             <TouchableOpacity
-                                onPress={()=>{
-                                    navigation.push(ScreenNames.EmployeesScreen,{
-                                        user:{
-                                           from:'profile'
+                                onPress={() => {
+                                    navigation.push(ScreenNames.EmployeesScreen, {
+                                        user: {
+                                            from: 'profile'
                                         }
                                     })
                                 }}
@@ -334,15 +344,15 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                             width: screenWidth - 40, alignItems: 'center', justifyContent: 'space-between', marginTop: 30 / 930 * screenHeight,
                             flexDirection: 'row'
                         }}>
-                            <Text style={[GlobalStyles.text14,{color:'#00000080'}]}>
+                            <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
                                 About Business
                             </Text>
 
                             <TouchableOpacity
-                                onPress={()=>{
-                                    navigation.push(ScreenNames.BusinessDetailsScreen,{
-                                        user:{
-                                            from:'profile'
+                                onPress={() => {
+                                    navigation.push(ScreenNames.BusinessDetailsScreen, {
+                                        user: {
+                                            from: 'profile'
                                         }
                                     })
                                 }}

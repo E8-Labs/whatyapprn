@@ -54,11 +54,13 @@ export default function SplashScreen({ navigation }) {
     let data = await AsyncStorage.getItem("USER");
     if (data) {
       let u = JSON.parse(data);
-      return
+      // return
       if (u.user.role === "admin") {
         navigation.push(ScreenNames.AdminTabbarContainer);
       } else {
-        navigation.push(ScreenNames.TabbarContainer);
+        navigation.push(ScreenNames.TabbarContainer,{
+          from:'splashScreen'
+         });
       }
     } else {
       navigation.push(ScreenNames.OnboardingSlideScreen);

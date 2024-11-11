@@ -13,70 +13,88 @@ import LoadingAnimation from '../../components/LoadingAnimation'
 
 
 
-const YapExperienceScreen = ({ navigation ,route}) => {
+const YapExperienceScreen = ({ navigation, route }) => {
 
     const yap = route.params.yap
     console.log('yap on experience screen is', yap)
 
-    const [experience,setExperience] = useState("")
-    const [loading,setLoading] = useState(false)
-    const [error,setError] = useState("")
+    const [experience, setExperience] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
-    const handleContinuePress = async () =>{
-        if(!experience){
+    const handleContinuePress = async () => {
+        if (!experience) {
             setError("Experience required")
-            return 
+            return
         }
+        console.log('yap.media', yap.media)
+
+        let mediaUrls = []
+        yap.media.forEach((item) =>
+            mediaUrls.push(item.url)
+        )
+        console.log('media urls are ', mediaUrls)
+        // return
         setLoading(true)
-        try{
+        try {
             const data = await AsyncStorage.getItem("USER")
-            if(data){
+            if (data) {
                 let u = JSON.parse(data)
-
-               
-
                 let apidata = new FormData()
 
-                apidata.append("service",yap.service)
-                apidata.append("amountOfTransaction",yap.transactionAmount)
-                apidata.append("dateOfTransaction",yap.dateOfTransaction)
-                apidata.append("yapScore",yap.yapScore)
-                apidata.append("settlementOffer",yap.settlementOffer)
-                apidata.append("notesAboutCustomer",experience)
-                apidata.append("settlementAmount",yap.settlementAmount)
-                apidata.append("customerId",yap.user.id)
-                apidata.append("media", {
-                    name: "imageName",
-                    uri: yap.media,
+                apidata.append("service", yap.service)
+                apidata.append("amountOfTransaction", yap.transactionAmount)
+                apidata.append("dateOfTransaction", yap.dateOfTransaction)
+                apidata.append("yapScore", yap.yapScore)
+                {
+                    yap.settlementOffer&& (
+                        apidata.append("settlementOffer", yap.settlementOffer)
+                    )
+                }
+                {
+                    yap.settlementAmount&&(
+                        apidata.append("settlementAmount", yap.settlementAmount)
+                    )
+                }
+                apidata.append("notesAboutCustomer", experience)
+                apidata.append("customerId", yap.user.id)
+                mediaUrls.forEach((url, index) => {
+                    apidata.append("media", {
+                        name: 'media',
+                        uri: url});
                 });
 
                 console.log('apidata is', apidata)
                 // return
- 
-                const response = await axios.post(Apipath.addYap,apidata,{
-                    headers:{
-                        'Authorization':'Bearer '+ u.token,
+
+                const response = await axios.post(Apipath.addYap, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
                     }
                 })
                 // console.log('response', response)
 
-                if(response.data){
+                if (response.data) {
                     setLoading(false)
-                    if(response.data.status === true){
+                    if (response.data.status === true) {
                         console.log('yad add data', response.data.data)
-                        ShowMessage("Congrats! yap added successfully",'green')
-                        if(yap.settlementAmount){
-                            navigation.pop(8)
-                        }else{
-                            navigation.pop(7)
+                        ShowMessage("Congrats! yap added successfully", 'green')
+                        if (yap.settlementAmount) {
+                            navigation.push(ScreenNames.TabbarContainer, {
+                                from: 'addReview'
+                            })
+                        } else {
+                            navigation.push(ScreenNames.TabbarContainer, {
+                                from: 'addReview'
+                            })
                         }
-                    }else{
+                    } else {
                         console.log('add response message is', response.data.message)
                         setError(response.data.message)
                     }
                 }
             }
-        }catch(e){
+        } catch (e) {
             setLoading(false)
             console.log('error in add yap is', e)
         }
@@ -86,7 +104,7 @@ const YapExperienceScreen = ({ navigation ,route}) => {
         <SafeAreaView style={GlobalStyles.container}>
             {
                 loading && (
-                    <LoadingAnimation visible = {loading} />
+                    <LoadingAnimation visible={loading} />
                 )
             }
             <View style={GlobalStyles.container}>
@@ -115,7 +133,8 @@ const YapExperienceScreen = ({ navigation ,route}) => {
 
                     <TextInput
                         multiline
-                        onChangeText={(text)=>{
+                        maxLength={250}
+                        onChangeText={(text) => {
                             setExperience(text)
                             setError("")
                         }}
@@ -123,9 +142,10 @@ const YapExperienceScreen = ({ navigation ,route}) => {
                         placeholderTextColor={'black'}
                         style={[GlobalStyles.input, { height: 140 / 930 * screenHeight }]}
                     />
+                    <Text style={[GlobalStyles.text17, { alignSelf: 'flex-end' }]}>{experience.length}/250</Text>
 
                     {
-                        error && <Text style = {GlobalStyles.errorText}>{error}</Text>
+                        error && <Text style={GlobalStyles.errorText}>{error}</Text>
                     }
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}

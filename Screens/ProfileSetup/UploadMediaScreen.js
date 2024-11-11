@@ -23,7 +23,7 @@ import LoadingAnimation from '../../components/LoadingAnimation'
 
 const UploadMediaScreen = ({ navigation, route }) => {
 
-    // const from = route.params.from
+    const from = route.params.from
 
     const [showPopup, setShowPopup] = useState(false)
     const [showCaptionPopup, setShowCaptionPopup] = useState(false)
@@ -95,8 +95,6 @@ const UploadMediaScreen = ({ navigation, route }) => {
             setShowCaptionPopup(true)
             setShowPopup(false)
 
-            // setImage(ImageUrl)
-            // console.log(result.assets[0].uri);
         } else {
             // alert('You did not select any image.');
         }

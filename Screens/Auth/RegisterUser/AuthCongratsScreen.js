@@ -14,8 +14,9 @@ const AuthCongratsScreen = ({ navigation, route }) => {
                 from:'congrats'
             })
         } else{
-            navigation.push(ScreenNames.TabbarContainer)
-
+            navigation.push(ScreenNames.TabbarContainer,{
+                from:'congratsScreen'
+               })
         }
 
     }

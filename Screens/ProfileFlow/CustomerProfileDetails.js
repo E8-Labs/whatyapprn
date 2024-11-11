@@ -19,6 +19,7 @@ import { Apipath } from '../../Api/Apipaths'
 import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import { useFocusEffect } from '@react-navigation/native'
+import moment from 'moment'
 
 const image1 = require('../../assets/Images/profileImage.png')
 const image2 = require('../../assets/Images/profileImage2.png')
@@ -142,12 +143,18 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                             <Text style={GlobalStyles.text14}>
                                 Profile Detail
                             </Text>
+                            {
 
-                            <TouchableOpacity>
-                                <Image source={require('../../assets/Images/threeDotsImage.png')}
-                                    style={GlobalStyles.image24}
-                                />
-                            </TouchableOpacity>
+                                role === "admin" ? (
+
+                                    <TouchableOpacity>
+                                        <Image source={require('../../assets/Images/threeDotsImage.png')}
+                                            style={GlobalStyles.image24}
+                                        />
+                                    </TouchableOpacity>
+                                ):(
+                                    <View></View>
+                                )}
                         </View>
                     )
                 }
@@ -171,13 +178,17 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                 <Text style={GlobalStyles.text17}>
                                     {user.name}
                                 </Text>
+                                {
+                                    user.city && (
+                                        <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
+                                            {user.city ? user.city : null} {user.state ? ` ,${user.state}` : null}
+                                        </Text>
+                                    )
+                                }
+
 
                                 <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
-                                    {user.city ? user.city : "N/A"} {user.state ? ` ,${user.state}` : ''}
-                                </Text>
-
-                                <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
-                                    Yaper since 2019
+                                    Yaper since {moment(user.createdAt).format("YYYY")}
                                 </Text>
 
                             </View>

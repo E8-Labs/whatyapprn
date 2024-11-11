@@ -59,10 +59,15 @@ const SattlementAmountScreen = ({ navigation, route }) => {
                             $
                         </Text>
                         <TextInput
-                            placeholder='0.0'
+                            placeholder='0.00'
+                            value={amount}
+                            autoFocus = {true}
                             placeholderTextColor={'black'}
+                            keyboardType='numeric'
                             onChangeText={(text) => {
+                                if (/^\d*\.?\d{0,2}$/.test(text)) {
                                 setAmount(text)
+                                }
                                 setError("")
                             }}
                             style={{ width: 330 / 430 * screenWidth }}

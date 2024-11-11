@@ -7,9 +7,9 @@ import { CustomFonts } from '../../assets/font/Fonts'
 import { ScreenNames } from '../../res/ScreenNames'
 
 
-const YapSattelmentAmount = ({ navigation,route }) => {
+const YapSattelmentAmount = ({ navigation, route }) => {
 
-    const [amount,setAmount] = useState("")
+    const [amount, setAmount] = useState(null)
 
     const review = route.params.review
     review.amount = amount
@@ -34,8 +34,8 @@ const YapSattelmentAmount = ({ navigation,route }) => {
                         Settlement Offer
                     </Text>
                     <TouchableOpacity>
-                        <Image source={require('../../assets/Images/threeDotsImage.png')} 
-                            style = {GlobalStyles.image24}
+                        <Image source={require('../../assets/Images/threeDotsImage.png')}
+                            style={GlobalStyles.image24}
                         />
                     </TouchableOpacity>
                 </View>
@@ -50,11 +50,15 @@ const YapSattelmentAmount = ({ navigation,route }) => {
                             $
                         </Text>
                         <TextInput
-                            placeholder='Type here'
-                            onChangeText={(text)=>{
-                                setAmount(text)
+                            placeholder='0.00'
+                            keyboardType='numeric'
+                            value={amount}
+                            onChangeText={(text) => {
+                                if (/^\d*\.?\d{0,2}$/.test(text)) {
+                                    setAmount(text)
+                                }
                             }}
-                            autoFocus = {true}
+                            autoFocus={true}
                             placeholderTextColor={'black'}
                             style={{ width: 330 / 430 * screenWidth }}
                         />
@@ -62,8 +66,8 @@ const YapSattelmentAmount = ({ navigation,route }) => {
 
                     <TouchableOpacity style={GlobalStyles.capsuleBtn}
                         onPress={() => {
-                            navigation.push(ScreenNames.ConfirmYapSattelmentOfferScreen,{
-                                review:review
+                            navigation.push(ScreenNames.ConfirmYapSattelmentOfferScreen, {
+                                review: review
                             })
                         }}
                     >
