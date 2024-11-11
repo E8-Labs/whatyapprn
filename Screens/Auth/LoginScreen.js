@@ -24,10 +24,10 @@ const eyeSlash = require('../../assets/Images/eye-slash.png')
 
 const LoginScreen = ({ navigation }) => {
 
+
     const [showPass, setShowPass] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -89,9 +89,6 @@ const LoginScreen = ({ navigation }) => {
             }
         }
     }
-
-
-
 
     const socialLogin = async (data) => {
         console.log('data is', data)

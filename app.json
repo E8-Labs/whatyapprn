@@ -15,7 +15,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": ["expo-apple-authentication"],
     "ios": {
+      "usesAppleSignIn": true,
       "supportsTablet": true,
       "requireFullScreen": false,
       "infoPlist": {
@@ -43,7 +45,7 @@
           "reservedClientId": "311004442185-ev6am2pcrj1ahqvhij8sgc9mdm7u7djt.apps.googleusercontent.com"
         }
       },
-      "bundleIdentifier": "com.salman-e8.whatyap"
+      "bundleIdentifier": "com.salman-e8.WhatYap"
     },
     "android": {
       "package": "com.salman_e8.whatyap",
