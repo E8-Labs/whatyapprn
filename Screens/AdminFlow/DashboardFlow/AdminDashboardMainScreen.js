@@ -66,6 +66,14 @@ const AdminDashboardMainScreen = ({ navigation }) => {
             console.log('dashboard data is', response.data.data)
             setDashboardData(response.data.data)
             setRecentBusonesses(response.data.data.recentBusinesses)
+            let d = response.data.data
+            let data = {
+              totalCustomers:d.customers ,
+              totalBusinesses: d.businesses,
+              totalReviews: d.totalReviews,
+              activeReviews: d.activeReviews,
+            }
+            AsyncStorage.setItem("AdminData",JSON.stringify(data))
           } else {
             console.log('darshboard api message is', response.data.message)
           }
@@ -80,7 +88,7 @@ const AdminDashboardMainScreen = ({ navigation }) => {
 
     AsyncStorage.removeItem("USER")
     navigation.replace(ScreenNames.LoginScreen)
-}
+  }
 
 
   return (
@@ -135,99 +143,107 @@ const AdminDashboardMainScreen = ({ navigation }) => {
                   height: 92 / 930 * screenHeight, width: 218 / 430 * screenWidth, backgroundColor: Colors.orangeColor, borderRadius: 16,
                   paddingVertical: 14 / 930 * screenHeight, paddingHorizontal: 20 / 430 * screenWidth
                 }}>
-                  <View style={{ width: 180 / 430 * screenWidth, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 8 / 930 * screenHeight, }}>
-                      <Image source={require('../../../assets/Images/usersIcon.png')}
-                        style={[GlobalStyles.image24, { tintColor: 'white' }]}
-                      />
-                      <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: 'white' }}>
-                        Users
-                      </Text>
-                    </View>
-                    <View style={{
-                      alignSelf: 'flex-end', marginTop: 10, alignItems: 'flex-end', flexDirection: 'column',
-                      gap: 7
-                    }}>
-                      <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
-                        {dashboardata && dashboardata.customers}
-                      </Text>
-                      <TouchableOpacity style={{ marginRight: 0 }}>
-
-                        <Text style={{ fontSize: 12, fontFamily: CustomFonts.PoppinsMedium, color: 'white', }}>
-                          View all
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate(ScreenNames.AdminUserMainScreen)
+                  }}>
+                    <View style={{ width: 180 / 430 * screenWidth, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+                      <View style={{ flexDirection: 'column', alignItems: 'center', gap: 8 / 930 * screenHeight, }}>
+                        <Image source={require('../../../assets/Images/usersIcon.png')}
+                          style={[GlobalStyles.image24, { tintColor: 'white' }]}
+                        />
+                        <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: 'white' }}>
+                          Users
                         </Text>
-                      </TouchableOpacity>
+                      </View>
+                      <View style={{
+                        alignSelf: 'flex-end', marginTop: 10, alignItems: 'flex-end', flexDirection: 'column',
+                        gap: 7
+                      }}>
+                        <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
+                          {dashboardata && dashboardata.customers}
+                        </Text>
+                        <TouchableOpacity style={{ marginRight: 0 }}>
+
+                          <Text style={{ fontSize: 12, fontFamily: CustomFonts.PoppinsMedium, color: 'white', }}>
+                            View all
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                    </View>
+                  </TouchableOpacity>
+
+                </View>
+
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate(ScreenNames.AdminResolutionsMainScreen)
+                }}>
+                  <View style={{
+                    width: 167 / 430 * screenWidth, height: 190 / 930 * screenHeight, backgroundColor: '#222222',
+                    borderRadius: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start',
+                    paddingVertical: 18, paddingHorizontal: 18
+                  }}>
+
+                    <View style={{ flexDirection: 'column', gap: 15 }}>
+                      <Image source={require('../../../assets/Images/disputeIcon.png')}
+                        style={[GlobalStyles.image24, { tintColor: '#F44336' }]}
+                      />
+
+                      <Text style={[GlobalStyles.text12, { color: 'white' }]}>
+                        Resolutions
+                      </Text>
                     </View>
 
+                    <View style={{ flexDirection: 'column', gap: 8 }}>
+                      <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
+                        {dashboardata && dashboardata.activeReviews}
+                      </Text>
+                      <Text style={[GlobalStyles.text12, { color: '#ffffff70' }]}>
+                        Resolutions
+                      </Text>
+                    </View>
+
+
                   </View>
-
-
-                </View>
-
-
-                <View style={{
-                  width: 167 / 430 * screenWidth, height: 190 / 930 * screenHeight, backgroundColor: '#222222',
-                  borderRadius: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start',
-                  paddingVertical: 18, paddingHorizontal: 18
-                }}>
-
-                  <View style={{ flexDirection: 'column', gap: 15 }}>
-                    <Image source={require('../../../assets/Images/disputeIcon.png')}
-                      style={[GlobalStyles.image24, { tintColor: '#F44336' }]}
-                    />
-
-                    <Text style={[GlobalStyles.text12, { color: 'white' }]}>
-                      Resolutions
-                    </Text>
-                  </View>
-
-                  <View style={{ flexDirection: 'column', gap: 8 }}>
-                    <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
-                      {dashboardata && dashboardata.activeReviews}
-                    </Text>
-                    <Text style={[GlobalStyles.text12, { color: '#ffffff70' }]}>
-                      Resolutions
-                    </Text>
-                  </View>
-
-
-                </View>
-
+                </TouchableOpacity>
               </View>
 
               <View style={{ flexDirection: 'row', gap: 15 / 430 * screenWidth }}>
-
-                <View style={{
-                  height: 254 / 930 * screenHeight, width: 219 / 430 * screenWidth, backgroundColor: '#222222',
-                  borderRadius: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start',
-                  paddingVertical: 18, paddingHorizontal: 18, marginTop: -100 / 930 * screenHeight
-
-                }}>
-
-                  <View style={{ flexDirection: 'column', gap: 15 }}>
-                    <Image source={require('../../../assets/Images/businessIcon.png')}
-                      style={[GlobalStyles.image24, { tintColor: '#fff' }]}
-                    />
-
-                    <Text style={[GlobalStyles.text17, { color: 'white' }]}>
-                      Businesses
-                    </Text>
-                  </View>
-
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(ScreenNames.AdminBusinessMainScreen)
+                  }}
+                >
                   <View style={{
-                    flexDirection: 'row', justifyContent: 'space-between', width: 180 / 430 * screenWidth,
-                    alignItems: 'center'
+                    height: 254 / 930 * screenHeight, width: 219 / 430 * screenWidth, backgroundColor: '#222222',
+                    borderRadius: 16, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start',
+                    paddingVertical: 18, paddingHorizontal: 18, marginTop: -100 / 930 * screenHeight
+
                   }}>
-                    <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
-                      {dashboardata && dashboardata.businesses}
-                    </Text>
-                    <Text style={[GlobalStyles.text12, { color: '#ffffff' }]}>
-                      View all
-                    </Text>
+
+                    <View style={{ flexDirection: 'column', gap: 15 }}>
+                      <Image source={require('../../../assets/Images/businessIcon.png')}
+                        style={[GlobalStyles.image24, { tintColor: '#fff' }]}
+                      />
+
+                      <Text style={[GlobalStyles.text17, { color: 'white' }]}>
+                        Businesses
+                      </Text>
+                    </View>
+
+                    <View style={{
+                      flexDirection: 'row', justifyContent: 'space-between', width: 180 / 430 * screenWidth,
+                      alignItems: 'center'
+                    }}>
+                      <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
+                        {dashboardata && dashboardata.businesses}
+                      </Text>
+                      <Text style={[GlobalStyles.text12, { color: '#ffffff' }]}>
+                        View all
+                      </Text>
+                    </View>
                   </View>
-
-                </View>
-
+                </TouchableOpacity>
 
                 <View style={{
                   width: 167 / 430 * screenWidth, height: 156 / 930 * screenHeight, backgroundColor: '#F0F0F0',
@@ -247,7 +263,11 @@ const AdminDashboardMainScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(ScreenNames.AdminAnalyticsMainScreen)
+              }}
+            >
               <View style={{
                 width: screenWidth - 30, height: 106 / 930 * screenHeight, backgroundColor: 'white', paddingVertical: 17,
                 paddingHorizontal: 19, shadowColor: '#00000025', shadowOffset: {
@@ -280,12 +300,23 @@ const AdminDashboardMainScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
 
+
+            <Text style={[GlobalStyles.text14, { marginTop: 20, marginBottom: 20, color: '#00000080' }]}>
+              Recently Registered Business
+            </Text>
+
             <FlatList
               scrollEnabled={false}
               data={rescentBusinesses}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity >
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push(ScreenNames.AdminBusinessProfileDetailsScreen, {
+                      user: item,
+                    })
+                  }}
+                >
                   <View style={{
                     width: screenWidth - 30, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between',
                     marginTop: 20

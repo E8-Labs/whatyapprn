@@ -29,8 +29,12 @@ export const Apipath = {
     sendSettlementOffer:baseUrl + "review/sendSettlementOffer",
     deleteSearch:baseUrl+'dashboard/deleteSearch',
     deleteMedia:baseUrl+'user/delete_media',
-    socialLogin:baseUrl+"user/SocialLogin"
-    
+    socialLogin:baseUrl+"user/SocialLogin",
+    getResolutions:baseUrl+"admin/adminResolutions",
+    hideFromPlatform:baseUrl+'admin/hideFromPlatform',
+    deleteFromPlatform:baseUrl+'admin/deleteFromPlatform',
+    deleteAccout:baseUrl+'admin/deleteAccount',
+    suspendAccount:baseUrl+'admin/suspendAccount',
     
     
 }

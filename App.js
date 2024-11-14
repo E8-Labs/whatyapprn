@@ -64,6 +64,8 @@ import SettlementPaymentScreen from "./Screens/PaySattleFlow/SettlementPaymentSc
 import AdminTabbarContainer from "./Screens/AdminFlow/Tabbar/AdminTabbarContainer";
 
 import socket from "./Api/socket";
+import AdminUserMainScreen from './Screens/AdminFlow/UsersFlow/AdminUserMainScreen';
+import AdminBusinessProfileDetailsScreen from './Screens/ProfileFlow/AdminBusinessProfileDetailsScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -427,6 +429,11 @@ export default function App() {
         <Stack.Screen
           name={ScreenNames.Testfile2}
           component={Testfile2}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name={ScreenNames.AdminBusinessProfileDetailsScreen}
+          component={AdminBusinessProfileDetailsScreen}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>

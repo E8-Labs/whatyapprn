@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Modal, TouchableWithoutFeedback, ScrollView } from 'react-native'
 import { GlobalStyles } from '../assets/styles/GlobalStyles'
 import { Colors } from '../res/Colors'
 import { CustomFonts } from '../assets/font/Fonts'
@@ -10,15 +10,25 @@ import { ScreenNames } from '../res/ScreenNames'
 import MessagePopup from './MessagePopup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ReviewTypes } from '../res/ReviewsTypes'
+import LoadingAnimation from './LoadingAnimation'
+import axios from 'axios'
+import { Apipath } from '../Api/Apipaths'
+
+
 
 const image1 = require('../assets/Images/profileImage.png')
 const image2 = require('../assets/Images/profileImage2.png')
 const pImage = require('../assets/Images/product.png')
 
 
-const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
+const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation, reviews, role,
+    deleteAccount, suspendAccount
+}) => {
 
     const [showPopup, setShowPopup] = useState(false)
+    const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
+    const [loading, setLoading] = useState(false)
+    const [selectedReview, setSelectedReview] = useState(null)
 
     const animatedvalue = useRef(null)
 
@@ -113,247 +123,289 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
         }
     }
 
+    const handleThreeDotsPress = (event, item) => {
+        event.target.measure((x, y, width, height, pageX, pageY) => {
+            setPopupPosition({ top: pageY + height, right: screenWidth - pageX - width });
+            setShowPopup(true);
+            setSelectedReview(item)
+        });
+    };
 
     return (
-        <View>
-            <View style={{ height: screenHeight * 0.44 }}>
-                {
-                    reviews.length > 0 ? (
-                        <FlatList
-                            scrollEnabled={true}
-                            showsVerticalScrollIndicator={false}
-                            data={reviews}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.push(ScreenNames.ReviewDetailsScreen, {
-                                            reviewDetails: {
-                                                review: item,
-                                                from: 'profile',
-                                            }
-                                        })
-                                    }}
-                                >
-                                    <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'column', }}>
-                                        {
-                                            // index === 0 ? (
-                                            <View style={{
-                                                marginTop: 40 / 930 * screenHeight, width: screenWidth - 40, alignItems: 'center', flexDirection: 'column',
-                                                // borderWidth: 1
-                                            }}>
-                                                <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                    <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
-                                                        <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
-                                                            <Image source={item.business.profile_image?{ uri: item.business.profile_image }:placeholderImage}
-                                                                style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
-                                                            />
-                                                        </View>
-                                                        <Text style={{
-                                                           fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
-                                                            //borderWidth:1
+        loading ? (
+            <LoadingAnimation visible={loading} />
+        ) :
+            <View>
+
+                <View style={{ height: screenHeight * 0.48 }}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {
+                            reviews.length > 0 ? (
+                                <>
+                                    <FlatList
+                                        scrollEnabled={false}
+                                        showsVerticalScrollIndicator={false}
+                                        data={reviews}
+                                        renderItem={({ item, index }) => (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.push(ScreenNames.ReviewDetailsScreen, {
+                                                        reviewDetails: {
+                                                            review: item,
+                                                            from: 'profile',
+                                                        }
+                                                    })
+                                                }}
+                                            >
+                                                <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'column', }}>
+                                                    {
+                                                        // index === 0 ? (
+                                                        <View style={{
+                                                            marginTop: 40 / 930 * screenHeight, width: screenWidth - 40, alignItems: 'center', flexDirection: 'column',
+                                                            // borderWidth: 1
                                                         }}>
-                                                            {item.business.name}
-                                                        </Text>
-
-
-                                                    </View>
-
-                                                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
-
-                                                        {selectView(item)}
-
-                                                        {
-                                                            role === "admin" && (
-                                                                <TouchableOpacity>
-                                                                    <Image source={require('../assets/Images/threeDotsImage.png')}
-                                                                        style={GlobalStyles.image24}
-                                                                    />
-                                                                </TouchableOpacity>
-                                                            )
-                                                        }
-                                                    </View>
-                                                </View>
-
-                                                <View style={{ flexDirection: 'row', width: screenWidth - 40, alignSelf: 'center', marginTop: 15 / 930 * screenHeight }}>
-                                                    <>
-                                                        <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth }}></View>
-                                                        <View style={{ width: 1, backgroundColor: '#B9B9B9', marginLeft: -2 }}></View>
-                                                    </>
-
-
-                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10, marginLeft: 20, width: 330 / 430 * screenWidth }}>
-                                                        <Rating
-                                                            type='custom'
-                                                            style={{ alignSelf: 'flex-start' }}
-                                                            ratingCount={5}
-                                                            ratingBackgroundColor='#FFC10730'
-                                                            tintColor='white'
-                                                            ratingColor='#FFC107'
-                                                            imageSize={25}
-                                                            readonly={true}
-                                                            startingValue={item.yapScore || 0}
-                                                            fractions={0}
-                                                            showRating={false}
-                                                        // onFinishRating={ratingCompleted}
-
-                                                        />
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                                            <Text style={{
-                                                                width: 260 / 430 * screenWidth, fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
-                                                                //borderWidth:1
-                                                            }}>
-                                                                {item.service} (${item.amountOfTransaction})
-                                                            </Text>
-
-                                                        </View>
-
-                                                        <Text style={GlobalStyles.text14}>
-                                                            Transaction date: {item.dateOfTransaction.replace(/\s+/g, '')}
-                                                        </Text>
-
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                            {
-                                                                item.media.map((img) => (
-                                                                    <Image key={img.id} source={{uri:img.thumb_url}}
-                                                                        style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
-                                                                    />
-                                                                ))
-                                                            }
-
-                                                            {/* <Image source={{ uri: item.mediaUrl }}
-                                                                style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
-                                                            /> */}
-                                                        </View>
-
-                                                        <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
-                                                            {item.notesAboutCustomer}
-                                                        </Text>
-                                                        {
-                                                            item.settlementOffer && (
-                                                                selectSettleView(item)
-                                                            )
-                                                        }
-                                                        <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 17 / 430 * screenWidth, marginTop: 10 / 930 * screenHeight }}>
-
-                                                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
-                                                                {/* <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}> */}
-                                                                <Image source={item.customer.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
-                                                                    style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
-                                                                />
-                                                                <Text style={[GlobalStyles.text17, { color: '#000' }]}>
-                                                                    {item.customer.name}
-                                                                </Text>
-                                                            </View>
-
-                                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-
-                                                                <View style={{
-                                                                    paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
-                                                                    backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
-                                                                }}>
-                                                                    <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                                                                        <Image source={require('../assets/Images/yIcon.png')}
-                                                                            style={GlobalStyles.yIcon}
+                                                            <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
+                                                                    <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
+                                                                        <Image source={item.business.profile_image ? { uri: item.business.profile_image } : placeholderImage}
+                                                                            style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
                                                                         />
-                                                                        <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                            ap score
-                                                                        </Text>
                                                                     </View>
-                                                                    <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                        {item.customer.totalYapScore}
+                                                                    <Text style={{
+                                                                        fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
+                                                                        //borderWidth:1
+                                                                    }}>
+                                                                        {item.business.name}
                                                                     </Text>
+
+
+                                                                </View>
+
+                                                                <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
+
+                                                                    {selectView(item)}
+
+                                                                    {
+                                                                        role === "admin" && (
+                                                                            <TouchableOpacity
+                                                                                onPress={(event) => handleThreeDotsPress(event, item)}
+                                                                            >
+                                                                                <Image source={require('../assets/Images/threeDotsImage.png')}
+                                                                                    style={GlobalStyles.image24}
+                                                                                />
+                                                                            </TouchableOpacity>
+                                                                        )
+                                                                    }
                                                                 </View>
                                                             </View>
-                                                        </View>
 
-                                                        <View style={{
-                                                            flexDirection: 'row', width: screenWidth - 100, alignItems: 'center', gap: 30 / 430 * screenWidth,
-                                                            marginBottom: 0 / 940 * screenHeight, justifyContent: 'flex-end',
-                                                        }}>
+                                                            <View style={{ flexDirection: 'row', width: screenWidth - 40, alignSelf: 'center', marginTop: 15 / 930 * screenHeight }}>
+                                                                <>
+                                                                    <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth }}></View>
+                                                                    <View style={{ width: 1, backgroundColor: '#B9B9B9', marginLeft: -2 }}></View>
+                                                                </>
 
-                                                            <View style={{ width: 50 }}></View>
 
-                                                            {
-                                                                item.reviewStatus !== ReviewTypes.Disputed && (
-                                                                    <>
+                                                                <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10, marginLeft: 20, width: 330 / 430 * screenWidth }}>
+                                                                    <Rating
+                                                                        type='custom'
+                                                                        style={{ alignSelf: 'flex-start' }}
+                                                                        ratingCount={5}
+                                                                        ratingBackgroundColor='#FFC10730'
+                                                                        tintColor='#fff'
+                                                                        ratingColor='#FFC107'
+                                                                        imageSize={25}
+                                                                        readonly={true}
+                                                                        startingValue={item.yapScore || 0}
+                                                                        fractions={0}
+                                                                        showRating={false}
+                                                                    // onFinishRating={ratingCompleted}
+
+                                                                    />
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                                                        <Text style={{
+                                                                            width: 260 / 430 * screenWidth, fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
+                                                                            //borderWidth:1
+                                                                        }}>
+                                                                            {item.service} (${item.amountOfTransaction})
+                                                                        </Text>
+
+                                                                    </View>
+
+                                                                    <Text style={GlobalStyles.text14}>
+                                                                        Transaction date: {item.dateOfTransaction.replace(/\s+/g, '')}
+                                                                    </Text>
+
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                                         {
-                                                                            // role === "business" ? (
-                                                                            //   <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                            //     onPress={() => {
-                                                                            //       navigation.push(ScreenNames.YapSattelmentAmount, {
-                                                                            //         review: item
-                                                                            //       })
-                                                                            //     }}
-                                                                            //   >
-                                                                            //     <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                            //       Create Settlement Offer
-                                                                            //     </Text>
-                                                                            //   </TouchableOpacity>
-                                                                            // ) : (
-                                                                            role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
-                                                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                                onPress={() => {
-                                                                                    navigation.push(ScreenNames.SettleReviewDetailsScreen, {
-                                                                                        review: item
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                                    Settle
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-
-
-
-                                                                            // )
+                                                                            item.media.map((img) => (
+                                                                                <Image key={img.id} source={{ uri: img.thumb_url }}
+                                                                                    style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
+                                                                                />
+                                                                            ))
                                                                         }
 
-                                                                        {
-                                                                            item.reviewStatus === ReviewTypes.Active &&
-                                                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                                onPress={() => {
-                                                                                    navigation.push(ScreenNames.DisputeScreen, {
-                                                                                        review: item,
-                                                                                        from: 'Profile'
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                                    Dispute
+                                                                        {/* <Image source={{ uri: item.mediaUrl }}
+                                                                style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
+                                                            /> */}
+                                                                    </View>
+
+                                                                    <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
+                                                                        {item.notesAboutCustomer}
+                                                                    </Text>
+                                                                    {
+                                                                        item.settlementOffer && (
+                                                                            selectSettleView(item)
+                                                                        )
+                                                                    }
+                                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 17 / 430 * screenWidth, marginTop: 10 / 930 * screenHeight }}>
+
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
+                                                                            {/* <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}> */}
+                                                                            <Image source={item.customer.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
+                                                                                style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
+                                                                            />
+                                                                            <Text style={[GlobalStyles.text17, { color: '#000' }]}>
+                                                                                {item.customer.name}
+                                                                            </Text>
+                                                                        </View>
+
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+
+                                                                            <View style={{
+                                                                                paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                                backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                            }}>
+                                                                                <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                                                    <Image source={require('../assets/Images/yIcon.png')}
+                                                                                        style={GlobalStyles.yIcon}
+                                                                                    />
+                                                                                    <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                                        ap score
+                                                                                    </Text>
+                                                                                </View>
+                                                                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
+                                                                                    {item.customer.totalYapScore.toFixed(2)}
                                                                                 </Text>
-                                                                            </TouchableOpacity>
+                                                                            </View>
+                                                                        </View>
+                                                                    </View>
 
+                                                                    <View style={{
+                                                                        flexDirection: 'row', width: screenWidth - 100, alignItems: 'center', gap: 30 / 430 * screenWidth,
+                                                                        marginBottom: 0 / 940 * screenHeight, justifyContent: 'flex-end',
+                                                                    }}>
+
+                                                                        <View style={{ width: 50 }}></View>
+
+                                                                        {
+                                                                            item.reviewStatus !== ReviewTypes.Disputed && (
+                                                                                <>
+                                                                                    {
+                                                                                        // role === "business" ? (
+                                                                                        //   <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                        //     onPress={() => {
+                                                                                        //       navigation.push(ScreenNames.YapSattelmentAmount, {
+                                                                                        //         review: item
+                                                                                        //       })
+                                                                                        //     }}
+                                                                                        //   >
+                                                                                        //     <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                        //       Create Settlement Offer
+                                                                                        //     </Text>
+                                                                                        //   </TouchableOpacity>
+                                                                                        // ) : (
+                                                                                        role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
+                                                                                        <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                            onPress={() => {
+                                                                                                navigation.push(ScreenNames.SettleReviewDetailsScreen, {
+                                                                                                    review: item
+                                                                                                })
+                                                                                            }}
+                                                                                        >
+                                                                                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                                Settle
+                                                                                            </Text>
+                                                                                        </TouchableOpacity>
+
+
+
+                                                                                        // )
+                                                                                    }
+
+                                                                                    {
+                                                                                        item.reviewStatus === ReviewTypes.Active &&
+                                                                                        <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                            onPress={() => {
+                                                                                                navigation.push(ScreenNames.DisputeScreen, {
+                                                                                                    review: item,
+                                                                                                    from: 'Profile'
+                                                                                                })
+                                                                                            }}
+                                                                                        >
+                                                                                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                                Dispute
+                                                                                            </Text>
+                                                                                        </TouchableOpacity>
+
+                                                                                    }
+                                                                                </>
+                                                                            )
                                                                         }
-                                                                    </>
-                                                                )
-                                                            }
 
+
+
+                                                                    </View>
+
+                                                                </View>
+
+                                                            </View>
+                                                            <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth, alignSelf: 'flex-start' }}></View>
 
 
                                                         </View>
-
-                                                    </View>
-
+                                                    }
                                                 </View>
-                                                <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth, alignSelf: 'flex-start' }}></View>
+                                            </TouchableOpacity>
+                                        )}
+                                    />
+                                </>
+                            ) : (
+                                <Text style={[GlobalStyles.text14, { alignSelf: 'center', marginTop: 20 }]}>
+                                    No reviews
+                                </Text>
+                            )
+                        }
+                        {
+                            role === "admin" && (
+                                <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50 }}>
 
+                                    <TouchableOpacity style={GlobalStyles.capsuleBtn}
+                                        onPress={() => {
+                                            suspendAccount()
+                                        }}
+                                    >
+                                        <Text style={GlobalStyles.BtnText}>
+                                            Suspend Account
+                                        </Text>
+                                    </TouchableOpacity>
 
-                                            </View>
-                                        }
-                                    </View>
-                                </TouchableOpacity>
-                            )}
+                                    <TouchableOpacity style={[GlobalStyles.capsuleBtn, { backgroundColor: 'white' }]}
+                                        onPress={() => {
+                                            deleteAccount()
+                                        }}
+                                    >
+                                        <Text style={[GlobalStyles.BtnText, { color: "red" }]}>
+                                            Delete Account
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
+                    </ScrollView>
 
-                        />
-                    ) : (
-                        <Text style={[GlobalStyles.text14, { alignSelf: 'center', marginTop: 20 }]}>
-                            No reviews
-                        </Text>
-                    )
-                }
-
-            </View>
-            {
+                </View>
+                {/* {
                 selectedMenue === "business" &&
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 0 }]}
                     onPress={() => {
@@ -365,18 +417,62 @@ const ProfileRecentReviews = ({ selectedMenue, navigation, reviews, role }) => {
                     </Text>
                 </TouchableOpacity>
 
-            }
-            <Modal
-                visible={showPopup}
-                transparent={true}
-                animationType='slide'
-            >
-                <MessagePopup closeModal={() => {
-                    setShowPopup(false)
-                }} />
-            </Modal>
+            } */}
 
-        </View>
+                {/* message popup */}
+                <Modal
+                    visible={false}
+                    transparent={true}
+                    animationType='slide'
+                >
+                    <MessagePopup closeModal={() => {
+                        setShowPopup(false)
+                    }} />
+                </Modal>
+
+                <Modal
+                    visible={showPopup}
+                    transparent={true}
+                    animationType='fade'
+                >
+                    <TouchableWithoutFeedback style={{ height: screenHeight }} onPress={() => {
+                        console.log('pressed')
+                        setShowPopup(false)
+                    }}>
+                        <View style={{ height: screenHeight, width: screenWidth }} >
+                            <View style={{
+                                position: 'absolute', top: popupPosition.top, right: popupPosition.right, padding: 15, backgroundColor: 'white',
+                                borderRadius: 5, shadowColor: 'gray', flexDirection: 'column', gap: 10,
+                                shadowOffset: { height: 0, width: 4 }, shadowOpacity: 0.5
+                            }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setShowPopup(false)
+                                        hideFromPlatform(selectedReview)
+                                    }}
+                                >
+                                    <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>
+                                        Hide from platform
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setShowPopup(false)
+                                        deletePermanently(selectedReview)
+                                    }}
+                                >
+                                    <Text style={[GlobalStyles.BtnText, { color: '#FF1504' }]}>
+                                        Delete permanently
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+
+            </View>
     )
 }
 

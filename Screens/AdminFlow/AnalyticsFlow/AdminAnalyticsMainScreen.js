@@ -14,7 +14,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import moment from 'moment'
 
 
-const AdminAnalyticsMainScreen = () => {
+const AdminAnalyticsMainScreen = ({navigation}) => {
   const image = require('../../../assets/Images/profileImage.png')
 
 
@@ -29,6 +29,7 @@ const AdminAnalyticsMainScreen = () => {
   const [businessValue, setBusinessValue] = useState("1")
   const [customerValue, setCustomerValue] = useState("1")
   const [reviewValue, setReviewValue] = useState("1")
+  const [adminData,setAdminData] = useState(null) 
 
   const [chartData, setChartData] = useState({ labels: [], datasets: [{ data: [] }] });
 
@@ -74,8 +75,19 @@ const AdminAnalyticsMainScreen = () => {
   ]
 
   useEffect(() => {
+    getAdminDataFromLocal()
     getAnalyticsData()
+    
   }, [])
+
+  const getAdminDataFromLocal =async () =>{
+    const data = await AsyncStorage.getItem("AdminData")
+    if(data){
+      let d = JSON.parse(data)
+      console.log('admin data from local is', d)
+      setAdminData(d)
+    }
+  }
 
   const getAnalyticsData = async () => {
     const data = await AsyncStorage.getItem("USER")
@@ -306,7 +318,7 @@ const AdminAnalyticsMainScreen = () => {
                   Revenue
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  $40,103.02
+                  $
                 </Text>
               </View>
 
@@ -379,7 +391,7 @@ const AdminAnalyticsMainScreen = () => {
                   Total Businesses
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  40,103.02
+                  {adminData&&adminData.totalBusinesses}
                 </Text>
               </View>
 
@@ -452,7 +464,7 @@ const AdminAnalyticsMainScreen = () => {
                     flexDirection: 'column', gap: 10 / 930 * screenHeight
                   }}>
                     <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                      style={GlobalStyles.image24}
+                      style={[GlobalStyles.image24,{borderRadius:15}]}
                     />
                     <Text style={GlobalStyles.text17}>
                       {item.name}
@@ -481,7 +493,7 @@ const AdminAnalyticsMainScreen = () => {
                   Total Customers
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  40,103.02
+                {adminData&&adminData.totalCustomers}
                 </Text>
               </View>
 
@@ -554,7 +566,7 @@ const AdminAnalyticsMainScreen = () => {
                     flexDirection: 'column', gap: 10 / 930 * screenHeight
                   }}>
                     <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                      style={GlobalStyles.image24}
+                      style={[GlobalStyles.image24,{borderRadius:15}]}
                     />
                     <Text style={GlobalStyles.text17}>
                       {item.name}
@@ -583,7 +595,7 @@ const AdminAnalyticsMainScreen = () => {
                   Reviews Stat
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  40,103.02
+                {adminData&&adminData.totalReviews}
                 </Text>
               </View>
 

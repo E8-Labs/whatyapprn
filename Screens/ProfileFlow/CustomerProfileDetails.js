@@ -1,16 +1,9 @@
 import { View, Text, Image, TouchableOpacity, SafeAreaView, FlatList, Modal } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { CustomFonts } from '../../assets/font/Fonts'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
 import { placeholderImage, screenHeight, screenWidth } from '../../res/Constants'
-import TestFile from '../../TestFile'
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { Rating } from 'react-native-ratings'
-import MessagePopup from '../../components/MessagePopup'
-import ProgressBar from '../../components/ProgressBar'
 import { ScreenNames } from '../../res/ScreenNames'
-import CircularProgress from 'react-native-circular-progress-indicator';
 import HalfCircularProgress from '../../components/HalfCircularProgressBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ProfileRecentReviews from '../../components/ProfileRecentReviews'
@@ -20,11 +13,6 @@ import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import { useFocusEffect } from '@react-navigation/native'
 import moment from 'moment'
-
-const image1 = require('../../assets/Images/profileImage.png')
-const image2 = require('../../assets/Images/profileImage2.png')
-const pImage = require('../../assets/Images/product.png')
-
 
 const CustomerProfileDetails = ({ navigation, route }) => {
 
@@ -114,8 +102,142 @@ const CustomerProfileDetails = ({ navigation, route }) => {
         navigation.replace(ScreenNames.LoginScreen)
     }
 
-    return (
+    const deletePermanently = async (review) => {
+        setLoading(true)
+        // setShowPopup(false)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                reviewId: review.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.hideFromPlatform, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('delete account api data', response.data.data)
+                        filteredReviews = reviews.filter(item => review.id !== item.id)
+                        console.log('filteredReviews', filteredReviews)
+                        setReviews(filteredReviews)
+                    } else {
+                        console.log('delete from platform api message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
 
+    const hideFromPlatform = async (review) => {
+        setLoading(true)
+        // setShowPopup(false)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                reviewId: review.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.hideFromPlatform, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('delete account api data', response.data)
+                        filteredReviews = reviews.filter(item => review.id !== item.id)
+                        console.log('filteredReviews', filteredReviews)
+                        setReviews(filteredReviews)
+
+                    } else {
+                        console.log('hide from platform message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+    const suspendAccount = async () => {
+        setLoading(true)
+        // setShowPopup(false)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                userId: user.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.suspendAccount, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('delete account api data', response.data)
+                        navigation.goBack()
+                    } else {
+                        console.log('delete account api message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+    const deleteAccount = async () => {
+        setLoading(true)
+        // setShowPopup(false)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                userId: user.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.deleteAccout, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('delete account api data', response.data)
+                        navigation.goBack()
+                    } else {
+                        console.log('delete account api message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+
+    return (
         // <SafeAreaView style={GlobalStyles.container}>
         <View style={GlobalStyles.container}>
             {
@@ -152,13 +274,12 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                             style={GlobalStyles.image24}
                                         />
                                     </TouchableOpacity>
-                                ):(
+                                ) : (
                                     <View></View>
                                 )}
                         </View>
                     )
                 }
-
 
 
                 <View style={{ flexDirection: 'column', alignItems: 'center', width: screenWidth - 40, marginTop: 20 / 930 * screenHeight }}>
@@ -211,7 +332,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                         borderWidth: 0, gap: 30 / 430 * screenWidth, alignSelf: 'center'
                     }}>
                         <View style={{ alignSelf: 'center', borderWidth: 0 }}>
-                            <HalfCircularProgress progress={user.totalYapScore} type={"Yap"} />
+                            <HalfCircularProgress progress={user.totalYapScore.toFixed(2)} type={"Yap"} />
                         </View>
                     </View>
 
@@ -273,13 +394,10 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                         ))
                                     }
                                 </View>
-                                {
-                                    selectedMenu === ReviewTypes.Active ? (
-                                        <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} />
-                                    ) : (
-                                        <ProfileRecentReviews navigation={navigation} selectedMenu="past" reviews={reviews && reviews} role={role && role} />
-                                    )
-                                }
+                                <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role}
+                                    hideFromPlatform={hideFromPlatform} deletePermanently={deletePermanently} suspendAccount = {suspendAccount} deleteAccount = {deleteAccount}
+                                />
+
                             </>
                             //         )
                         }
@@ -292,7 +410,6 @@ const CustomerProfileDetails = ({ navigation, route }) => {
 
         </View>
         // </SafeAreaView>
-
     )
 }
 

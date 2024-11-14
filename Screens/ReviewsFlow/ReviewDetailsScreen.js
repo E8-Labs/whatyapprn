@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, SafeAreaView, FlatList, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, FlatList, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Image } from 'expo-image'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
@@ -12,6 +12,8 @@ import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import { useFocusEffect } from '@react-navigation/native'
 import { ReviewTypes } from '../../res/ReviewsTypes'
+import LoadingAnimation from '../../components/LoadingAnimation'
+
 const image1 = require('../../assets/Images/profileImage.png')
 const image2 = require('../../assets/Images/profileImage2.png')
 const pImage = require('../../assets/Images/product.png')
@@ -21,6 +23,8 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
     const [messages, setMessages] = useState([])
     const [role, setRole] = useState(false)
     const [updatedData, setUpdatedData] = useState(null)
+    const [showPopup, setShowPopup] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const reviewdetails = route.params.reviewDetails
     console.log('review details are', reviewdetails.review)
@@ -94,7 +98,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
             const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let u = JSON.parse(data)
-                // console.log('user token is', u.token)
+                console.log('user token is', u.user.role)
                 setRole(u.user.role)
                 let path = Apipath.loadMessages + "?reviewId=" + review.id
                 console.log('path is', path)
@@ -169,9 +173,78 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
         setUpdatedData(data)
         selectView(data)
     }
+
+    const hideFromPlatform = async () => {
+        setLoading(true)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                reviewId: review.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.hideFromPlatform, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('hide from platform data', response.data)
+                        navigation.goBack()
+                    } else {
+                        console.log('hide from platform message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+
+    const deletePermanently = async () => {
+        setLoading(true)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                reviewId: review.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.hideFromPlatform, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('hide from platform data', response.data.data)
+                        navigation.goBack()
+                    } else {
+                        console.log('hide from platform message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+
+
     return (
-        <SafeAreaView style={GlobalStyles.container}>
-            <View style={GlobalStyles.container}>
+        loading ? (
+            <LoadingAnimation visible = {loading} />
+        ) : 
+        <SafeAreaView style={[GlobalStyles.container, { backgroundColor: '#f2f2f2' }]}>
+            <View style={[GlobalStyles.container, { backgroundColor: '#f2f2f2' }]}>
                 <View style={GlobalStyles.completeProfileTopBar}>
                     <TouchableOpacity
                         onPress={() => {
@@ -189,7 +262,9 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                     {
                         role === "admin" ? (
 
-                            <TouchableOpacity>
+                            <TouchableOpacity
+
+                            >
                                 <Image source={require('../../assets/Images/threeDotsImage.png')}
                                     style={GlobalStyles.image24}
                                 />
@@ -218,7 +293,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
                                             {/* <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}> */}
                                             <Image source={review.business.profile_image ? { uri: review.business.profile_image } : placeholderImage}
-                                                style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
+                                                style={[GlobalStyles.image37,]}
                                             />
 
                                             {/* </View> */}
@@ -250,7 +325,11 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                             {selectView(review)}
                                             {
                                                 role === 'admin' && (
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            console.log('show popop')
+                                                            setShowPopup(true)
+                                                        }}>
                                                         <Image source={require('../../assets/Images/threeDotsImage.png')}
                                                             style={GlobalStyles.image24}
                                                         />
@@ -290,7 +369,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                 {
                                                     review.media.map((img) => (
-                                                        <Image source={{uri: img.thumb_url }}
+                                                        <Image source={{ uri: img.thumb_url }}
                                                             style={{ height: 45 / 930 * screenHeight, width: 45 / 930 * screenHeight, borderRadius: 5, resizeMode: 'cover' }}
                                                         />
                                                     ))
@@ -365,7 +444,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 </Text>
                                                             </View>
                                                             <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                {item.user.totalYapScore}
+                                                                {item.user.totalYapScore.toFixed(2)}
                                                             </Text>
                                                         </View>
 
@@ -389,108 +468,239 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                     alignSelf: 'flex-start'
                                 }}></View>
 
-                                <View style={{
-                                    borderWidth: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: screenWidth - 50,
-                                    marginTop: 20
-                                }}>
-                                    <View style={{ width: 100 }}></View>
+                                {
+                                    role === 'admin' && review.reviewStatus === ReviewTypes.Disputed ? (
+                                        <TouchableOpacity style={{ marginTop: 20 / 930 * screenHeight, alignSelf: 'flex-end' }}
+                                        // onPress={() => {
+                                        //     navigation.push(ScreenNames.SettleReviewDetailsScreen, {
+                                        //         review: review
+                                        //     })
+                                        // }}
+                                        >
+                                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                Resolve
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ) : (
+                                        role !== 'admin' &&
+                                        <View style={{
+                                            borderWidth: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: screenWidth - 50,
+                                            marginTop: 20
+                                        }}>
+                                            <View style={{ width: 100 }}></View>
 
-                                    {review.reviewStatus !== ReviewTypes.Disputed && (
-                                        <>
-                                            {
-                                                //  role === "business" && review.reviewStatus !== ReviewTypes.Resolved ? (
-                                                //     <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                //         onPress={() => {
-                                                //             navigation.push(ScreenNames.YapSattelmentAmount, {
-                                                //                 review: review
-                                                //             })
-                                                //         }}
-                                                //     >
-                                                //         <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                //             Create Settlement Offer
-                                                //         </Text>
-                                                //     </TouchableOpacity>
-                                                // ) : (
-                                                role === "customer" && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.ResolvedByAdmin && review.reviewStatus !== ReviewTypes.Resolved && review.settlementOffer &&
-                                                <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                    onPress={() => {
-                                                        navigation.push(ScreenNames.SettleReviewDetailsScreen, {
-                                                            review: review
-                                                        })
-                                                    }}
-                                                >
-                                                    <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                        Settle
-                                                    </Text>
-                                                </TouchableOpacity>
+                                            {review.reviewStatus !== ReviewTypes.Disputed && (
+                                                <>
+                                                    {
+                                                        //  role === "business" && review.reviewStatus !== ReviewTypes.Resolved ? (
+                                                        //     <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
+                                                        //         onPress={() => {
+                                                        //             navigation.push(ScreenNames.YapSattelmentAmount, {
+                                                        //                 review: review
+                                                        //             })
+                                                        //         }}
+                                                        //     >
+                                                        //         <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                        //             Create Settlement Offer
+                                                        //         </Text>
+                                                        //     </TouchableOpacity>
+                                                        // ) : (
+                                                        role === "customer" && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.ResolvedByAdmin && review.reviewStatus !== ReviewTypes.Resolved && review.settlementOffer &&
+                                                        <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
+                                                            onPress={() => {
+                                                                navigation.push(ScreenNames.SettleReviewDetailsScreen, {
+                                                                    review: review
+                                                                })
+                                                            }}
+                                                        >
+                                                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                Settle
+                                                            </Text>
+                                                        </TouchableOpacity>
 
-                                                // )
+                                                        // )
+                                                    }
+
+                                                    {
+                                                        review.reviewStatus === ReviewTypes.Active &&
+                                                        <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
+                                                            onPress={() => {
+                                                                navigation.push(ScreenNames.DisputeScreen, {
+                                                                    review: review,
+                                                                    updatedView: updateView
+                                                                    // from:'sattle'
+                                                                })
+                                                            }}
+                                                        >
+                                                            <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                Dispute
+                                                            </Text>
+                                                        </TouchableOpacity>
+
+                                                    }
+                                                    {
+                                                        role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Resolved && (
+                                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
+                                                                onPress={() => {
+                                                                    navigation.push(ScreenNames.ReviewReplyScreen, {
+                                                                        review: review,
+                                                                        role: role
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                    Reply
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        ) : (review.reviewStatus !== ReviewTypes.Resolved &&
+                                                            <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
+                                                                onPress={() => {
+                                                                    navigation.push(ScreenNames.ReviewReplyScreen, {
+                                                                        review: review
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                    Reply
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        )
+                                                    }
+                                                </>
+                                            )
                                             }
 
-                                            {
-                                                review.reviewStatus === ReviewTypes.Active &&
-                                                <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                    onPress={() => {
-                                                        navigation.push(ScreenNames.DisputeScreen, {
-                                                            review: review,
-                                                            updatedView: updateView
-                                                            // from:'sattle'
-                                                        })
-                                                    }}
-                                                >
-                                                    <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                        Dispute
-                                                    </Text>
-                                                </TouchableOpacity>
-
-                                            }
-                                            {
-                                                role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Resolved && (
-                                                    <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                        onPress={() => {
-                                                            navigation.push(ScreenNames.ReviewReplyScreen, {
-                                                                review: review,
-                                                                role: role
-                                                            })
-                                                        }}
-                                                    >
-                                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                            Reply
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                ) : (review.reviewStatus !== ReviewTypes.Resolved &&
-                                                    <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                        onPress={() => {
-                                                            navigation.push(ScreenNames.ReviewReplyScreen, {
-                                                                review: review
-                                                            })
-                                                        }}
-                                                    >
-                                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                            Reply
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                )
-                                            }
-                                        </>
+                                        </View>
                                     )
+                                }
+                            </View>
+                            <View style={{ marginTop: 50 / 930 * screenHeight }}>
+                                <Text style={[GlobalStyles.text14, { color: '#00000050' }]}>Active Parties</Text>
 
-                                    }
+                                <TouchableOpacity>
+                                    <View style={{
+                                        width: screenWidth - 40, backgroundColor: '#fff', borderRadius: 3,
+                                        marginTop: 30 / 930 * screenHeight, alignItems: "center", paddingVertical: 10, paddingHorizontal: 10
+                                    }}>
 
+                                        <View style={{ width: screenWidth - 60, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View style={{ flexDirection: 'column', gap: 10 }}>
+                                                <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                                                    <Image source={review.business.profile_image ? { uri: review.business.profile_image } : placeholderImage}
+                                                        style={[GlobalStyles.image24, { borderRadius: 20 }]}
+                                                    />
+                                                    <Text style={GlobalStyles.text17} > {review.business.name}</Text>
+                                                    <Text style={[GlobalStyles.text12, { color: Colors.orangeColor }]} > Company</Text>
+                                                </View>
+                                                <Text style={GlobalStyles.text12} > {review.business.city} {review.business.state}</Text>
+                                                <View style={{ flexDirection: 'row', gap: 0, alignItems: 'center' }}>
+                                                    <Image source={require('../../assets/Images/starIcon.png')}
+                                                        style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                                                    />
 
-                                </View>
+                                                    <Text style={GlobalStyles.text12} > {review.business.totalReviews} reviews</Text>
 
+                                                </View>
+                                            </View>
+                                            <Image source={require('../../assets/Images/farwordArrow.png')}
+                                                style={GlobalStyles.image24}
+                                            />
+                                        </View>
+                                    </View>
 
+                                </TouchableOpacity>
 
+                                <TouchableOpacity>
+                                    <View style={{
+                                        width: screenWidth - 40, backgroundColor: '#fff', borderRadius: 3,
+                                        marginTop: 30 / 930 * screenHeight, alignItems: "center", paddingVertical: 10, paddingHorizontal: 10
+                                    }}>
+
+                                        <View style={{ width: screenWidth - 60, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View style={{ flexDirection: 'column', gap: 6 }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
+                                                        <Image source={review.business.profile_image ? { uri: review.business.profile_image } : placeholderImage}
+                                                            style={[GlobalStyles.image24, { borderRadius: 20 }]}
+                                                        />
+                                                        <Text style={GlobalStyles.text14} > {review.business.name}</Text>
+                                                        <Text style={[GlobalStyles.text12, { color: Colors.orangeColor }]} > Customer</Text>
+                                                    </View>
+                                                    <View style={{
+                                                        paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                        backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                    }}>
+                                                        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                            <Image source={require('../../assets/Images/yIcon.png')}
+                                                                style={GlobalStyles.yIcon}
+                                                            />
+                                                            <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                ap score {review.customer.totalYapScore.toFixed(2)}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                <Text style={GlobalStyles.text12} > {review.business.city} {review.business.state}</Text>
+                                                <View style={{ flexDirection: 'row', gap: 0, alignItems: 'center' }}>
+                                                    <Image source={require('../../assets/Images/starIcon.png')}
+                                                        style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                                                    />
+
+                                                    <Text style={GlobalStyles.text12} > {review.business.totalReviews} reviews</Text>
+
+                                                </View>
+                                            </View>
+                                            <Image source={require('../../assets/Images/farwordArrow.png')}
+                                                style={GlobalStyles.image24}
+                                            />
+                                        </View>
+                                    </View>
+
+                                </TouchableOpacity>
                             </View>
                         </ScrollView>
                     </View>
-
-                    {/* )}
-
-                    /> */}
                 </View>
 
+                <Modal
+                    visible={showPopup}
+                    transparent={true}
+                    animationType='fade'
+                >
+                    <TouchableWithoutFeedback style={{ height: screenHeight }} onPress={() => {
+                        console.log('pressed')
+                        setShowPopup(false)
+                    }}>
+                        <View style={{ height: screenHeight, width: screenWidth }} >
+                            <View style={{
+                                padding: 15, backgroundColor: 'white', shadowColor: 'gray', shadowOffset: {
+                                    height: 0, width: 4,
+                                }, position: 'absolute', top: 170 / 930 * screenHeight, right: 20,
+                                flexDirection: 'column', gap: 15, borderRadius: 5
+                            }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        hideFromPlatform()
+                                    }}
+                                >
+                                    <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>
+                                        Hide from platform
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        deletePermanently()
+                                    }}
+                                >
+                                    <Text style={[GlobalStyles.BtnText, { color: '#FF1504' }]}>
+                                        Delete permanently
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
             </View>
         </SafeAreaView>

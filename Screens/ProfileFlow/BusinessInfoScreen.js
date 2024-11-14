@@ -20,6 +20,7 @@ import { getProfile } from '../../components/GetProfile'
 import { useFocusEffect } from '@react-navigation/native'
 
 const BusinessInfoScreen = ({ navigation, route }) => {
+    
 
     const [user, setUser] = useState('')
 

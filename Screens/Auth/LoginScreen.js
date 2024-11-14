@@ -11,9 +11,10 @@ import { ShowMessage } from '../../components/ShowMessage'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import * as AppleAuthentication from 'expo-apple-authentication';
+// import * as AppleAuthentication from 'expo-apple-authentication';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken, Profile } from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
     iosClientId: '311004442185-ev6am2pcrj1ahqvhij8sgc9mdm7u7djt.apps.googleusercontent.com',
@@ -53,42 +54,81 @@ const LoginScreen = ({ navigation }) => {
         }
     };
 
-    const appleLogin = async () => {
+    // const appleLogin = async () => {
+    //     try {
+
+    //         let credential = await AppleAuthentication.signInAsync({
+    //             requestedScopes: [
+    //                 AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+    //                 AppleAuthentication.AppleAuthenticationScope.EMAIL,
+    //             ],
+    //         });
+    //         // signed in
+    //         // let cr = {"authorizationCode": "c352b03fb0d6e4defa3f626d9d9d45fa5.0.styx.lBXUeXBx15Ohk42_CU_rKQ", "email": "spidyzno3@gmail.com", "fullName": {"familyName": "Bin khalid", "givenName": "Waleed", "middleName": null, "namePrefix": null, "nameSuffix": null, "nickname": null}, "identityToken": "eyJraWQiOiJsVkhkT3g4bHRSIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmU4bGFicy5wbHVyYXdsIiwiZXhwIjoxNzEwNjI5MDE0LCJpYXQiOjE3MTA1NDI2MTQsInN1YiI6IjAwMDM4Ny5lMDYyYzMxZTBlMjg0YmQwOTcxYzE1NzI5ZmNmOGU2ZS4yMjQzIiwiY19oYXNoIjoiZjBpdy1mdGpjOXBfblVPNlBqRVdxZyIsImVtYWlsIjoic3BpZHl6bm8zQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3MTA1NDI2MTQsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZSwicmVhbF91c2VyX3N0YXR1cyI6Mn0.Z41O2oWCfpIxQtnTdwgNuHdwHx1W0iS-P7qf-L4HusgEswzhGZ8G1Ss1FMNnh0FXXwkX174uj_kykhGROqMelNnbQ_HkvCU1yYhlAQ29rQNu7GyAzLUs070wU1RdrHO7napvUtHh4JncAnUyXm6zxLGaciDKVOQ8RX4GOVPogcczjKSQse6Y9CggMLHpvjrZ-pSFyyw4oLssm1GXteEhGCckhl3V_h4QIhLstr03ZUVErVoyy2gtq0pV55Xf6jc28p666Ph2K2Cgh_AeSh_cq8I4iv3CgaD_A25dOmtJrweRYDgKYJYGYAmNVhC9xVFIxedQG8L34GC-4C29p1n_qQ", "realUserStatus": 2, "state": null, "user": "000387.e062c31e0e284bd0971c15729fcf8e6e.2243"}
+
+    //         if (credential.email !== null) {
+    //             //save credentials here
+    //             AsyncStorage.setItem("applelogin", JSON.stringify(credential))
+    //         }
+    //         else {
+    //             //get credentials here
+    //             let cr = await AsyncStorage.getItem("applelogin")
+    //             if (cr) {
+    //                 credential = JSON.parse(cr)
+    //             }
+    //         }
+    //         //Call the api here
+    //         socialLogin({ first_name: credential.fullName.givenName, last_name: credential.fullName.familyName, email: credential.email, provider_name: "apple", provider_id: credential.user })
+
+    //         console.log("Apple credentials ", credential)
+    //     } catch (e) {
+    //         console.log("Exception ", e)
+    //         if (e.code === 'ERR_REQUEST_CANCELED') {
+    //             // handle that the user canceled the sign-in flow
+    //         } else {
+    //             // handle other errors
+    //         }
+    //     }
+    // }
+
+    const handleFacebookLogin = async () => {
         try {
+            const result = await LoginManager.logInWithPermissions(["public_profile"]);
 
-            let credential = await AppleAuthentication.signInAsync({
-                requestedScopes: [
-                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
-                ],
-            });
-            // signed in
-            // let cr = {"authorizationCode": "c352b03fb0d6e4defa3f626d9d9d45fa5.0.styx.lBXUeXBx15Ohk42_CU_rKQ", "email": "spidyzno3@gmail.com", "fullName": {"familyName": "Bin khalid", "givenName": "Waleed", "middleName": null, "namePrefix": null, "nameSuffix": null, "nickname": null}, "identityToken": "eyJraWQiOiJsVkhkT3g4bHRSIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmU4bGFicy5wbHVyYXdsIiwiZXhwIjoxNzEwNjI5MDE0LCJpYXQiOjE3MTA1NDI2MTQsInN1YiI6IjAwMDM4Ny5lMDYyYzMxZTBlMjg0YmQwOTcxYzE1NzI5ZmNmOGU2ZS4yMjQzIiwiY19oYXNoIjoiZjBpdy1mdGpjOXBfblVPNlBqRVdxZyIsImVtYWlsIjoic3BpZHl6bm8zQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3MTA1NDI2MTQsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZSwicmVhbF91c2VyX3N0YXR1cyI6Mn0.Z41O2oWCfpIxQtnTdwgNuHdwHx1W0iS-P7qf-L4HusgEswzhGZ8G1Ss1FMNnh0FXXwkX174uj_kykhGROqMelNnbQ_HkvCU1yYhlAQ29rQNu7GyAzLUs070wU1RdrHO7napvUtHh4JncAnUyXm6zxLGaciDKVOQ8RX4GOVPogcczjKSQse6Y9CggMLHpvjrZ-pSFyyw4oLssm1GXteEhGCckhl3V_h4QIhLstr03ZUVErVoyy2gtq0pV55Xf6jc28p666Ph2K2Cgh_AeSh_cq8I4iv3CgaD_A25dOmtJrweRYDgKYJYGYAmNVhC9xVFIxedQG8L34GC-4C29p1n_qQ", "realUserStatus": 2, "state": null, "user": "000387.e062c31e0e284bd0971c15729fcf8e6e.2243"}
+            if (result.isCancelled) {
+                console.log("Login cancelled");
+                Alert.alert('Login cancelled');
+            } else {
+                console.log("Login success with permissions:", result);
 
-            if (credential.email !== null) {
-                //save credentials here
-                AsyncStorage.setItem("applelogin", JSON.stringify(credential))
-            }
-            else {
-                //get credentials here
-                let cr = await AsyncStorage.getItem("applelogin")
-                if (cr) {
-                    credential = JSON.parse(cr)
+                const data = await AccessToken.getCurrentAccessToken();
+
+                if (!data) {
+                    console.log("Something went wrong obtaining access token");
+                    Alert.alert('Error', 'Something went wrong obtaining access token');
+                } else {
+                    console.log("Access token obtained:", data.accessToken.toString());
+
+                    const currentProfile = await Profile.getCurrentProfile();
+
+                    if (currentProfile) {
+                        console.log("Current Profile:", currentProfile);
+                        // Alert.alert('Login Success', `Logged in as ${currentProfile.name}`);
+                        socialLogin({ first_name: currentProfile.firstName, last_name: currentProfile.lastName, email: currentProfile.userID + "@gmail.com", provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, })
+
+                        // Perform further actions with the profile data, e.g., signInSocial function
+                    } else {
+                        console.log("No current profile found");
+                        Alert.alert('Error', 'No current profile found');
+                    }
                 }
             }
-            //Call the api here
-            socialLogin({ first_name: credential.fullName.givenName, last_name: credential.fullName.familyName, email: credential.email, provider_name: "apple", provider_id: credential.user })
-
-            console.log("Apple credentials ", credential)
-        } catch (e) {
-            console.log("Exception ", e)
-            if (e.code === 'ERR_REQUEST_CANCELED') {
-                // handle that the user canceled the sign-in flow
-            } else {
-                // handle other errors
-            }
+        } catch (error) {
+            console.log("Login failed with error:", error);
+            Alert.alert('Login failed', error.message);
         }
-    }
+    };
+
 
     const socialLogin = async (data) => {
         console.log('data is', data)
@@ -319,7 +359,7 @@ const LoginScreen = ({ navigation }) => {
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            onPress={appleLogin}
+                            // onPress={appleLogin}
                         >
                             <View style={styles.socialContainer}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -334,7 +374,12 @@ const LoginScreen = ({ navigation }) => {
                         </TouchableOpacity>
 
 
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={()=>{
+                                handleFacebookLogin()
+                            }}
+                        >
+                            
                             <View style={styles.socialContainer}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                                     <Image source={require('../../assets/Images/facebookIcon.png')}

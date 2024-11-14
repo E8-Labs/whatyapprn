@@ -1,3 +1,4 @@
+import AdminBusinessProfileDetailsScreen from "../Screens/ProfileFlow/AdminBusinessProfileDetailsScreen";
 
 export const ScreenNames = {
     SplashScreen : "SplashScreen",
@@ -66,6 +67,7 @@ export const ScreenNames = {
     AdminBusinessMainScreen:'AdminBusinessMainScreen',
     AdminUserMainScreen:'AdminUserMainScreen',
     AdminResolutionsMainScreen:'AdminResolutionsMainScreen',
+    AdminBusinessProfileDetailsScreen:'AdminBusinessProfileDetailsScreen',
 
 
     AdminTabbarContainer:'AdminTabbarContainer',

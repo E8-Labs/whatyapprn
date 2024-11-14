@@ -155,10 +155,9 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
           path =
             `${path}?searchQuery=${searchQuery}` +
             "&offset=" +
-            offset +
-            "&role=customer";
+            offset;
         } else {
-          path = `${path}?` + "offset=" + offset + "&role=customer";
+          path = `${path}?` + "offset=" + offset;
         }
 
         console.log("path is", path);
@@ -189,6 +188,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
     } else {
       navigation.push(ScreenNames.CustomerProfileDetails, {
         user: item,
+        from:'User'
       });
     }
   };
@@ -367,7 +367,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                 alignItems: "flex-start",
                                 flexDirection: "row",
                                 justifyContent: "space-between",
-                                marginTop: (0 / 930) * screenHeight,
+                                marginTop: (20 / 930) * screenHeight,
                               }}
                             >
                               <Image
@@ -433,7 +433,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                         fontFamily: CustomFonts.IntriaBold,
                                       }}
                                     >
-                                      {item.totalYapScore}
+                                      {item.totalYapScore.toFixed(2)}
                                     </Text>
                                   </View>
 
