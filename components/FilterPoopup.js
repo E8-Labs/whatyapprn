@@ -25,6 +25,19 @@ const FilterPoopup = ({ close }) => {
     const handleYapChange = (values) => {
         setYapScore(values);
     };
+
+    const handleApplyPress = () =>{
+        const filters = {
+            city:city,
+            state:state,
+            minYapScore:yapScore[0],
+            maxYapScore:yapScore[1],
+            minTransaction:transactionValue[0],
+            maxTransaction:transactionValue[1]
+        }
+        console.log('filters', filters)
+        close(filters)
+    }
     return (
         <View style={[GlobalStyles.container, { backgroundColor: '#00000055', justifyContent: 'flex-end' }]}>
             <View style={{
@@ -121,7 +134,7 @@ const FilterPoopup = ({ close }) => {
                 </View>
 
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn,{alignSelf:'center'}]}
-                    onPress={close}
+                    onPress={handleApplyPress}
                 >
                     <Text style={GlobalStyles.BtnText}>
                         Apply Filter

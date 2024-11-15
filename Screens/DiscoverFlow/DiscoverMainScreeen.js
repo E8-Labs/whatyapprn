@@ -97,7 +97,10 @@ const DiscoverMainScreeen = ({ navigation }) => {
   return (
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
-        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} />
+       
+        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} 
+            from = {showFilterPopup?"filter":''}
+        />
       </Animated.View>
 
     ) : (
@@ -162,6 +165,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               setShowFilter(true)
+              showAnimation()
             }}
           >
             <Image source={require('../../assets/Images/filterIcon.png')}
@@ -172,7 +176,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
 
         {/* Filter popup*/}
         <Modal
-          visible={showFilterPopup}
+          visible={false}
           animationType='slide'
           transparent={true}
         >
