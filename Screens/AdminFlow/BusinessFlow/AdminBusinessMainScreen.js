@@ -17,6 +17,7 @@ import { getCutomerProfile } from '../../../components/GetCustomerProfile'
 import axios from 'axios';
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useFocusEffect } from '@react-navigation/native';
+import AdminFilterPopup from '../../../components/AdminUserFilterPopup';
 
 
 const image = require('../../../assets/Images/profileImage.png')
@@ -59,7 +60,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
     }, [])
   )
 
-  
+
   const getAdminDataFromLocal = async () => {
     const data = await AsyncStorage.getItem("AdminData")
     if (data) {
@@ -69,8 +70,10 @@ const AdminBusinessMainScreen = ({ navigation }) => {
     }
   }
 
-  const searchCustomers = async (currentOffset = 0) => {
+  const searchCustomers = async (currentOffset = 0, filters) => {
     console.log('currentOffset', currentOffset)
+    console.log('filters in searcch customer', filters)
+
     try {
       if (currentOffset === 0) setLoading(true);
       else setIsFetchingMore(true);
@@ -79,7 +82,36 @@ const AdminBusinessMainScreen = ({ navigation }) => {
       if (data) {
         let user = JSON.parse(data);
         let path = `${Apipath.searchCustomers}?offset=${currentOffset}&role=business`;
+        if (filters) {
+          if (filters.city) {
+            path = path + "&city=" + filters.city
+          }
+          if (filters.state) {
+            path = path + "&state=" + filters.state
+          }
+          if (filters.fromDate) {
+            path = path + "&fromDate=" + filters.fromDate
+          }
+          if (filters.toDate) {
+            path = path + "&toDate=" + filters.toDate
+          }
+          if (filters.minYapScore) {
+            path = path + "&minYapScore=" + filters.minYapScore
+          }
+          if (filters.maxYapScore) {
+            path = path + "&maxYapScore=" + filters.maxYapScore
+          }
+          if (filters.minReviewCout) {
+            path = path + "&minReviewCout=" + filters.minReviewCout
+          }
+          if (filters.maxReviewCount) {
+            path = path + "&maxReviewCount=" + filters.maxReviewCount
+          }
+        }
+
         console.log('path is', path);
+
+        // return
         const response = await axios.get(path, {
           headers: {
             Authorization: 'Bearer ' + user.token,
@@ -106,7 +138,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
       }
     } catch (e) {
 
-      console.log('Error in fetching customers', e);
+      console.log('Error in fetching business', e);
     } finally {
       setLoading(false);
       setIsFetchingMore(false); // Reset fetching more state
@@ -131,6 +163,12 @@ const AdminBusinessMainScreen = ({ navigation }) => {
       searchCustomers(offset);
     }
   };
+
+  const closeModal = (filters) => {
+    setShowFilter(false)
+    setBusinesses([])
+    searchCustomers(0, filters)
+  }
 
 
   return (
@@ -228,9 +266,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
             animationType='slide'
             transparent={true}
           >
-            <FilterPoopup close={() => {
-              setShowFilter(false)
-            }} />
+            <AdminFilterPopup close={closeModal} />
           </Modal>
 
           <View style={{ height: screenHeight * 0.65 }}>

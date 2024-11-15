@@ -332,7 +332,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                         borderWidth: 0, gap: 30 / 430 * screenWidth, alignSelf: 'center'
                     }}>
                         <View style={{ alignSelf: 'center', borderWidth: 0 }}>
-                            <HalfCircularProgress progress={user.totalYapScore.toFixed(2)} type={"Yap"} />
+                            <HalfCircularProgress progress={user.totalYapScore} type={"Yap"} />
                         </View>
                     </View>
 

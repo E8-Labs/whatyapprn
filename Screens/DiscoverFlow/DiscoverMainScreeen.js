@@ -239,7 +239,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                       </Text>
                                     </View>
                                     <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                      { item.totalYapScore.toFixed(2)}
+                                      { item.totalYapScore}
                                     </Text>
                                   </View>
                                   <View style={{ flexDirection: 'column', gap: 4 }}>
@@ -322,7 +322,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 Yap score
                               </Text>
                               <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.totalYapScore.toFixed(2)}
+                                {item.totalYapScore}
                               </Text>
                             </View>
 

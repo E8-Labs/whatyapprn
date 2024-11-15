@@ -17,6 +17,7 @@ import { getCutomerProfile } from '../../../components/GetCustomerProfile'
 import axios from 'axios';
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useFocusEffect } from '@react-navigation/native';
+import AdminFilterPopup from '../../../components/AdminUserFilterPopup';
 
 
 const image = require('../../../assets/Images/profileImage.png')
@@ -73,25 +74,54 @@ const AdminUserMainScreen = ({ navigation }) => {
     }
   }
 
-  const searchCustomers = async (currentOffset = 0) => {
+  const searchCustomers = async (currentOffset = 0, filters) => {
     try {
-      if (currentOffset === 0) setLoading(true);
+      if (currentOffset === 0) 
+      setLoading(true);
       else setIsFetchingMore(true);
 
       const data = await AsyncStorage.getItem('USER');
       if (data) {
         let user = JSON.parse(data);
         let path = `${Apipath.searchCustomers}?offset=${currentOffset}&role=customer`;
+        if (filters) {
+          if (filters.city) {
+            path = path + "&city=" + filters.city
+          }
+          if (filters.state) {
+            path = path + "&state=" + filters.state
+          }
+          if (filters.fromDate) {
+            path = path + "&fromDate=" + filters.fromDate
+          }
+          if (filters.toDate) {
+            path = path + "&toDate=" + filters.toDate
+          }
+          if (filters.minYapScore) {
+            path = path + "&minYapScore=" + filters.minYapScore
+          }
+          if (filters.maxYapScore) {
+            path = path + "&maxYapScore=" + filters.maxYapScore
+          }
+          if (filters.minReviewCout) {
+            path = path + "&minReviewCout=" + filters.minReviewCout
+          }
+          if (filters.maxReviewCount) {
+            path = path + "&maxReviewCount=" + filters.maxReviewCount
+          }
+        }
         console.log('path is', path);
+        // return
         const response = await axios.get(path, {
           headers: {
             Authorization: 'Bearer ' + user.token,
           },
         });
         if (response.data) {
+          setLoading(false)
           if (response.data.status === true) {
             const newBusinesses = response.data.data || [];
-            // console.log('businesses list is', newBusinesses);
+            console.log('businesses list is', newBusinesses);
 
             // Update businesses list
             setBusinesses(prevBusinesses =>
@@ -117,7 +147,6 @@ const AdminUserMainScreen = ({ navigation }) => {
     }
   };
 
-
   const getProfile = async (item) => {
     setLoading(true)
     let data = await getCutomerProfile(item)
@@ -137,6 +166,12 @@ const AdminUserMainScreen = ({ navigation }) => {
       searchCustomers(offset);
     }
   };
+  const closeModal = (filters) => {
+    setShowFilter(false)
+    setBusinesses([])
+    searchCustomers(0, filters)
+  }
+
 
 
   return (
@@ -236,9 +271,7 @@ const AdminUserMainScreen = ({ navigation }) => {
             animationType='slide'
             transparent={true}
           >
-            <FilterPoopup close={() => {
-              setShowFilter(false)
-            }} />
+            <AdminFilterPopup close={closeModal} />
           </Modal>
 
           <View style={{ height: screenHeight * 0.65 }}>
@@ -289,7 +322,7 @@ const AdminUserMainScreen = ({ navigation }) => {
                         </Text>
                       </View>
                       <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                        {item.totalYapScore.toFixed(2)}
+                        {item.yapScore}
                       </Text>
                     </View>
 

@@ -249,7 +249,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                                   </Text>
                                 </View>
                                 <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                  {item.customer.totalYapScore.toFixed(2)}
+                                  {item.customer.totalYapScore}
                                 </Text>
                               </View>
                             </View>

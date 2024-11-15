@@ -444,7 +444,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 </Text>
                                                             </View>
                                                             <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                {item.user.totalYapScore.toFixed(2)}
+                                                                {item.user.totalYapScore}
                                                             </Text>
                                                         </View>
 
@@ -635,7 +635,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 style={GlobalStyles.yIcon}
                                                             />
                                                             <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                ap score {review.customer.totalYapScore.toFixed(2)}
+                                                                ap score {review.customer.totalYapScore}
                                                             </Text>
                                                         </View>
                                                     </View>
