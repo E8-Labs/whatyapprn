@@ -45,7 +45,7 @@ const YapServiceScreeen = ({ navigation,route }) => {
                     <Text style={GlobalStyles.text14}>
                         Create Yap!
                     </Text>
-                    <View></View>
+                    <View style = {{width:50}}></View>
                 </View>
                 <View style={{ flexDirection: 'column', alignItems: 'center', width: screenWidth - 40, gap: 20 / 930 * screenHeight }}>
                     <Text style={[GlobalStyles.heading24, { marginTop: 50 / 930 * screenHeight }]}>

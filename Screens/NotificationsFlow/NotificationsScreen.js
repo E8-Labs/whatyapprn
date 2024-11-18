@@ -143,7 +143,7 @@ export default function NotificationsScreen({ navigation }) {
         else if (item.type === NotificationType.NewMessage) {
             let not = {
                 image: messageIcon,
-                message: item.fromUser.name + "sent you a message",
+                message: item.fromUser.name + " sent you a message",
                 time: item.createdAt,
                 type: item.type
             }
@@ -153,6 +153,15 @@ export default function NotificationsScreen({ navigation }) {
             let not = {
                 image: profileViewIcon,
                 message: item.fromUser.name + " viewed your business page",
+                time: item.createdAt,
+                type: item.type
+            }
+            // console.log('notification type data is', not)
+            return not
+        } else if (item.type === NotificationType.SettlementOfferSent) {
+            let not = {
+                image: acceptSettlementIcon,
+                message: item.fromUser.name + " sent you a settlement offer",
                 time: item.createdAt,
                 type: item.type
             }
@@ -280,7 +289,9 @@ export default function NotificationsScreen({ navigation }) {
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <View style={{ alignItems: 'center', height: height, width: width, backgroundColor: 'white' }}>
-                <View style={{justifyContent:'space-between', width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
+                <View style={{justifyContent:'space-between', width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width,
+                    marginTop:10
+                 }}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
                     }}>
@@ -328,7 +339,7 @@ export default function NotificationsScreen({ navigation }) {
                                         <View style={{ height: 60, width: "90%", alignItems: 'center', justifyContent: 'center' }}>
                                             {
                                                 loading && (
-                                                    <ActivityIndicator size={'large'} style={{ alignSelf: 'center' }} />
+                                                    <ActivityIndicator size={'large'} color={Colors.orangeColor} style={{ alignSelf: 'center' }} />
                                                 )
                                             }
                                         </View>

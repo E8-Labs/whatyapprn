@@ -26,7 +26,7 @@ console.log('review', review)
                     </TouchableOpacity>
 
                     <Text style={GlobalStyles.text14}>
-                        Sattle
+                        Settle
                     </Text>
                     <View></View>
                 </View>
@@ -51,7 +51,7 @@ console.log('review', review)
                 </Text>
 
                 <Text style = {[GlobalStyles.text17,{textAlign:'center',marginTop:20}]}>
-                    Your settlement offer of {review.amount} was sent to  {review.customer.name}
+                    Your settlement offer of ${review.amount} was sent to {review.customer.name}
                 </Text>
 
 

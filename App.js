@@ -141,7 +141,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={ScreenNames.PlansScreen}
+        initialRouteName={ScreenNames.SplashScreen}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen

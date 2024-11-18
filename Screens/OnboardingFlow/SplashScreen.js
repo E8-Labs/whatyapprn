@@ -86,14 +86,14 @@ export default function SplashScreen({ navigation }) {
           ]}
         />
         <Animated.Image
-          source={circleImage2}
+          source={circleImage1}
           style={[
             styles.circle,
             { top: screenHeight * 0.20, left: screenWidth * 0.1, transform: [{ scale: scaleAnim3 }] },
           ]}
         />
         <Animated.Image
-          source={circleImage2}
+          source={circleImage1}
           style={[
             styles.circle,
             { bottom: screenHeight * 0.1, left: screenWidth * 0.6, transform: [{ scale: scaleAnim4 }] },

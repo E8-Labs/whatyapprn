@@ -1,5 +1,5 @@
 import { View, Text,SafeAreaView,Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { ScreenNames } from '../../res/ScreenNames'
@@ -16,13 +16,20 @@ const LocationPremitionScreen = ({navigation}) => {
         navigation.push(ScreenNames.PlansScreen)
     }
 
-    const getLocation = async () => {
-        // setOpenModal(false)
-       
+    useEffect(() => {
+        checkLocationPermission();
+      }, []);
+
+    const checkLocationPermission = async () => {
+        const { status } = await Location.getForegroundPermissionsAsync();
+        setPermissionGranted(status === 'granted');
+      };
+    
+      const getLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            // setErrorMsg('Permission to access location was denied');
-            return;
+          alert('Go to settings to allow location');
+          return;
         }
 
         let location = await Location.getCurrentPositionAsync({});
@@ -51,6 +58,8 @@ const LocationPremitionScreen = ({navigation}) => {
                 navigation.push(ScreenNames.PlansScreen)
             }
             
+        }else{
+            console.log('unable to get location')
         }
     };
 

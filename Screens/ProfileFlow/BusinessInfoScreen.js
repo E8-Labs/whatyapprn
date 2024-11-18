@@ -96,7 +96,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("Please allow Whatyap camera access to complite profile");
+      alert("Please allow Whatyap camera access to complete profile");
       return;
     }
     console.log("trying to open galery");
@@ -121,7 +121,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
   const captureImage = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      alert("Please allow Whatyap camera access to complite profile");
+      alert("Please allow Whatyap camera access to complete profile");
       return;
     }
 
@@ -206,15 +206,19 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
               >
-                <Image
-                  source={image ? { uri: image } : placeholderImage}
-                  style={{
-                    height: (88 / 930) * screenHeight,
-                    width: (88 / 430) * screenWidth,
-                    resizeMode: "cover",
-                    borderRadius: 50,
-                  }}
-                />
+                <TouchableOpacity onPress={() => {
+                  setShowPopup(true);
+                }}>
+                  <Image
+                    source={image ? { uri: image } : placeholderImage}
+                    style={{
+                      height: (88 / 930) * screenHeight,
+                      width: (88 / 430) * screenWidth,
+                      resizeMode: "cover",
+                      borderRadius: 50,
+                    }}
+                  />
+                </TouchableOpacity>
                 <View
                   style={{
                     flexDirection: "column",
@@ -537,9 +541,9 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 secureTextEntry={true}
                 value={password}
                 editable={false}
-                // onChangeText={(text)=>{
-                //     email(text)
-                // }}
+              // onChangeText={(text)=>{
+              //     email(text)
+              // }}
               />
               <TouchableOpacity
                 onPress={() => {

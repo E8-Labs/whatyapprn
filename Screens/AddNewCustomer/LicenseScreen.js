@@ -45,7 +45,7 @@ const LicenseScreen = ({ navigation, route }) => {
         }
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
+            allowsEditing: false,
             quality: 0.5,
         });
 
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     },
     bottomLeftCorner: {
         position: 'absolute',
-        bottom: screenHeight * 0.4,
+        bottom: screenHeight * 0.3,
         left: screenWidth * 0.1,
         borderBottomWidth: 3,
         borderLeftWidth: 3,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     },
     bottomRightCorner: {
         position: 'absolute',
-        bottom: screenHeight * 0.4,
+        bottom: screenHeight * 0.3,
         right: screenWidth * 0.1,
         borderBottomWidth: 3,
         borderRightWidth: 3,

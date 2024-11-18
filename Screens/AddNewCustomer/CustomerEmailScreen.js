@@ -93,7 +93,10 @@ const CustomerEmailScreen = ({ navigation, route }) => {
                 formData.append("name", user.name)
                 formData.append("username", user.name)
                 formData.append("driver_license_id", user.licenseNumber)
-                formData.append("driver_license", user.licenseImage)
+                formData.append("driver_license", {
+                        name: 'image',
+                        uri: user.licenseImage
+                    })
 
                 console.log('formData', formData)
 // return
@@ -115,6 +118,7 @@ const CustomerEmailScreen = ({ navigation, route }) => {
                 }
             }
         } catch (e) {
+            setLoading(false)
             console.log('error in add new customer api', e)
         }
     }

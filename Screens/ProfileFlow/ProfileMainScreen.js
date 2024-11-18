@@ -112,7 +112,7 @@ const ProfileMainScreen = ({ navigation }) => {
               width: screenWidth - 80,
             }}
           >
-            <Text style={GlobalStyles.text17}>Credit Points</Text>
+            <Text style={[GlobalStyles.text17,{color:'#000'}]}>Credit Points</Text>
 
             <TouchableOpacity
               style={{
@@ -176,7 +176,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 }
                 style={[GlobalStyles.image24, { borderRadius: 24 }]}
               />
-              <Text style={GlobalStyles.text17}>Business Information</Text>
+              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Business Information</Text>
             </View>
 
             <Image
@@ -205,7 +205,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 source={require("../../assets/Images/walletIcon.png")}
                 style={GlobalStyles.image24}
               />
-              <Text style={GlobalStyles.text17}>Plans</Text>
+              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Plans</Text>
             </View>
 
             <Image
@@ -230,7 +230,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 source={require("../../assets/Images/lockIcon.png")}
                 style={GlobalStyles.image24}
               />
-              <Text style={GlobalStyles.text17}>Privacy Policy</Text>
+              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Privacy Policy</Text>
             </View>
 
             <Image
@@ -251,7 +251,7 @@ const ProfileMainScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity onPress={logoutUser}>
-            <Text style={[GlobalStyles.text17, { color: "red" }]}>Logout</Text>
+            <Text style={[GlobalStyles.text17, { color: "#E33636" }]}>Logout</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

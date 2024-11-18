@@ -5,4 +5,5 @@ export const NotificationType = {
     SettlementAccepted: "SettlementAccepted",
     SettlementOfferSent: "SettlementOfferSent",
     ProfileView: "ProfileView",
+    SettlementOfferSent:"SettlementOfferSent",
   };

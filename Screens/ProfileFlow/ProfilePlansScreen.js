@@ -25,16 +25,18 @@ const ProfilePlansScreen = ({ navigation }) => {
     {
       id: 1,
       name: "YEARLY",
-      price: "$999/yr",
+      price: "$499/yr",
       disc: "12 Months at $50/Month",
       identifier: "Monthly_Premium_1118",
+      oldPrice: '$999'
     },
     {
       id: 2,
       name: "MONTHLY",
-      price: "$99/m",
+      price: "$49/m",
       disc: "",
       identifier: "Yearly_Premium_1118",
+      oldPrice: '$99'
     },
   ];
   //   const [products, setProducts] = useState([]);
@@ -279,6 +281,7 @@ const ProfilePlansScreen = ({ navigation }) => {
                             {item.name}
                           </Text>
 
+
                           <Text
                             style={{
                               fontSize: 17,
@@ -287,7 +290,15 @@ const ProfilePlansScreen = ({ navigation }) => {
                               color: "black",
                             }}
                           >
-                            {item.price}
+                            {item.price} <Text style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.PoppinsMedium,
+                              fontWeight: "700",
+                              color: "black",
+                              textDecorationLine: 'line-through'
+                            }}>
+                              {item.oldPrice}
+                            </Text>
                           </Text>
                         </View>
 

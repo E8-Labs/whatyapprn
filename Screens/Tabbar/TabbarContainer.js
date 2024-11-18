@@ -92,7 +92,7 @@ const TabbarContainer = ({ navigation, route }) => {
       );
     } else {
       console.log("User not subscribed");
-      navigation.navigate(ScreenNames.PlansScreen);
+      // navigation.navigate(ScreenNames.PlansScreen);
     }
   }
 

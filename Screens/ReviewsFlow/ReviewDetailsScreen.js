@@ -355,14 +355,13 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                                 <Text style={{
                                                     width: 260 / 430 * screenWidth, fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
-                                                    //borderWidth:1
                                                 }}>
                                                     {review.service} (${review.amountOfTransaction})
                                                 </Text>
 
                                             </View>
 
-                                            <Text style={GlobalStyles.text14}>
+                                            <Text style={[GlobalStyles.text14,{color:'#00000090'}]}>
                                                 Transaction date: {review.dateOfTransaction.replace(/\s+/g, '')}
                                             </Text>
 

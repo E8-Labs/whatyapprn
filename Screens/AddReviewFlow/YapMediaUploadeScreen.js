@@ -37,7 +37,7 @@ const YapMediaUploadScreen = ({ navigation, route }) => {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Whatyapp camera access to complite profile');
+            alert('Please allow Whatyapp camera access to complete profile');
             return;
         }
         console.log('trying to open galery')
@@ -72,7 +72,7 @@ const YapMediaUploadScreen = ({ navigation, route }) => {
     const pickVideo = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Please allow Whatyap camera access to complite profile');
+            alert('Please allow Whatyap camera access to complete profile');
             return;
         }
         console.log('trying to open galery')
