@@ -1,4 +1,4 @@
-import 'react-native-get-random-values';
+import "react-native-get-random-values";
 
 import { StyleSheet, Text, View, SafeAreaView, AppState } from "react-native";
 import { useEffect, useState } from "react";
@@ -64,8 +64,8 @@ import SettlementPaymentScreen from "./Screens/PaySattleFlow/SettlementPaymentSc
 import AdminTabbarContainer from "./Screens/AdminFlow/Tabbar/AdminTabbarContainer";
 
 import socket from "./Api/socket";
-import AdminUserMainScreen from './Screens/AdminFlow/UsersFlow/AdminUserMainScreen';
-import AdminBusinessProfileDetailsScreen from './Screens/ProfileFlow/AdminBusinessProfileDetailsScreen';
+import AdminUserMainScreen from "./Screens/AdminFlow/UsersFlow/AdminUserMainScreen";
+import AdminBusinessProfileDetailsScreen from "./Screens/ProfileFlow/AdminBusinessProfileDetailsScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -141,7 +141,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={ScreenNames.SplashScreen}
+        initialRouteName={ScreenNames.PlansScreen}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen

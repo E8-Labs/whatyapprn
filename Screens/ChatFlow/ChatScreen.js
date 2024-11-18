@@ -29,9 +29,8 @@ import axios from "axios";
 import { Apipath } from "../../Api/Apipaths";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../res/Colors";
-import { Audio } from 'expo-av';
+import { Audio } from "expo-av";
 import VoiceMessagePlayer from "./VoiceMessagePlayer";
-
 
 const ChatScreen = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
@@ -42,8 +41,6 @@ const ChatScreen = ({ navigation, route }) => {
   const [recording, setRecording] = useState();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const [recordingPopup, setRecordingPopup] = useState(false);
-
-
 
   const chat = route.params.chat;
   const chatId = chat.id;
@@ -63,7 +60,7 @@ const ChatScreen = ({ navigation, route }) => {
           if (messageIndex !== -1) {
             const updatedMessages = [...prevMessages];
             updatedMessages[messageIndex].emoji = messageData.message.emoji;
-            conse.log("Message updated");
+            console.log("Message updated");
             return updatedMessages;
           } else {
             return [...prevMessages, messageData.message];
@@ -101,21 +98,20 @@ const ChatScreen = ({ navigation, route }) => {
   };
 
   async function sendVoice(base64Audio) {
-
     const data = await AsyncStorage.getItem("USER");
     if (data) {
       const u = JSON.parse(data);
 
       socket.emit("sendMessage", {
         token: u.token,
-        chatId: chatId,  // Replace with your actual chat ID
-        messageContent: "",       // Optional message content
+        chatId: chatId, // Replace with your actual chat ID
+        messageContent: "", // Optional message content
         audio: {
-          buffer: base64Audio,      // Base64-encoded audio data
+          buffer: base64Audio, // Base64-encoded audio data
           originalname: "audio.m4a", // Audio filename with extension
-          mimetype: "audio/m4a"      // MIME type of the audio
-        }
-      })
+          mimetype: "audio/m4a", // MIME type of the audio
+        },
+      });
     }
 
     console.log("Audio data sent via socket");
@@ -213,17 +209,17 @@ const ChatScreen = ({ navigation, route }) => {
   async function startRecording() {
     try {
       // Check for microphone permission
-      if (permissionResponse.status !== 'granted') {
+      if (permissionResponse.status !== "granted") {
         const permission = await requestPermission();
-        if (permission.status !== 'granted') {
-          console.warn('Microphone permission not granted');
+        if (permission.status !== "granted") {
+          console.warn("Microphone permission not granted");
           return;
         }
       }
 
       // Prevent starting another recording if already in progress
       if (recording) {
-        console.warn('Recording is already in progress');
+        console.warn("Recording is already in progress");
         return;
       }
 
@@ -240,7 +236,7 @@ const ChatScreen = ({ navigation, route }) => {
 
       setRecording(newRecording); // Set the recording state to the new recording object.
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error("Failed to start recording", err);
     }
   }
 
@@ -265,13 +261,9 @@ const ChatScreen = ({ navigation, route }) => {
       // Clear the recording instance after stopping
       setRecording(undefined);
     } catch (err) {
-      console.error('Failed to stop recording', err);
+      console.error("Failed to stop recording", err);
     }
   }
-
-
-
-
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -348,9 +340,12 @@ const ChatScreen = ({ navigation, route }) => {
                 );
               } else if (item.item.messageType === "Voice") {
                 return (
-                  
-                  <VoiceMessagePlayer item={item} user = {user}  timestamp={item.createdAt}/>
-                )
+                  <VoiceMessagePlayer
+                    item={item}
+                    user={user}
+                    timestamp={item.createdAt}
+                  />
+                );
               } else {
                 return (
                   <MessageBox item={item} user={user} sendEmoji={sendEmoji} />
@@ -402,11 +397,13 @@ const ChatScreen = ({ navigation, route }) => {
               />
             </View>
 
-            <TouchableOpacity style={{ marginTop: 12 / 930 * screenHeight }}
+            <TouchableOpacity
+              style={{ marginTop: (12 / 930) * screenHeight }}
               onPress={recording ? stopRecording : startRecording}
             >
-              <Image source={require('../../assets/Images/micIcon.png')}
-                style={{ height: 24, width: 24, }}
+              <Image
+                source={require("../../assets/Images/micIcon.png")}
+                style={{ height: 24, width: 24 }}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => sendMessage()}>
@@ -450,10 +447,21 @@ const ChatScreen = ({ navigation, route }) => {
               // backgroundColor:'white'
             }}
           >
-            <TouchableOpacity style={[GlobalStyles.capsuleBtn, { width: 150, backgroundColor: Colors.grayColor }]} onPress={() => setPreviewImage(null)}>
-              <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>Cancel</Text>
+            <TouchableOpacity
+              style={[
+                GlobalStyles.capsuleBtn,
+                { width: 150, backgroundColor: Colors.grayColor },
+              ]}
+              onPress={() => setPreviewImage(null)}
+            >
+              <Text style={[GlobalStyles.BtnText, { color: "black" }]}>
+                Cancel
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={sendImageMessage} style={[GlobalStyles.capsuleBtn, { width: 150 }]}>
+            <TouchableOpacity
+              onPress={sendImageMessage}
+              style={[GlobalStyles.capsuleBtn, { width: 150 }]}
+            >
               <Text style={GlobalStyles.BtnText}>Send</Text>
             </TouchableOpacity>
           </View>
@@ -470,36 +478,36 @@ const ChatScreen = ({ navigation, route }) => {
         />
       </Modal>
 
-
-
       {/* record voice popup */}
       <Modal
         animationType="fade"
         transparent={true}
         visible={recordingPopup}
-        onRequestClose={() => { }}>
+        onRequestClose={() => {}}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TouchableOpacity style={styles.stopButton} >
-              <Image source={require('../../assets/Images/recordinAnimations.gif')}
+            <TouchableOpacity style={styles.stopButton}>
+              <Image
+                source={require("../../assets/Images/recordinAnimations.gif")}
                 style={{ height: 50, width: 80 }}
               />
             </TouchableOpacity>
             <Text style={styles.modalText}>Recording...</Text>
-            <TouchableOpacity style={{ marginTop: 20 }}
+            <TouchableOpacity
+              style={{ marginTop: 20 }}
               onPress={() => {
-                stopRecording()
+                stopRecording();
               }}
             >
-              <Image source={require('../../assets/Images/micIcon.png')}
-                style={{ height: 30, width: 30, tintColor: 'red' }}
+              <Image
+                source={require("../../assets/Images/micIcon.png")}
+                style={{ height: 30, width: 30, tintColor: "red" }}
               />
             </TouchableOpacity>
           </View>
-
         </View>
       </Modal>
-
     </SafeAreaView>
   );
 };
@@ -509,36 +517,35 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     // width:300
   },
   modalView: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
-    width: 300 / 430 * screenWidth,
-    height: 180 / 930 * screenHeight
-
-
+    width: (300 / 430) * screenWidth,
+    height: (180 / 930) * screenHeight,
   },
   stopButton: {
     marginBottom: 20,
   },
   modalText: {
-    color: '#333333',
-    textAlign: 'center',
+    color: "#333333",
+    textAlign: "center",
     fontSize: 16,
-  }, voicecontainer: {
-    maxWidth: '70%',
-    flexDirection: 'row',
-    alignItems: 'center',
+  },
+  voicecontainer: {
+    maxWidth: "70%",
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
   },
-})
+});

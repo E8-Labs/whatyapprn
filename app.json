@@ -6,16 +6,13 @@
     "orientation": "portrait",
     "icon": "./assets/WhatYap.png",
     "userInterfaceStyle": "light",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "plugins": ["expo-apple-authentication"],
+    "plugins": [["expo-apple-authentication"], ["expo-notifications"]],
     "ios": {
       "usesAppleSignIn": true,
       "supportsTablet": true,

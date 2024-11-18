@@ -79,7 +79,7 @@ const usePurchases = (RevenueCatApiKey) => {
   const buyProduct = async (product) => {
     setLoading2(product.identifier);
     try {
-      console.log("Subscribing to", product.identifier);
+      console.log("Subscribing to", product);
       const { customerInfo } = await Purchases.purchaseProduct(
         product.identifier
       );
