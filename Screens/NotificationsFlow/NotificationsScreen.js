@@ -25,6 +25,7 @@ export default function NotificationsScreen({ navigation }) {
     const [notifications, setNotifications] = useState([])
     const [loading, setLoading] = useState(false)
     const [sections, setSections] = useState([])
+    const [role,setRole] = useState("")
 
     useEffect(() => {
         getNotifications()
@@ -42,6 +43,8 @@ export default function NotificationsScreen({ navigation }) {
         try {
             if (data) {
                 let d = JSON.parse(data)
+                // console.log('d', d)
+                setRole(d.user.role)
                 const result = await fetch(Apipath.getNotifications + `?offset=${notifications.length}`, {
                     method: 'get',
                     headers: {
@@ -124,7 +127,7 @@ export default function NotificationsScreen({ navigation }) {
         } else if (item.type === NotificationType.Disagreement) {
             let not = {
                 image: disAgreeReviewIcon,
-                message: item.fromUser.name + " disagreed to your review",
+                message: role&&role === "admin" ? item.fromUser.name + "  submitted a disagreement":item.fromUser.name + " disagreed to your review",
                 time: item.createdAt,
                 type: item.type
             }
@@ -167,84 +170,35 @@ export default function NotificationsScreen({ navigation }) {
             }
             // console.log('notification type data is', not)
             return not
+        } else if(item.type === NotificationType.NewUser){
+            let not = {
+                image:  item.fromUser.profile_image? item.fromUser.profile_image:placeholderImage,
+                message: item.fromUser.name + " registered",
+                time: item.createdAt,
+                type: item.type
+            }
+            return not
+        } else if(item.type === NotificationType.SettlementAmountPaid){
+            let not = {
+                image:messageIcon,
+                message: item.fromUser.name + " paid ",
+                time: item.createdAt,
+                type: item.type
+            }
+            return not
+        }else if(item.type === NotificationType.NewReview){
+            let not = {
+                image:messageIcon,
+                message: item.fromUser.name + " wrote a review ",
+                time: item.createdAt,
+                type: item.type
+            }
+            return not
         }
         else {
             console.log('other notification type', item.type)
         }
     }
-
-    const onpressHandle = (item) => {
-        if (item.notification_type === 'NewUser') {
-            navigation.navigate("UserProfileDetails", {
-                DATA: {
-                    UserDetails: item.from
-                },
-            })
-        } else if (item.notification_type === 'ReportedUser') {
-            navigation.navigate("UserProfileDetails", {
-                DATA: {
-                    UserDetails: item.from.id
-                },
-            })
-        } else if (item.notification_type === "Match") {
-            navigation.navigate("SelectedProfile", {
-                data: {
-                    user: item.from
-                }
-            })
-        } else if (item.notification_type === "Dislike") {
-            navigation.navigate("SelectedProfile", {
-                data: {
-                    user: item.from
-                }
-            })
-        } else if (item.notification_type === "Like") {
-            navigation.navigate("SelectedProfile", {
-                data: {
-                    user: item.from
-                }
-            })
-        } else if (item.notification_type === "Message") {
-            if (item.chat) {
-                navigation.navigate("ChatScreen", {
-                    data: {
-                        chat: item.chat,
-                        from: 'Notification',
-                    },
-                    LastMessage: () => { console.log("Here") }
-                })
-            } else {
-                ShowMessage("This chat was deleted")
-            }
-
-        } else if (item.notification_type === "DateInvite") {
-            if (item.booking) {
-                navigation.navigate("SelectedDateDetails", {
-                    data: item.booking.datePlace,
-                })
-            } else {
-                ShowMessage("This date was deleted")
-            }
-
-        }
-        else if (item.notification_type === "DateInviteToAdmin") {
-            if (item.booking) {
-                navigation.navigate("DateDetails", {
-                    DATA: {
-                        dateDetails: item.booking.datePlace,
-                        from: 'Notification'
-                    },
-                    DateDeleted: () => console.log('here'),
-                    DateUpdated: () => console.log('here'),
-                })
-            } else {
-                ShowMessage("This date was deleted")
-            }
-
-        }
-    }
-
-
     const renderItem = (item) => {
         console.log('trying to render items', item)
         let not = getNotificationType(item)

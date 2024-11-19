@@ -470,7 +470,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                           fontFamily: CustomFonts.IntriaBold,
                                         }}
                                       >
-                                        {item.totalYapScore}
+                                        {item.yapScore3Digit}
                                       </Text>
                                     </View>
 

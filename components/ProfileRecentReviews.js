@@ -285,7 +285,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                     </Text>
                                                                                 </View>
                                                                                 <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                                    {item.customer.totalYapScore}
+                                                                                    {item.customer.yapScore3Digit}
                                                                                 </Text>
                                                                             </View>
                                                                         </View>

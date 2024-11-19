@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity, Animated, FlatList, StyleSheet, Modal } from 'react-native'
-import React, { useCallback, useEffect, useState,useRef } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { GlobalStyles } from '../../../assets/styles/GlobalStyles'
 import { BarChart } from 'react-native-chart-kit';
 
@@ -16,6 +16,7 @@ import SearchScreen from '../../DiscoverFlow/SearchScreen';
 import axios from 'axios';
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useFocusEffect } from '@react-navigation/native';
+import AdminResolutionFilterPopup from '../../../components/AdminResolutionFilterPopup';
 
 
 const image = require('../../../assets/Images/profileImage.png')
@@ -32,129 +33,6 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
   const image1 = require('../../../assets/Images/profileImage.png')
   const image2 = require('../../../assets/Images/profileImage2.png')
 
-  const reviews = [
-    {
-      id: 41,
-      service: "AirPods",
-      amountOfTransaction: 12.12,
-      dateOfTransaction: "10/11/2024",
-      mediaUrl: null,
-      thumbUrl: null,
-      yapScore: 1.5,
-      settlementOffer: true,
-      notesAboutCustomer: "Multiple media test",
-      business: {
-        id: 26,
-        name: "Arslan Developer",
-        profile_image: null,
-        full_profile_image: null,
-        email: "developer5787@gmail.com",
-        phone: "",
-        role: "business",
-        city: "San Nicolas",
-        state: "Cdad. Autónoma de Buenos Aires",
-        totalYapScore: 0,
-        totalReviews: 0,
-        createdAt: "2024-11-08T21:19:05.000Z",
-        totalSpent: 0
-      },
-      customer: {
-        id: 9,
-        name: "Noah",
-        profile_image: "http://185.28.22.219:8006/uploads/profile_images/thumbnail_1729400994943.jpg",
-        full_profile_image: "http://185.28.22.219:8006/uploads/profile_images/profile_1729400994943.jpg",
-        email: "arslan@gmail.com",
-        phone: "",
-        role: "customer",
-        city: "",
-        state: "",
-        totalYapScore: 58.8,
-        totalReviews: 14,
-        createdAt: "2024-10-17T17:20:34.000Z",
-        totalSpent: 8149.93
-      },
-      createdAt: "2024-11-11T17:12:52.000Z",
-      updatedAt: "2024-11-11T17:12:52.000Z",
-      settlementOfferObject: {
-        id: 19,
-        amount: 12.1,
-        userId: 26,
-        reviewId: 41,
-        status: "active",
-        createdAt: "2024-11-11T17:12:52.000Z",
-        updatedAt: "2024-11-11T17:12:52.000Z"
-      },
-      reviewStatus: "active",
-      newActivityByCustomer: false,
-      newActivityByBusiness: false,
-      media: []
-    },
-    {
-      id: 48,
-      service: "Hello testing",
-      amountOfTransaction: 120,
-      dateOfTransaction: "10/11/2024",
-      mediaUrl: null,
-      thumbUrl: null,
-      yapScore: 3.8,
-      settlementOffer: false,
-      notesAboutCustomer: "Hello",
-      business: {
-        id: 26,
-        name: "Arslan Developer",
-        profile_image: null,
-        full_profile_image: null,
-        email: "developer5787@gmail.com",
-        phone: "",
-        role: "business",
-        city: "San Nicolas",
-        state: "Cdad. Autónoma de Buenos Aires",
-        totalYapScore: 0,
-        totalReviews: 0,
-        createdAt: "2024-11-08T21:19:05.000Z",
-        totalSpent: 0
-      },
-      customer: {
-        id: 9,
-        name: "Noah",
-        profile_image: "http://185.28.22.219:8006/uploads/profile_images/thumbnail_1729400994943.jpg",
-        full_profile_image: "http://185.28.22.219:8006/uploads/profile_images/profile_1729400994943.jpg",
-        email: "arslan@gmail.com",
-        phone: "",
-        role: "customer",
-        city: "",
-        state: "",
-        totalYapScore: 58.8,
-        totalReviews: 14,
-        createdAt: "2024-10-17T17:20:34.000Z",
-        totalSpent: 8149.93
-      },
-      createdAt: "2024-11-11T17:49:39.000Z",
-      updatedAt: "2024-11-11T17:49:39.000Z",
-      settlementOfferObject: null,
-      reviewStatus: "active",
-      newActivityByCustomer: false,
-      newActivityByBusiness: false,
-      media: [
-        {
-          id: 13,
-          media_url: "http://185.28.22.219:8006/uploads/review_images/2024-11-11_review_1731347379344.jpg",
-          thumb_url: "http://185.28.22.219:8006/uploads/review_images/2024-11-11_thumbnail_1731347379344.jpg",
-          reviewId: 48,
-          createdAt: "2024-11-11T17:49:39.000Z",
-          updatedAt: "2024-11-11T17:49:39.000Z"
-        },
-        {
-          id: 14,
-          media_url: "http://185.28.22.219:8006/uploads/review_images/2024-11-11_review_1731347379380.jpg",
-          thumb_url: "http://185.28.22.219:8006/uploads/review_images/2024-11-11_thumbnail_1731347379380.jpg",
-          reviewId: 48,
-          createdAt: "2024-11-11T17:49:39.000Z",
-          updatedAt: "2024-11-11T17:49:39.000Z"
-        }
-      ]
-    }
-  ]
   useFocusEffect(
     useCallback(() => {
       getResolutions()
@@ -182,13 +60,23 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
     }).start(() => setshowSearch(false))
   }
 
-  const getResolutions = async () => {
+  const getResolutions = async (filters) => {
+    console.log('filters in get resolutions function', filters)
+    // return
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
       setLoading(true)
       try {
-        const response = await axios.get(Apipath.getResolutions, {
+        let path = Apipath.getResolutions
+        if(filters){
+          
+          path = path + "?active="+filters.active+"&disputeStatus="+filters.disputeStatus+"&maxAmount="+filters.maxAmount+
+          "&minAmount="+filters.minAmount+"&resolved="+filters.resolved
+        }
+        console.log('path', path)
+// return
+        const response = await axios.get(path, {
           headers: {
             "Authorization": "Bearer " + u.token
           }
@@ -207,6 +95,14 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
         console.log('error in dashboard api ', e)
       }
     }
+  }
+
+  const closeModal = (filters) => {
+    console.log('filters', filters)
+    if (filters) {
+      getResolutions(filters)
+    }
+    setShowFilter(false)
   }
 
 
@@ -295,9 +191,7 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
             animationType='slide'
             transparent={true}
           >
-            <FilterPoopup close={() => {
-              setShowFilter(false)
-            }} />
+            <AdminResolutionFilterPopup close={closeModal} />
           </Modal>
 
           <View style={{ height: screenHeight * 0.68 }}>
