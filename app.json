@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "name": "WhatYap",
+    "slug": "whatyap",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/WhatYap.png",
+    "userInterfaceStyle": "light",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      [
+        "expo-apple-authentication"
+      ],
+      [
+        "expo-notifications"
+      ]
+    ],
+    "ios": {
+      "usesAppleSignIn": true,
+      "supportsTablet": true,
+      "requireFullScreen": false,
+      "infoPlist": {
+        "CFBundleDisplayName": "WhatYap",
+        "NSCameraUsageDescription": "Allow WhatYap to open the camera",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow WhatYap to use your location.",
+        "NSLocationAlwaysUsageDescription": "Allow WhatYap to access your location",
+        "NSLocationWhenInUseUsageDescription": "Allow WhatYap to access your location",
+        "NSMicrophoneUsageDescription": "Allow WhatYap to access your microphone",
+        "NSPhotoLibraryUsageDescription": "Allow WhatYap to open the Photos",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {
+            "185.28.22.219": {
+              "NSIncludesSubdomains": true,
+              "NSTemporaryExceptionAllowsInsecureHTTPLoads": true
+            }
+          },
+          "NSAllowsLocalNetworking": true
+        }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "311004442185-ev6am2pcrj1ahqvhij8sgc9mdm7u7djt.apps.googleusercontent.com"
+        }
+      },
+      "bundleIdentifier": "com.salman-e8.WhatYap"
+    },
+    "android": {
+      "package": "com.salman_e8.whatyap",
+      "permissions": [
+        "CAMERA",
+        "LOCATION",
+        "MICROPHONE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "68ac3ece-d86e-4f42-8066-b2e3406b4978"
+      }
+    }
+  }
+}

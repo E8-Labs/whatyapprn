@@ -1,0 +1,65 @@
+{
+    "about_business": "Helo",
+    "addedBy": 14,
+    "business_address": "",
+    "business_employees": 150,
+    "business_industry": "Management",
+    "business_website": "",
+    "city": "Playa del Carmen",
+    "createdAt": "2024-10-20T07:26:33.000Z",
+    "credits_available": 35,
+    "driver_license_id": "12345678",
+    "driver_license_image": "http://185.28.22.219:8006/uploads/profile_images/dl_1729411888423.jpg",
+    "email": "hammad@gmail.com",
+    "fcm_token": "",
+    "full_profile_image": "http://185.28.22.219:8006/uploads/profile_images/2024-12-12_profile_1734041532978.jpg",
+    "id": 15,
+    "lat": 20.63003373544371,
+    "lon": -87.07050395081671,
+    "media": [
+        {
+            "caption": "Hello",
+            "createdAt": "2024-12-13T13:39:26.000Z",
+            "id": 58,
+            "thumb_url": "http://185.28.22.219:8006/uploads/media/2024-12-13_thumbnail_media.jpg",
+            "type": "image",
+            "updatedAt": "2024-12-13T13:39:26.000Z",
+            "url": "http://185.28.22.219:8006/uploads/media/2024-12-13_media.jpg",
+            "userId": 15
+        },
+        {
+            "caption": "",
+            "createdAt": "2024-12-13T15:20:47.000Z",
+            "id": 59,
+            "thumb_url": "http://185.28.22.219:8006/uploads/media/2024-12-13_thumbnail_media.jpg",
+            "type": "image",
+            "updatedAt": "2024-12-13T15:20:47.000Z",
+            "url": "http://185.28.22.219:8006/uploads/media/2024-12-13_media.jpg",
+            "userId": 15
+        },
+        {
+            "caption": "",
+            "createdAt": "2024-12-13T15:21:29.000Z",
+            "id": 60,
+            "thumb_url": "http://185.28.22.219:8006/uploads/media/2024-12-13_thumbnail_media.jpg",
+            "type": "image",
+            "updatedAt": "2024-12-13T15:21:29.000Z",
+            "url": "http://185.28.22.219:8006/uploads/media/2024-12-13_media.jpg",
+            "userId": 15
+        }
+    ],
+    "name": "hammad",
+    "phone": "",
+    "profile_image": "http://185.28.22.219:8006/uploads/images/2024-12-12_thumbnail_1734041532978.jpg",
+    "role": "business",
+    "state": "Q. Roo.",
+    "subscription": {
+        "isSubscribed": false,
+        "subscriptionDetails": null
+    },
+    "totalReviews": 4,
+    "totalSpent": 7568,
+    "totalYapScore": 16,
+    "username": "Hammad ",
+    "yapScore3Digit": 820
+}
