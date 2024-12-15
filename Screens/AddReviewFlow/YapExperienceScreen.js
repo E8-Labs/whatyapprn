@@ -46,12 +46,12 @@ const YapExperienceScreen = ({ navigation, route }) => {
                 let settlementAmount;
                 if (yap.settlementAmount) {
                     console.log('yap.settlementAmount', yap.settlementAmount)
-                    transactionAmount = yap.settlementAmount && yap.transactionAmount.replace(",", "")
+                    transactionAmount = Number(yap.settlementAmount && yap.transactionAmount.replace(",", ""))
                 }
                 if (yap.transactionAmount) {
                     console.log('yap.transactionAmount',yap.transactionAmount)
 
-                    settlementAmount = yap.transactionAmount && yap.transactionAmount.replace(",", "")
+                    settlementAmount =Number(yap.transactionAmount && yap.transactionAmount.replace(",", ""))
                 }
 
                 apidata.append("service", yap.service)
