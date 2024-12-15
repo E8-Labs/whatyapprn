@@ -29,16 +29,12 @@
 			<string>Fb Login</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb1490848418243027</string>
-			</array>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>com.googleusercontent.apps.311004442185-ev6am2pcrj1ahqvhij8sgc9mdm7u7djt</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.8</string>
+	<string>3</string>
 	<key>FacebookAppID</key>
 	<string>1490848418243027</string>
 	<key>FacebookClientToken</key>
