@@ -51,6 +51,8 @@ const ChatScreen = ({ navigation, route }) => {
   const chat = route.params.chat;
   const chatId = chat.id;
   let listViewRef = useRef(null);
+  const recordingInstance = useRef(null);
+
 
   useEffect(() => {
     socket.on("receiveMessage" + chatId, (data) => {
@@ -302,135 +304,129 @@ const ChatScreen = ({ navigation, route }) => {
     onPanResponderMove: (evt, gestureState) => {
       if (gestureState.dx < -50) {
         setCancelRecording(true);
+      } else {
+        setCancelRecording(false);
       }
     },
-    onPanResponderRelease: () => {
+    onPanResponderRelease: async () => {
       if (cancelRecording) {
         cancelVoiceRecording();
       } else {
-        stopRecording();
+        await stopRecording();
       }
     },
   });
 
   const startRecording = async () => {
     try {
-      // Request permissions if not granted
-      if (permissionResponse?.status !== "granted") {
-        const permission = await requestPermission();
-        if (permission.status !== "granted") {
-          console.warn("Microphone permission not granted");
-          return;
-        }
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Microphone permission not granted");
+        return;
       }
-
-      // Set recording state
-      setIsRecording(true);
-      setCancelRecording(false);
-      setRecordingTimer(0);
 
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
 
-      const { recording: newRecording } = await Audio.Recording.createAsync(
+      const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
-      setRecording(newRecording);
 
-      // Start timer
-      timerInterval.current = setInterval(() => {
-        setRecordingTimer((prev) => prev + 1);
-      }, 1000);
+      recordingInstance.current = recording;
+      setIsRecording(true);
+      startTimer();
 
-      // Start animation
       Animated.loop(
         Animated.sequence([
+          Animated.timing(recordingAnimation, {
+            toValue: 1.5,
+            duration: 500,
+            useNativeDriver: true,
+          }),
           Animated.timing(recordingAnimation, {
             toValue: 1,
             duration: 500,
             useNativeDriver: true,
           }),
-          Animated.timing(recordingAnimation, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }),
         ])
       ).start();
-    } catch (err) {
-      console.error("Failed to start recording", err);
+    } catch (error) {
+      console.error("Error starting recording:", error);
     }
   };
 
   const stopRecording = async () => {
-    if (!recording) return;
-
-    setIsRecording(false);
-    clearInterval(timerInterval.current);
-    Animated.timing(recordingAnimation).stop();
-
     try {
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      setAudioURI(uri);
+      if (!recordingInstance.current) return;
 
-      // Convert audio to base64
+      Animated.timing(recordingAnimation).stop();
+      await recordingInstance.current.stopAndUnloadAsync();
+      const uri = recordingInstance.current.getURI();
+
       const base64Audio = await FileSystem.readAsStringAsync(uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      sendVoice(base64Audio);
-      setRecording(null);
-    } catch (err) {
-      console.error("Failed to stop recording", err);
+      sendVoice(base64Audio)
+      setIsRecording(false);
+      resetTimer();
+    } catch (error) {
+      console.error("Error stopping recording:", error);
     }
   };
 
   const cancelVoiceRecording = () => {
-    setIsRecording(false);
-    clearInterval(timerInterval.current);
-    Animated.timing(recordingAnimation).stop();
-
-    if (recording) {
-      recording.stopAndUnloadAsync();
+    if (recordingInstance.current) {
+      recordingInstance.current.stopAndUnloadAsync();
     }
-    setRecording(null);
-    setAudioURI(null);
+    setIsRecording(false);
+    resetTimer();
     console.log("Recording canceled");
   };
 
+  const startTimer = () => {
+    setRecordingTimer(0);
+    timerInterval.current = setInterval(() => {
+      setRecordingTimer((prev) => prev + 1);
+    }, 1000);
+  };
+
+  const resetTimer = () => {
+    clearInterval(timerInterval.current);
+    setRecordingTimer(0);
+  };
+
+  const formatTimer = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+
   const renderMicButton = () => (
-    <View
-      {...panResponder.panHandlers}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {renderMicButton()}
-      {isRecording && (
-        <View style={{ marginLeft: 10 }}>
-          <Animated.View
-            style={{
-              height: 10,
-              width: 10,
-              borderRadius: 5,
-              backgroundColor: cancelRecording ? "gray" : "red",
-              opacity: recordingAnimation,
-            }}
-          />
-          <Text style={{ color: "gray", marginTop: 5 }}>
-            {cancelRecording ? "Swipe to cancel" : formatTimer(recordingTimer)}
-          </Text>
-        </View>
-      )}
-    </View>
+    isRecording ? (
+      <View style={styles.recordingContainer} {...panResponder.panHandlers}>
+        <Animated.View
+          style={[
+            styles.recordingIndicator,
+            { transform: [{ scale: recordingAnimation }] },
+          ]}
+        />
+        <Text style={styles.recordingText}>
+          {cancelRecording ? "Release to Cancel" : formatTimer(recordingTimer)}
+        </Text>
+      </View>
+    ) : (
+      <TouchableOpacity onPress={startRecording} style={styles.micButton}>
+        <Image
+          source={require("../../assets/Images/micIcon.png")}
+          style={styles.micIcon}
+        />
+      </TouchableOpacity>
+    )
   );
-
-
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -449,13 +445,13 @@ const ChatScreen = ({ navigation, route }) => {
           <View style={{ alignItems: "center", gap: 5 }}>
             <Image
               source={
-                user&&user.user.id === chat.Business.id ? (chat.Customer.profile_image
+                user && user.user.id === chat.Business.id ? (chat.Customer.profile_image
                   ? { uri: chat.Customer.profile_image }
-                  : placeholderImage ):(chat.Business.profile_image
+                  : placeholderImage) : (chat.Business.profile_image
                     ? { uri: chat.Business.profile_image }
-                    : placeholderImage 
+                    : placeholderImage
 
-                  )
+                )
               }
               style={{
                 height: (44 / 930) * screenHeight,
@@ -474,7 +470,7 @@ const ChatScreen = ({ navigation, route }) => {
               {getSenderUserName(chat)}
             </Text>
           </View>
-          <TouchableOpacity style={{opacity:0}}>
+          <TouchableOpacity style={{ opacity: 0 }}>
             <Image
               source={require("../../assets/Images/threeDotsImage.png")}
               style={GlobalStyles.image24}
@@ -535,55 +531,58 @@ const ChatScreen = ({ navigation, route }) => {
               justifyContent: "center",
               paddingHorizontal: 10,
               gap: 8,
-              marginBottom:0
+              marginBottom: 0
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                setShowPopup(true);
-              }}
-            >
-              <Image
-                source={require("../../assets/Images/addIcon.png")}
-                style={{
-                  height: 24,
-                  width: 24,
-                  marginTop: (8 / 930) * screenHeight,
-                }}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                width: (246 / 430) * screenWidth,
-                backgroundColor: "#f5f5f5",
-                paddingVertical: 10,
-                borderRadius: 10,
-                paddingHorizontal: 16,
-              }}
-            >
-              <TextInput
-                placeholder="Send message...."
-                multiline
-                value={inputMessage}
-                onChangeText={(item) => setInputMessage(item)}
-              />
-            </View>
+            {!isRecording ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowPopup(true);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/Images/addIcon.png")}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      marginTop: (8 / 930) * screenHeight,
+                    }}
+                  />
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ marginTop: (12 / 930) * screenHeight }}
-              onPress={recording ? stopRecording : startRecording}
-            >
-              <Image
-                source={require("../../assets/Images/micIcon.png")}
-                style={{ height: 24, width: 24 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => sendMessage()}>
-              <Image
-                source={require("../../assets/Images/blackSendIcon.png")}
-                style={{ height: 52, width: 52 }}
-              />
-            </TouchableOpacity>
+                <View
+                  style={{
+                    width: (246 / 430) * screenWidth,
+                    backgroundColor: "#f5f5f5",
+                    paddingVertical: 10,
+                    borderRadius: 10,
+                    paddingHorizontal: 16,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Send message...."
+                    multiline
+                    value={inputMessage}
+                    onChangeText={(item) => setInputMessage(item)}
+                  />
+                </View>
+              </>
+            ) : null
+
+            }
+            {renderMicButton()}
+            {
+              !isRecording && (
+                <TouchableOpacity onPress={() => sendMessage()}>
+                  <Image
+                    source={require("../../assets/Images/blackSendIcon.png")}
+                    style={{ height: 52, width: 52 }}
+                  />
+                </TouchableOpacity>
+              )
+            }
+
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -654,8 +653,8 @@ const ChatScreen = ({ navigation, route }) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={recordingPopup}
-        onRequestClose={() => {}}
+        visible={false}
+        onRequestClose={() => { }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -719,5 +718,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
+  },
+  micButton: {
+    // backgroundColor: "#007AFF",
+    // borderRadius: 30,
+    // padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  micIcon: {
+    height: 36,
+    width: 36,
+    marginTop:3
+    // tintColor: "white",
+  },
+  recordingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FF3B30",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 50,
+  },
+  recordingIndicator: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    backgroundColor: "white",
+    marginRight: 10,
+  },
+  recordingText: {
+    color: "white",
+    fontSize: 16,
   },
 });

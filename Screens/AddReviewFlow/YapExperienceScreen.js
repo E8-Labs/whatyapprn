@@ -42,10 +42,17 @@ const YapExperienceScreen = ({ navigation, route }) => {
             if (data) {
                 let u = JSON.parse(data)
                 let apidata = new FormData()
+                let transactionAmount;
+                let settlementAmount;
+                if (yap.settlementAmount) {
+                    console.log('yap.settlementAmount', yap.settlementAmount)
+                    transactionAmount = yap.settlementAmount && yap.transactionAmount.replace(",", "")
+                }
+                if (yap.transactionAmount) {
+                    console.log('yap.transactionAmount',yap.transactionAmount)
 
-                let transactionAmount = yap.transactionAmount.replace(",", "")
-                let settlementAmount = yap.transactionAmount && yap.settlementAmount.replace(",", "")
-
+                    settlementAmount = yap.transactionAmount && yap.transactionAmount.replace(",", "")
+                }
 
                 apidata.append("service", yap.service)
                 apidata.append("amountOfTransaction", transactionAmount)

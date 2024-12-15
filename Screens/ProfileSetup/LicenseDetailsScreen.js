@@ -60,7 +60,7 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
             return
         }
         try {
-            // setLoading(true)
+            setLoading(true)
             let formdata = new FormData()
 
 

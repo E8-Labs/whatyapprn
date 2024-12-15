@@ -285,7 +285,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                 marginTop: 30 / 930 * screenHeight
               }}>
                 <Text style={[GlobalStyles.text17,]}>
-                  {role && role === "customer" ? "Business" : "Customer"} Near Me
+                  {role && role === "customer" ? "Businesses" : "Customers"} Near Me
                 </Text>
 
                 <TouchableOpacity
