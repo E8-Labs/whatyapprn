@@ -18,6 +18,7 @@ import axios from 'axios';
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useFocusEffect } from '@react-navigation/native';
 import AdminFilterPopup from '../../../components/AdminUserFilterPopup';
+import moment from 'moment';
 
 
 const image = require('../../../assets/Images/profileImage.png')
@@ -311,7 +312,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
 
                         <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 20 / 930 * screenHeight }}>
                           <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                            Created on {item.createdAt}
+                            Created on {moment(item.createdAt).format("MMM DD")}
                           </Text>
                           <Image source={require('../../../assets/Images/farwordArrow.png')}
                             style={GlobalStyles.image24}

@@ -98,14 +98,14 @@ const AdminDashboardMainScreen = ({ navigation }) => {
           width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
           marginTop: 20 / 930 * screenHeight
         }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
-            <Image source={require('../../../assets/Images/mainIcon.png')}
-              style={GlobalStyles.image37}
+          {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}> */}
+            <Image source={require('../../../assets/Images/logo.png')}
+              style={GlobalStyles.logoImage}
             />
-            <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
+            {/* <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
               Resolution
             </Text>
-          </View>
+          </View> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
             <TouchableOpacity
               onPress={() => {

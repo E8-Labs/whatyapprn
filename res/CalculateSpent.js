@@ -1,5 +1,5 @@
 export default function calculateSpent(spent) {
-  // console.log('spent', spent);
+  console.log('spent', spent);
 
   if (spent === 0) {
     return "$0";

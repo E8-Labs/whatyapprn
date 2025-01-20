@@ -146,7 +146,7 @@ const ReviewReplyScreen = ({ navigation, route }) => {
 
 
               <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                Spent over ${calculateSpent(review.spent)}
+                Spent over {review.totalSpent}
               </Text>
             </View>
           </View>

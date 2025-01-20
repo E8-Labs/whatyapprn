@@ -577,7 +577,7 @@ const ChatScreen = ({ navigation, route }) => {
                 <TouchableOpacity onPress={() => sendMessage()}>
                   <Image
                     source={require("../../assets/Images/blackSendIcon.png")}
-                    style={{ height: 52, width: 52 }}
+                    style={{ height: 40, width: 40 }}
                   />
                 </TouchableOpacity>
               )
@@ -673,7 +673,7 @@ const ChatScreen = ({ navigation, route }) => {
             >
               <Image
                 source={require("../../assets/Images/micIcon.png")}
-                style={{ height: 30, width: 30, tintColor: "red" }}
+                style={{ height: 28, width: 28, tintColor: "red" }}
               />
             </TouchableOpacity>
           </View>

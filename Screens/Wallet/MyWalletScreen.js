@@ -1,35 +1,48 @@
-import { View, Text, TouchableOpacity, SafeAreaView, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, FlatList, Modal } from 'react-native'
 import { Image } from 'expo-image'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
 import { CustomFonts } from '../../assets/font/Fonts'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { screenHeight, screenWidth } from '../../res/Constants'
+import AsyncStorage from '@react-native-async-storage/async-storage'  
+import axios from 'axios'
+import { Apipath } from '../../Api/Apipaths'
+import AddCardScreen from '../PaySattleFlow/AddCardScreen'
+
 
 const MyWalletScreen = ({ navigation }) => {
 
   const cardImage = require('../../assets/Images/visaIcon.png')
 
   const [selectedCard, setSelectedCard] = useState("")
+  const [cards, setCards] = useState([])
+  const [showAddCard, setShowAddCard] = useState(false)
 
-  const cards = [
-    {
-      id: 1,
-      name: 'VISA',
-      disc: 'Editing With',
-      number: 9033,
-      defaultCard: true,
-      image: cardImage
-    },
-    {
-      id: 2,
-      name: 'Mastercard',
-      disc: 'Editing With',
-      number: 9033,
-      defaultCard: false,
-      image: cardImage
-    },
-  ]
+  useEffect(() => {
+    getCards()
+  }, [])
+
+  const getCards = async () => {
+    try {
+      const data = await AsyncStorage.getItem("USER")
+      if (data) {
+        let u = JSON.parse(data)
+        const response = await axios.get(Apipath.getCards, {
+          headers: {
+            'Authorization': 'Bearer ' + u.token,
+            'Content-Type': 'application/json'
+          }
+        })
+        if (response.data) {
+          console.log('cards data is', response.data.data)
+          setCards(response.data.data)
+        }
+      }
+    } catch (e) {
+      console.log('error in get cards is', e)
+    }
+  }
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -48,7 +61,11 @@ const MyWalletScreen = ({ navigation }) => {
           <Text style={GlobalStyles.text14}>
             My Wallet
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={()=>{
+              setShowAddCard(true)
+            }}
+          >
             <Image source={require('../../assets/Images/orangeAddBtn.png')}
               style={{ height: 28 / 930 * screenHeight, width: 28 / 930 * screenHeight }}
             />
@@ -58,6 +75,8 @@ const MyWalletScreen = ({ navigation }) => {
           <Text style={[GlobalStyles.text14, { marginTop: 50 / 930 * screenHeight, alignSelf: 'flex-start' }]}>
             My Cards
           </Text>
+
+
 
           <FlatList
             data={cards}
@@ -104,6 +123,14 @@ const MyWalletScreen = ({ navigation }) => {
               </TouchableOpacity>
             )}
           />
+
+          <Modal
+            visible={showAddCard}
+            transparent={true}
+            animationType="fade"
+          >
+            <AddCardScreen close={()=>setShowAddCard(false)} />
+          </Modal>
         </View>
       </View>
     </SafeAreaView>

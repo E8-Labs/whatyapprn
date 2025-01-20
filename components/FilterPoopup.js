@@ -84,7 +84,7 @@ const FilterPoopup = ({ close }) => {
                             }} 
                             PickAddress={(address)=>{
                                 console.log('picked address is', address)
-                                setState(address.shortState)
+                                setState(address.longState)
                                 setCity(address.city)
                             }}
                             

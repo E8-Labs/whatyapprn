@@ -82,7 +82,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
             "Content-Type": "application/json",
           },
         });
-        // console.log("trying to gt past searches 3");
+        console.log("trying to gt past searches 3");
 
         if (response.data) {
           if (response.data.status === true) {
@@ -112,6 +112,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
   };
 
   const deleteSearch = async (item) => {
+    console.log('trying to delete',item)
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
@@ -523,7 +524,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                                           fontFamily: CustomFonts.InterMedium,
                                         }}
                                       >
-                                        Spent over {calculateSpent(item.spent)}
+                                        Spent over {calculateSpent(item.totalSpent)}
                                       </Text>
 
                                       {/* <TouchableOpacity> */}

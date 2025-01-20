@@ -60,165 +60,167 @@ const PlansScreen = ({ navigation }) => {
               marginTop: (100 / 930) * screenHeight,
             }}
           />
-          <View style={{ position: "absolute", bottom: 50 }}>
-            <Text style={GlobalStyles.heading}>Subscription Plan</Text>
-            <Text
-              style={[
-                GlobalStyles.subheading14,
-                { marginTop: 10, marginBottom: (50 / 930) * screenHeight },
-              ]}
-            >
-              Choose the right plan for your business
-            </Text>
-
-            {loading ? (
-              <View
-                style={{
-                  width: screenWidth,
-                  height: 100,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+          <View style={{ position: "absolute", bottom: 50,}}>
+            <View style={{width:screenWidth,alignItems:'center'}}>
+              <Text style={GlobalStyles.heading}>Subscription Plan</Text>
+              <Text
+                style={[
+                  GlobalStyles.subheading14,
+                  { marginTop: 10, marginBottom: (50 / 930) * screenHeight },
+                ]}
               >
-                <Text> Loading products...</Text>
-              </View>
-            ) : (
-              plans.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() => {
-                    setselectedPlan(item);
+                Choose the right plan for your business
+              </Text>
+
+              {loading ? (
+                <View
+                  style={{
+                    width: screenWidth,
+                    height: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  {item.id === 1 && (
-                    <Image
-                      source={require("../../assets/Images/recommendedImage.png")}
-                      style={{
-                        height: (30 / 930) * screenHeight,
-                        width: (164 / 430) * screenWidth,
-                        resizeMode: "contain",
-                        zIndex: 2,
-                        alignSelf: "flex-end",
-                        marginRight: (30 / 430) * screenWidth,
-                        marginBottom: (-45 / 930) * screenHeight,
-                        // position: 'relative', top: 0, bottom: 50,
-                      }}
-                    />
-                  )}
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderColor:
-                        selectedPlan.id === item.id
-                          ? Colors.orangeColor
-                          : Colors.grayColor,
-                      borderRadius: 5,
-                      alignItems: "center",
-                      paddingVertical: 15,
-                      paddingHorizontal: 10,
-                      marginTop: (30 / 930) * screenHeight,
-                      zIndex: 1,
+                  <Text> Loading products...</Text>
+                </View>
+              ) : (
+                plans.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    onPress={() => {
+                      setselectedPlan(item);
                     }}
                   >
+                    {item.id === 1 && (
+                      <Image
+                        source={require("../../assets/Images/recommendedImage.png")}
+                        style={{
+                          height: (30 / 930) * screenHeight,
+                          width: (164 / 430) * screenWidth,
+                          resizeMode: "contain",
+                          zIndex: 2,
+                          alignSelf: "flex-end",
+                          marginRight: (30 / 430) * screenWidth,
+                          marginBottom: (-45 / 930) * screenHeight,
+                          // position: 'relative', top: 0, bottom: 50,
+                        }}
+                      />
+                    )}
                     <View
                       style={{
-                        width: screenWidth - (80 / 430) * screenWidth,
-                        flexDirection: "row",
+                        borderWidth: 1,
+                        borderColor:
+                          selectedPlan.id === item.id
+                            ? Colors.orangeColor
+                            : Colors.grayColor,
+                        borderRadius: 5,
                         alignItems: "center",
-                        justifyContent: "space-between",
+                        paddingVertical: 15,
+                        paddingHorizontal: 10,
+                        marginTop: (30 / 930) * screenHeight,
+                        zIndex: 1,
                       }}
                     >
                       <View
                         style={{
-                          flexDirection: "column",
+                          width: screenWidth - (80 / 430) * screenWidth,
+                          flexDirection: "row",
                           alignItems: "center",
-                          gap: 15,
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Text
+                        <View
                           style={{
-                            fontSize: 17,
-                            fontFamily: CustomFonts.PoppinsSemiBold,
-                            fontWeight: "700",
-                            color: Colors.orangeColor,
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 15,
                           }}
                         >
-                          {item.name}
-                        </Text>
-
-                        <Text
-                          style={{
-                            fontSize: 17,
-                            fontFamily: CustomFonts.PoppinsSemiBold,
-                            fontWeight: "700",
-                            color: "black",
-                          }}
-                        >
-                          {item.price} <Text style={{
-                            fontSize: 17,
-                            fontFamily: CustomFonts.PoppinsMedium,
-                            fontWeight: "700",
-                            color: "black",
-                            textDecorationLine:'line-through'
-                          }}>
-                            {item.oldPrice}
+                          <Text
+                            style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.PoppinsSemiBold,
+                              fontWeight: "700",
+                              color: Colors.orangeColor,
+                            }}
+                          >
+                            {item.name}
                           </Text>
-                        </Text>
-                      </View>
 
-                      <View
-                        style={{
-                          flexDirection: "column",
-                          alignItems: "flex-end",
-                          gap: 15,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Image
-                          source={
-                            selectedPlan.id === item.id
-                              ? selectedImage
-                              : unSelectedImage
-                          }
-                          style={GlobalStyles.image24}
-                        />
-                        <Text
+                          <Text
+                            style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.PoppinsSemiBold,
+                              fontWeight: "700",
+                              color: "black",
+                            }}
+                          >
+                            {item.price} <Text style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.PoppinsMedium,
+                              fontWeight: "700",
+                              color: "black",
+                              textDecorationLine: 'line-through'
+                            }}>
+                              {item.oldPrice}
+                            </Text>
+                          </Text>
+                        </View>
+
+                        <View
                           style={{
-                            fontSize: 17,
-                            fontFamily: CustomFonts.InterRegular,
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            gap: 15,
+                            justifyContent: "center",
                           }}
                         >
-                          {item.disc}
-                        </Text>
+                          <Image
+                            source={
+                              selectedPlan.id === item.id
+                                ? selectedImage
+                                : unSelectedImage
+                            }
+                            style={GlobalStyles.image24}
+                          />
+                          <Text
+                            style={{
+                              fontSize: 17,
+                              fontFamily: CustomFonts.InterRegular,
+                            }}
+                          >
+                            {item.disc}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
+                  </TouchableOpacity>
+                ))
+              )}
 
-            <TouchableOpacity
-              style={GlobalStyles.capsuleBtn}
-              onPress={() => {
-                buyProduct(selectedPlan);
-              }}
-            >
-              <Text style={GlobalStyles.BtnText}>Subscribe</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={GlobalStyles.capsuleBtn}
+                onPress={() => {
+                  buyProduct(selectedPlan);
+                }}
+              >
+                <Text style={GlobalStyles.BtnText}>Subscribe</Text>
+              </TouchableOpacity>
 
-            <Text
-              style={{
-                width: screenWidth - 40,
-                fontSize: 13,
-                fontFamily: CustomFonts.InterRegular,
-                marginTop: 30,
-                textAlign: "center",
-              }}
-            >
-              This subscription automically renews unless auto-renew is turn off
-              ateast 24hrs before current period eands. Payment is charged to
-              your iTunes Account.
-            </Text>
+              <Text
+                style={{
+                  width: screenWidth - 40,
+                  fontSize: 13,
+                  fontFamily: CustomFonts.InterRegular,
+                  marginTop: 30,
+                  textAlign: "center",
+                }}
+              >
+                This subscription automically renews unless auto-renew is turn off
+                ateast 24hrs before current period eands. Payment is charged to
+                your iTunes Account.
+              </Text>
+            </View>
           </View>
         </View>
       </View>

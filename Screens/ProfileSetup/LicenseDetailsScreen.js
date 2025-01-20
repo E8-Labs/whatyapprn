@@ -23,9 +23,10 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false)
     const [user, setUser] = useState("")
     const [error, setError] = useState("")
+    const [isAvailable, setIsAvailable] = useState(false)
 
     const from = route.params.user.from
-    console.log('from', from)
+    // console.log('from', from)
     useEffect(() => {
         let u = route.params.user.user
         setUser(u)
@@ -37,6 +38,11 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
     user.business_website = weburl
 
     const handleContinuePress = async () => {
+
+        if(!isAvailable){
+            
+            return
+        }
 
         if (!name || name === "Name not found") {
             setError("Fill in the name")
@@ -105,6 +111,45 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
         } catch (e) {
             setLoading(false)
             console.log('eror in register user api is', e)
+        }
+    }
+
+     useEffect(() => {
+            let timer = setTimeout(() => {
+                if (lNumber) {
+                    console.log('timer finished')
+                    checkLicenseExists(lNumber)
+                }
+            }, 500);
+            return () => clearTimeout(timer)
+        }, [lNumber])
+
+    const checkLicenseExists = async (number) => {
+
+        
+        const apiData = {
+            driverLicenseId: number
+        }
+        try {
+            const response = await axios.post(Apipath.checkLicenseExists, apiData, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if (response) {
+                console.log('response of check license api is', response.data)
+                if (response.data.status === true) {
+                    setIsAvailable(true)
+                    setError("")
+                } else {
+                    setIsAvailable(false)
+                    setError(response.data.message)
+                }
+            }
+        } catch (e) {
+            setLoading(false)
+            setError("Cannot check if license exists.")
+            console.log('error in  check email api', e)
         }
     }
 

@@ -1,5 +1,7 @@
 // import AdminBusinessProfileDetailsScreen from "../Screens/ProfileFlow/AdminBusinessProfileDetailsScreen";
 
+import AddCardScreen from "../Screens/PaySattleFlow/AddCardScreen";
+
 export const ScreenNames = {
   SplashScreen: "SplashScreen",
   OnboardingSlideScreen: "OnboardingSlideScreen",
@@ -70,6 +72,7 @@ export const ScreenNames = {
   AdminBusinessProfileDetailsScreen: "AdminBusinessProfileDetailsScreen",
 
   AdminTabbarContainer: "AdminTabbarContainer",
+  AddCardScreen:"AddCardScreen",
 
   TestFile: "TestFile",
   Testfile2: "Testfile2",

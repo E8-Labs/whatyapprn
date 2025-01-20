@@ -37,4 +37,7 @@ export const Apipath = {
   suspendAccount: baseUrl + "admin/suspendAccount",
   resolveOrReject:baseUrl+"admin/resolveOrReject",
   PurchaseCredits: `${baseUrl}user/purchaseCredits`,
+  checkLicenseExists: `${baseUrl}user/checkDriverLicenseExists`,
+  getCards:`${baseUrl}user/list_cards`,
+  addNewCard:`${baseUrl}user/add_card`,
 };

@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList, Modal } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { Colors } from '../../res/Colors'
@@ -10,6 +10,7 @@ import { ScreenNames } from '../../res/ScreenNames'
 import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import { ShowMessage } from '../../components/ShowMessage'
+import AddCardScreen from './AddCardScreen'
 
 const SettlementPaymentScreen = ({ navigation, route }) => {
 
@@ -18,32 +19,15 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
 
   const cardImage = require('../../assets/Images/visaIcon.png')
 
-  const originalAmount = review.settlementOfferObject&&review.settlementOfferObject.amount; 
-  const percentageIncrease = 5; 
+  const originalAmount = review.settlementOfferObject && review.settlementOfferObject.amount;
+  const percentageIncrease = 5;
 
   const newAmount = originalAmount + (originalAmount * (percentageIncrease / 100))
 
   const [selectedCard, setSelectedCard] = useState("")
   const [loading, setLoading] = useState(false)
-
-  const cards = [
-    {
-      id: 1,
-      name: 'VISA',
-      disc: 'Editing With',
-      number: 9033,
-      defaultCard: true,
-      image: cardImage
-    },
-    {
-      id: 2,
-      name: 'Mastercard',
-      disc: 'Editing With',
-      number: 9033,
-      defaultCard: false,
-      image: cardImage
-    },
-  ]
+  const [showAddCard, setShowAddCard] = useState(false)
+  const [cards, setCards] = useState([])
 
   const paySettle = async () => {
     try {
@@ -86,6 +70,31 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
     }
   }
 
+  useEffect(() => {
+    getCards()
+  }, [])
+
+  const getCards = async () => {
+    try {
+      const data = await AsyncStorage.getItem("USER")
+      if (data) {
+        let u = JSON.parse(data)
+        const response = await axios.get(Apipath.getCards, {
+          headers: {
+            'Authorization': 'Bearer ' + u.token,
+            'Content-Type': 'application/json'
+          }
+        })
+        if (response.data) {
+          console.log('cards data is', response.data.data)
+          setCards(response.data.data)
+        }
+      }
+    } catch (e) {
+      console.log('error in get cards is', e)
+    }
+  }
+
   return (
     <SafeAreaView style={GlobalStyles.container}>
       {
@@ -125,7 +134,7 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
               Amount to be paid
             </Text>
             <Text style={GlobalStyles.text17}>
-              ${review.settlementOfferObject&&review.settlementOfferObject.amount}
+              ${review.settlementOfferObject && review.settlementOfferObject.amount}
             </Text>
           </View>
 
@@ -152,6 +161,63 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
           <Text style={[GlobalStyles.text12, { alignSelf: 'center', width: 288 / 430 * screenWidth, textAlign: 'center' }]}>
             By making this payment, you agree to our terms and condition.
           </Text>
+
+          {
+            cards.length > 0 && (
+              <>
+                <Text style={[GlobalStyles.text17, { alignSelf: 'flex-start' }]}>
+                  Select Card
+                </Text>
+
+                <FlatList
+                  data={cards}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedCard(item)
+                      }}
+                    >
+                      <View style={{
+                        flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
+                        borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
+                      }}>
+                        <View style={{
+                          flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
+
+                        }}>
+                          <Image source={item.image}
+                            style={GlobalStyles.image37}
+                          />
+                          <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
+                            <Text style={GlobalStyles.text17}>
+                              {item.brand} Ending with {item.last4}
+                            </Text>
+                            {
+                              item.isDefault && (
+                                <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+                                  Default Card
+                                </Text>
+                              )
+                            }
+                          </View>
+
+                          <Image source={item.id === selectedCard.id ? (
+                            require('../../assets/Images/selectedIcon.png')
+                          ) : (
+                            require('../../assets/Images/unSelectedIcon.png')
+                          )}
+                            style={GlobalStyles.image24}
+
+                          />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+
+              </>
+            )
+          }
 
           <Text style={[GlobalStyles.text17, { alignSelf: 'flex-start' }]}>
             Select Card
@@ -203,11 +269,25 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
             )}
           />
 
-          <TouchableOpacity style={{ alignSelf: 'flex-start' }}>
+          <TouchableOpacity style={{ alignSelf: 'flex-start' }}
+            onPress={() => {
+              setShowAddCard(true)
+            }}
+          >
             <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
               Add New
             </Text>
           </TouchableOpacity>
+
+
+          <Modal
+            visible={showAddCard}
+            transparent={true}
+            animationType="fade"
+          >
+            <AddCardScreen close={() => { setShowAddCard(false) }} />
+
+          </Modal>
 
           <TouchableOpacity style={GlobalStyles.capsuleBtn}
             onPress={

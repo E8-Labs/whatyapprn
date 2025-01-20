@@ -3,6 +3,7 @@ node_modules
 # Ignore CocoaPods directories
 /ios/Pods/
 /Api/keys.js
+/ApiKeys.js
 
 /ios/Podfile.lock
 

@@ -66,6 +66,7 @@ import AdminTabbarContainer from "./Screens/AdminFlow/Tabbar/AdminTabbarContaine
 import socket from "./Api/socket";
 import AdminUserMainScreen from "./Screens/AdminFlow/UsersFlow/AdminUserMainScreen";
 import AdminBusinessProfileDetailsScreen from "./Screens/ProfileFlow/AdminBusinessProfileDetailsScreen";
+import AddCardScreen from "./Screens/PaySattleFlow/AddCardScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -434,6 +435,12 @@ export default function App() {
         <Stack.Screen
           name={ScreenNames.AdminBusinessProfileDetailsScreen}
           component={AdminBusinessProfileDetailsScreen}
+          options={{ gestureEnabled: false }}
+        />
+
+        <Stack.Screen
+          name={ScreenNames.AddCardScreen}
+          component={AddCardScreen}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>

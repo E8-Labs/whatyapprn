@@ -218,7 +218,7 @@ export default function NotificationsScreen({ navigation }) {
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
                         <Image source={
-                            not.type === NotificationType.ReplyReview ? (
+                            not.type === NotificationType.ReplyReview && not.image ? (
                                 { uri: not.image }
                             ) : (
                                 not.image

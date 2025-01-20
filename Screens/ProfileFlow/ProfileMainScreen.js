@@ -48,7 +48,7 @@ const ProfileMainScreen = ({ navigation }) => {
     Mailer.mail(
       {
         subject: 'Hello from React Native',
-        recipients: ['arslannaeem5787@gmail.com'], // Array of email addresses
+        recipients: ['feedback@whatyap.com'], // Array of email addresses
         ccRecipients: ['cc@example.com'], // Array of CC email addresses
         bccRecipients: ['bcc@example.com'], // Array of BCC email addresses
         body: 'This is a test email from React Native.',
