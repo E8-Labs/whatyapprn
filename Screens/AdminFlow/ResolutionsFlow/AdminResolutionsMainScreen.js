@@ -69,13 +69,13 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
       setLoading(true)
       try {
         let path = Apipath.getResolutions
-        if(filters){
-          
-          path = path + "?active="+filters.active+"&disputeStatus="+filters.disputeStatus+"&maxAmount="+filters.maxAmount+
-          "&minAmount="+filters.minAmount+"&resolved="+filters.resolved
+        if (filters) {
+
+          path = path + "?active=" + filters.active + "&disputeStatus=" + filters.disputeStatus + "&maxAmount=" + filters.maxAmount +
+            "&minAmount=" + filters.minAmount + "&resolved=" + filters.resolved
         }
         console.log('path', path)
-// return
+        // return
         const response = await axios.get(path, {
           headers: {
             "Authorization": "Bearer " + u.token
@@ -125,9 +125,9 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
             marginTop: 20 / 930 * screenHeight
           }}>
 
-            <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
-              Resolutions
-            </Text>
+            <Image source={require('../../../assets/Images/logo.png')}
+              style={GlobalStyles.logoImage}
+            />
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
               <TouchableOpacity
                 onPress={() => {

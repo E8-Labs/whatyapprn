@@ -15,8 +15,8 @@ const AdminFilterPopup = ({ close }) => {
 
 
     const [showAddressPicker, setShowAddressPicker] = useState(false)
-    const [reviewCount, setreviewCount] = useState([100, 1000]);
-    const [yapScore, setYapScore] = useState([1, 1000]);
+    const [reviewCount, setreviewCount] = useState([100, 999]);
+    const [yapScore, setYapScore] = useState([1, 999]);
     const [showCalender, setShowCalender] = useState(false)
     const [selectedFromDate, setSelcetedFromDate] = useState("")
     const [selectedToDate, setSelcetedToDate] = useState("")
@@ -218,7 +218,7 @@ const AdminFilterPopup = ({ close }) => {
                     <MultiSlider
                         values={[reviewCount[0], reviewCount[1]]}
                         min={100}
-                        max={1000}
+                        max={999}
                         // step={400}
                         selectedStyle={{ backgroundColor: '#FF5700' }}  // In-range track color (orange)
                         unselectedStyle={{ backgroundColor: '#FF570030' }} // Make outer transparent, handled by background

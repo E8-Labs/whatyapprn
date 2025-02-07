@@ -26,7 +26,7 @@ const ProfilePlansScreen = ({ navigation }) => {
       id: 1,
       name: "YEARLY",
       price: "$499/yr",
-      disc: "12 Months at $50/Month",
+      // disc: "12 Months at $50/Month",
       identifier: "Monthly_Premium_1118",
       oldPrice: '$999'
     },
@@ -266,7 +266,7 @@ const ProfilePlansScreen = ({ navigation }) => {
                         <View
                           style={{
                             flexDirection: "column",
-                            alignItems: "center",
+                            alignItems: "flex-start",
                             gap: 15,
                           }}
                         >

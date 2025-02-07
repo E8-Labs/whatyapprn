@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, FlatList, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useRef} from 'react'
 import { GlobalStyles } from '../../../assets/styles/GlobalStyles'
 import { Image } from 'expo-image'
 import { BarChart } from 'react-native-chart-kit'
@@ -14,7 +14,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import moment from 'moment'
 
 
-const AdminAnalyticsMainScreen = ({navigation}) => {
+const AdminAnalyticsMainScreen = ({ navigation }) => {
   const image = require('../../../assets/Images/profileImage.png')
 
 
@@ -29,9 +29,33 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
   const [businessValue, setBusinessValue] = useState("1")
   const [customerValue, setCustomerValue] = useState("1")
   const [reviewValue, setReviewValue] = useState("1")
-  const [adminData,setAdminData] = useState(null) 
+  const [adminData, setAdminData] = useState(null)
 
   const [chartData, setChartData] = useState({ labels: [], datasets: [{ data: [] }] });
+
+  const scrollViewRef = useRef(null); // Ref for ScrollView
+
+  // Add section offsets (to calculate positions of each graph)
+  const sectionOffsets = {
+    Revenue: 0,
+    Business: screenHeight * 0.4, // Adjust as per your layout
+    Customers: screenHeight,
+    Reviews:screenHeight*1.6,
+    Past: screenHeight*2.1,
+  }
+
+
+  const handleMenuPress = (menuItem) => {
+    setSelectedMenu(menuItem);
+
+    // Scroll to the desired section
+    if (scrollViewRef.current && sectionOffsets[menuItem.name] !== undefined) {
+      scrollViewRef.current.scrollTo({
+        y: sectionOffsets[menuItem.name],
+        animated: true,
+      });
+    }
+  };
 
   let opened = 30
   let closed = 70
@@ -53,8 +77,11 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
     }, {
       id: 3,
       name: "Customers",
-    }, {
+    },{
       id: 4,
+      name: "Reviews",
+    }, {
+      id: 5,
       name: "Past",
     },
   ]
@@ -77,12 +104,12 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
   useEffect(() => {
     getAdminDataFromLocal()
     getAnalyticsData()
-    
+
   }, [])
 
-  const getAdminDataFromLocal =async () =>{
+  const getAdminDataFromLocal = async () => {
     const data = await AsyncStorage.getItem("AdminData")
-    if(data){
+    if (data) {
       let d = JSON.parse(data)
       console.log('admin data from local is', d)
       setAdminData(d)
@@ -120,14 +147,14 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
     if (type === "monthly") {
       const labels = monthNames;
       const monthlyData = Array(12).fill(0);
-  
+
       data.forEach((entry) => {
         const monthIndex = entry.month - 1;
         if (monthIndex >= 0 && monthIndex < 12) {
           monthlyData[monthIndex] = entry.count || 0; // Default to 0 if count is undefined
         }
       });
-  
+
       return {
         labels,
         datasets: [{ data: monthlyData }],
@@ -135,45 +162,45 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
     } else if (type === "weekly") {
       const labels = [];
       const weeklyData = [];
-  
+
       data.forEach((entry) => {
         labels.push(entry.week)
         weeklyData.push(entry.count)
-        
+
       });
-  
+
       return {
         labels,
         datasets: [{ data: weeklyData }],
       };
     } else if (type === "daily") {
       const labels = [] // Format as MM-DD
-      const dailyData =  [] // Default to 0 if count is undefined
+      const dailyData = [] // Default to 0 if count is undefined
 
 
       data.forEach((entry) => {
         let date = moment(entry.date).format("MM/DD")
         labels.push(date)
         dailyData.push(entry.count)
-        
+
       });
 
       console.log(`labels for ${type} are ${labels} `)
       console.log(`datasets for ${type} are ${dailyData} `)
-  
+
       return {
         labels,
         datasets: [{ data: dailyData }],
       };
     }
   };
-  
+
   const getChartData = (dataType, value) => {
     if (!analyticsData) return { labels: [], datasets: [{ data: [0] }] }; // Empty dataset fallback
-  
+
     let data;
     let type;
-  
+
     switch (dataType) {
       case "Revenue":
         if (value === "1" && analyticsData.mauCustomer) { data = analyticsData.mauCustomer; type = "monthly"; }
@@ -199,13 +226,13 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
         data = [];
         type = "monthly";
     }
-  
+
     if (!data || data.length === 0) return { labels: [], datasets: [{ data: [0] }] }; // Fallback to empty dataset
-  
+
     return formatData(data, type);
   };
-  
-  
+
+
 
   const revenueData = getChartData("Revenue", revValue);
   const businessData = getChartData("Business", businessValue);
@@ -231,7 +258,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
 
   const handleDropdownChange = (value, setStateFunction, dataType) => {
     setStateFunction(value);
-  
+
     // Recalculate the chart data based on the new dropdown value
     const newChartData = getChartData(dataType, value);
     if (newChartData && newChartData.labels && newChartData.datasets) {
@@ -250,19 +277,9 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
           width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
           marginTop: 20 / 930 * screenHeight
         }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
-            <Image source={require('../../../assets/Images/mainIcon.png')}
-              style={GlobalStyles.image37}
-            />
-            <View>
-              <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
-                Analytics
-              </Text>
-              <Text style={{ fontSize: 13, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
-                Welcome
-              </Text>
-            </View>
-          </View>
+          <Image source={require('../../../assets/Images/logo.png')}
+            style={GlobalStyles.logoImage}
+          />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
             <TouchableOpacity
               onPress={() => {
@@ -286,14 +303,14 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
 
         </View>
         <View style={{
-          width: screenWidth - 60, flexDirection: 'row', justifyContent: 'space-between',
-          marginTop: 33 / 930 * screenHeight
+          width: screenWidth - 30, flexDirection: 'row', justifyContent: 'space-between',
+          marginTop: 33 / 930 * screenHeight,paddingBottom:10
         }}>
           {
             menue.map((item) => (
               <TouchableOpacity key={item.id}
                 onPress={() => {
-                  setSelectedMenu(item)
+                  handleMenuPress(item)
                 }}
               >
                 <Text style={[GlobalStyles.text17, { color: selectedMenu.id === item.id ? "black" : '#00000040' }]}>
@@ -304,7 +321,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
           }
         </View>
         <View style={{ height: screenHeight * 0.71, width: screenWidth - 30 }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
 
             {/* revenu chart */}
 
@@ -391,7 +408,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
                   Total Businesses
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  {adminData&&adminData.totalBusinesses}
+                  {adminData && adminData.totalBusinesses}
                 </Text>
               </View>
 
@@ -464,7 +481,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
                     flexDirection: 'column', gap: 10 / 930 * screenHeight
                   }}>
                     <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                      style={[GlobalStyles.image24,{borderRadius:15}]}
+                      style={[GlobalStyles.image24, { borderRadius: 15 }]}
                     />
                     <Text style={GlobalStyles.text17}>
                       {item.name}
@@ -493,7 +510,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
                   Total Customers
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                {adminData&&adminData.totalCustomers}
+                  {adminData && adminData.totalCustomers}
                 </Text>
               </View>
 
@@ -566,7 +583,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
                     flexDirection: 'column', gap: 10 / 930 * screenHeight
                   }}>
                     <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                      style={[GlobalStyles.image24,{borderRadius:15}]}
+                      style={[GlobalStyles.image24, { borderRadius: 15 }]}
                     />
                     <Text style={GlobalStyles.text17}>
                       {item.name}
@@ -595,7 +612,7 @@ const AdminAnalyticsMainScreen = ({navigation}) => {
                   Reviews Stat
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                {adminData&&adminData.totalReviews}
+                  {adminData && adminData.totalReviews}
                 </Text>
               </View>
 

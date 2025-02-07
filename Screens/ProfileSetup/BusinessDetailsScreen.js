@@ -52,7 +52,8 @@ const BusinessDetailsScreen = ({ navigation, route }) => {
         setLoading(false)
         if (data) {
             navigation.push(ScreenNames.NotificationPermitionScreeen, {
-                user: user
+                user: user,
+                from:"BusinessFlow"
             })
         } else {
             console.log('no data')

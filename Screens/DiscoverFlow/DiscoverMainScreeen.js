@@ -118,7 +118,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
         }
         <View style={{
           width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-          marginTop: 20 / 930 * screenHeight
+          marginTop: 8 / 930 * screenHeight
         }}>
           <Image source={require('../../assets/Images/logo.png')}
             style={GlobalStyles.logoImage}

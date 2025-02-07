@@ -190,6 +190,7 @@ const getNotificationPermission = async () => {
   )
 
   useEffect(() => {
+    console.log('trying to refresh subscription status')
     refreshSubscriptionStatus();
   }, []);
 

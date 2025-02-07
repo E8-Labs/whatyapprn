@@ -322,7 +322,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                       gap: 8,
                     }}
                   >
-                    <Text
+                    {/* <Text
                       style={{
                         fontSize: 14,
                         fontFamily: CustomFonts.InterMedium,
@@ -331,7 +331,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                       }}
                     >
                       {getMediaName(item.url)}
-                    </Text>
+                    </Text> */}
                     <Text
                       numberOfLines={2}
                       style={[

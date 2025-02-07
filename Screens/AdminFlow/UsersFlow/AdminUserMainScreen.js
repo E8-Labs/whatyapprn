@@ -169,7 +169,7 @@ const AdminUserMainScreen = ({ navigation }) => {
   const closeModal = (filters) => {
     setShowFilter(false)
     if (filters) {
-      setCustomers([])
+      setBusinesses([])
       searchCustomers(0, filters)
     }
   }
@@ -195,21 +195,9 @@ const AdminUserMainScreen = ({ navigation }) => {
                 width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                 marginTop: 20 / 930 * screenHeight
               }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
-                  <Image source={require('../../../assets/Images/mainIcon.png')}
-                    style={GlobalStyles.image37}
-                  />
-                  <View>
-                    <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
-                      Customers
-                    </Text>
-                    <Text style={[GlobalStyles.text14, { color: '#00000036' }]}> Total Customers:
-                      <Text style={{ fontSize: 13, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
-                        {adminData && adminData.totalCustomers}
-                      </Text>
-                    </Text>
-                  </View>
-                </View>
+                <Image source={require('../../../assets/Images/logo.png')}
+                  style={GlobalStyles.logoImage}
+                />
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
                   <TouchableOpacity
                     onPress={() => {
@@ -324,7 +312,7 @@ const AdminUserMainScreen = ({ navigation }) => {
                             </Text>
                           </View>
                           <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                            {item.yapScore}
+                            {item.yapScore3Digit}
                           </Text>
                         </View>
 

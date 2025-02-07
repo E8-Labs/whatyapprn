@@ -167,6 +167,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
 
   const closeModal = (filters) => {
     setshowSearch(false)
+    setShowFilter(false)
     if (filters) {
       setBusinesses([])
       searchCustomers(0, filters)
@@ -193,7 +194,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
                 width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                 marginTop: 20 / 930 * screenHeight
               }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}>
                   <Image source={require('../../../assets/Images/mainIcon.png')}
                     style={GlobalStyles.image37}
                   />
@@ -207,7 +208,11 @@ const AdminBusinessMainScreen = ({ navigation }) => {
                       </Text>
                     </Text>
                   </View>
-                </View>
+                </View> */}
+
+                <Image source={require('../../../assets/Images/logo.png')}
+                  style={GlobalStyles.logoImage}
+                />
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
                   <TouchableOpacity
                     onPress={() => {

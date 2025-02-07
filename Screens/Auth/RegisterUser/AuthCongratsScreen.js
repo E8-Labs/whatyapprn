@@ -13,7 +13,13 @@ const AuthCongratsScreen = ({ navigation, route }) => {
             navigation.push(ScreenNames.UploadMediaScreen,{
                 from:'congrats'
             })
-        } else{
+        } else if(from == "LicenseDetailsScreen"){
+            navigation.push(ScreenNames.NotificationPermitionScreeen,{
+                from:"CustomerFlow"
+            })
+        }
+        
+        else {
             navigation.push(ScreenNames.TabbarContainer,{
                 from:'congratsScreen'
                })

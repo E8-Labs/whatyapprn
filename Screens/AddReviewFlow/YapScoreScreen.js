@@ -12,6 +12,7 @@ import { ShowMessage } from '../../components/ShowMessage'
 const YapScoreScreen = ({ navigation, route }) => {
 
     const [rating, setRating] = useState(0)
+    const [ratingKey, setRatingKey] = useState(0); // Force re-render on rating change
     const [error, setError] = useState("")
 
     const yap = route.params.yap
@@ -19,11 +20,15 @@ const YapScoreScreen = ({ navigation, route }) => {
     console.log('yap on yap score screen is', yap)
 
 
-    const ratingCompleted = (rating) => {
-        console.log("Rating is: " + rating)
-        setRating(rating)
+    const ratingCompleted = (newRating) => {
+        let roundedRating = Math.round(newRating * 2) / 2; // Ensure half or full star
+        console.log("Rounded Rating is: " + roundedRating);
+
+        setRating(roundedRating);
+        setRatingKey((prevKey) => prevKey + 1); // Change key to force re-render
         setError(null)
     }
+
 
     const handleContinuePress = () => {
         if (rating === 0) {
@@ -33,7 +38,7 @@ const YapScoreScreen = ({ navigation, route }) => {
             navigation.push(ScreenNames.SattelmentSelectionScreen, {
                 yap: yap
             })
-        }else{
+        } else {
             navigation.push(ScreenNames.YapExperienceScreen, {
                 yap: yap
             })
@@ -70,13 +75,14 @@ const YapScoreScreen = ({ navigation, route }) => {
 
                     <Rating
                         type='custom'
+                        key={ratingKey} // Ensures UI updates with each change
                         style={{ alignSelf: 'flex-start' }}
                         ratingCount={5}
                         ratingBackgroundColor='#D3D3D3'
                         tintColor='white'
                         ratingColor='#FFC107'
                         imageSize={50}
-                        startingValue={0}
+                        startingValue={rating}
                         fractions={1}
                         showRating={false}
                         onFinishRating={ratingCompleted}

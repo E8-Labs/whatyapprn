@@ -276,6 +276,7 @@ const LoginScreen = ({ navigation }) => {
                                 placeholder='Email address'
                                 keyboardType='email-address'
                                 autoCapitalize='none'
+                                placeholderTextColor={Colors.lightBlack}
                                 style={{
                                     width: 320 / 430 * screenWidth,
                                     fontFamily: CustomFonts.InterMedium
@@ -304,6 +305,7 @@ const LoginScreen = ({ navigation }) => {
                                     width: 320 / 430 * screenWidth,
                                     fontFamily: CustomFonts.InterMedium
                                 }}
+                                placeholderTextColor={Colors.lightBlack}
                                 onChangeText={(text) => {
                                     setPassword(text)
                                     setError("")

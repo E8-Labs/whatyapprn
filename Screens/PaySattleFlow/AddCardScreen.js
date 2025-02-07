@@ -18,6 +18,7 @@ const AddCardScreen = ({ close }) => {
   const stripe = useStripe();
 
   const handleAddCard = async () => {
+    // close()
     if (!cardDetails?.complete) {
       ShowMessage("Please enter valid card details")
       console.log('error')
@@ -30,6 +31,7 @@ const AddCardScreen = ({ close }) => {
 
       if (error) {
         ShowMessage(error.message)
+        close()
         setLoading(false)
         return;
       }
@@ -56,7 +58,7 @@ const AddCardScreen = ({ close }) => {
 
       if (data) {
         let u = JSON.parse(data);
-        const response = await axios.post(Apipath.addn, { apiData }, {
+        const response = await axios.post(Apipath.addNewCard, { apiData }, {
           headers: {
             'Authorization': 'Bearer ' + u.token,
             'Content-Type': 'application/json'
@@ -71,12 +73,14 @@ const AddCardScreen = ({ close }) => {
             close();
           }
           else {
-
-            ShowMessage(result.message || 'Failed to add card.');
+            close()
+            ShowMessage(response.data.message || 'Failed to add card.');
+            console.log('add new card api message is', response.data.message)
           }
         }
       }
     } catch (error) {
+      close()
       setLoading(false);
       console.error('API Error:', error);
       ShowMessage('Network error occurred while adding the card.');

@@ -5,12 +5,16 @@ import { screenHeight } from '../res/Constants';
 import { CustomFonts } from '../assets/font/Fonts';
 import { GlobalStyles } from '../assets/styles/GlobalStyles';
 
-const HalfCircularProgress = ({ progress,type }) => {
+const HalfCircularProgress = ({ progress, type }) => {
   const strokeWidth = 15;
   const radius = 80; // Adjust this for the desired size
   const innerRadius = radius - strokeWidth / 2;
   const circumference = Math.PI * innerRadius;
-  const progressStroke = circumference * (progress / 100);
+
+  // Normalize progress to a percentage (max value: 1000)
+  const maxProgress = 1000; // Define the maximum value
+  const normalizedProgress = Math.min((progress / maxProgress) * 100, 100); // Convert to percentage and cap at 100
+  const progressStroke = circumference * (normalizedProgress / 100);
 
   return (
     <View style={styles.container}>
@@ -32,7 +36,7 @@ const HalfCircularProgress = ({ progress,type }) => {
           stroke="#00EE8A20"
           strokeWidth={strokeWidth}
           fill="transparent"
-          strokeLinecap='round'
+          strokeLinecap="round"
         />
         {/* Progress path */}
         <Path
@@ -45,31 +49,27 @@ const HalfCircularProgress = ({ progress,type }) => {
         />
       </Svg>
       <View style={styles.textContainer}>
-       
         <Text style={styles.progressText}>{`${progress}`}</Text>
-        {
-            type === 'Yap' ? (
-                <View style = {{flexDirection:'row',alignItems:'center',marginTop:6/930*screenHeight}}>
-                    <Image source={require('../assets/Images/yIcon.png')}
-                        style = {GlobalStyles.yIcon}
-                    />
-                    <Text style = {[GlobalStyles.text14,{color:'#00000090'}]}
-                    >
-                        ap score
-                    </Text>
-                </View>
-
-            ):(
-                <Text style = {[GlobalStyles.text14,{color:'#00000090',marginRight:8/430*screenHeight,marginTop:6/930*screenHeight}]}
-                >
-                    Sentiment Score
-                </Text>
-            )
-        }
+        {type === 'Yap' ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 / 930 * screenHeight }}>
+            <Image
+              source={require('../assets/Images/yIcon.png')}
+              style={GlobalStyles.yIcon}
+            />
+            <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+              ap score
+            </Text>
+          </View>
+        ) : (
+          <Text style={[GlobalStyles.text14, { color: '#00000090', marginRight: 8 / 430 * screenHeight, marginTop: 6 / 930 * screenHeight }]}>
+            Sentiment Score
+          </Text>
+        )}
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

@@ -11,10 +11,15 @@ import { updateProfile } from '../../components/UpdateProfile';
 import LoadingAnimation from '../../components/LoadingAnimation';
 
 
-const NotificationPermitionScreeen = ({ navigation }) => {
+const NotificationPermitionScreeen = ({ navigation,route}) => {
 
     const [fcmToken, setFcmToken] = useState("")
     const[loading,setloading] = useState(false)
+
+
+    let from = route.params.from
+    // let from = "CustomerFlow"
+    console.log('from', from)
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -88,7 +93,9 @@ const NotificationPermitionScreeen = ({ navigation }) => {
                 let data = await updateProfile(apidata)
                 setloading(false)
                 if (data) {
-                    navigation.push(ScreenNames.LocationPremitionScreen)
+                    navigation.push(ScreenNames.LocationPremitionScreen,{
+                        from : from
+                    })
                 }
                 // updateProfile(token)
             }
@@ -121,7 +128,9 @@ const NotificationPermitionScreeen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginTop: 40 }}
                     onPress={() => {
-                        navigation.push(ScreenNames.LocationPremitionScreen)
+                        navigation.push(ScreenNames.LocationPremitionScreen,{
+                            from : from
+                        })
                     }}
                 >
                     <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>

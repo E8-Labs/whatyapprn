@@ -162,7 +162,11 @@ const AdminDashboardMainScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 24, fontFamily: CustomFonts.PoppinsMedium, color: 'white' }}>
                           {dashboardata && dashboardata.customers}
                         </Text>
-                        <TouchableOpacity style={{ marginRight: 0 }}>
+                        <TouchableOpacity style={{ marginRight: 0 }}
+                          onPress={()=>{
+                            navigation.navigate(ScreenNames.AdminUserMainScreen)
+                          }}
+                        >
 
                           <Text style={{ fontSize: 12, fontFamily: CustomFonts.PoppinsMedium, color: 'white', }}>
                             View all
