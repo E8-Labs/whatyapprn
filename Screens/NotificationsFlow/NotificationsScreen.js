@@ -10,6 +10,7 @@ import moment from 'moment';
 import { placeholderImage } from '../../res/Constants';
 import { NotificationType } from '../../res/NotificationsType';
 import { Apipath } from '../../Api/Apipaths';
+import { unreadNotification } from '../../components/UnreadNotifications';
 
 
 const { height, width } = Dimensions.get('window')
@@ -28,6 +29,7 @@ export default function NotificationsScreen({ navigation }) {
     const [role,setRole] = useState("")
 
     useEffect(() => {
+        unreadNotification()
         getNotifications()
     }, [])
 

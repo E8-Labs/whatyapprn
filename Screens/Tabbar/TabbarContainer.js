@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Animated,Platform
+  Animated, Platform
 } from "react-native";
 import Purchases from "react-native-purchases";
 import { Image } from "expo-image";
@@ -33,6 +33,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { updateProfile } from "../../components/UpdateProfile";
+import { ApiKeys } from "../../Api/keys";
 
 const TabbarContainer = ({ navigation, route }) => {
   const Tab = createBottomTabNavigator();
@@ -45,6 +46,18 @@ const TabbarContainer = ({ navigation, route }) => {
   const [loadImage, setLoadImage] = useState(false);
 
   const from = route.params.from;
+  const RevenueCatApiKey = ApiKeys.RevenueCatApiKey; //"appl_xmLtPRVaCdpCrklyeHGUMguQRlb";
+
+
+  useEffect(() => {
+    if (user) {
+      console.log("Initializing RevenueCat Purchases...", user.id);
+      Purchases.configure({
+        apiKey: RevenueCatApiKey,
+        appUserID: `${user?.id}`,
+      });
+    }
+  }, []);
 
   const openModal = () => {
     console.log("Add button pressed");
@@ -72,9 +85,9 @@ const TabbarContainer = ({ navigation, route }) => {
   };
 
 
-  useEffect(()=>{
+  useEffect(() => {
     getNotificationPermission()
-  },[])
+  }, [])
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -149,26 +162,26 @@ const TabbarContainer = ({ navigation, route }) => {
     return token;
   }
 
-const getNotificationPermission = async () => {
+  const getNotificationPermission = async () => {
     console.log('enter in function')
     registerForPushNotificationsAsync().then(
-        async (token) => {
-            if (token) {
-                // setFcmToken(token)
-            }
-            console.log('token', token)
-            let apidata = {
-                fcm_token: token
-            }
-            let data = await updateProfile (apidata)
-            
-            if (data) {
-                // navigation.push(ScreenNames.LocationPremitionScreen)
-            }
-            // updateProfile(token)
+      async (token) => {
+        if (token) {
+          // setFcmToken(token)
         }
+        console.log('token', token)
+        let apidata = {
+          fcm_token: token
+        }
+        let data = await updateProfile(apidata)
+
+        if (data) {
+          // navigation.push(ScreenNames.LocationPremitionScreen)
+        }
+        // updateProfile(token)
+      }
     );
-}
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -202,7 +215,7 @@ const getNotificationPermission = async () => {
       );
     } else {
       console.log("User not subscribed");
-      navigation.navigate(ScreenNames.PlansScreen);
+      // navigation.navigate(ScreenNames.PlansScreen);
     }
   }
 

@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, FlatList, StyleSheet } from 'react-native'
-import React, { useEffect, useState ,useRef} from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { GlobalStyles } from '../../../assets/styles/GlobalStyles'
 import { Image } from 'expo-image'
 import { BarChart } from 'react-native-chart-kit'
@@ -35,13 +35,15 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
 
   const scrollViewRef = useRef(null); // Ref for ScrollView
 
+  const [user,setUser] = useState("")
+
   // Add section offsets (to calculate positions of each graph)
   const sectionOffsets = {
     Revenue: 0,
     Business: screenHeight * 0.4, // Adjust as per your layout
     Customers: screenHeight,
-    Reviews:screenHeight*1.6,
-    Past: screenHeight*2.1,
+    Reviews: screenHeight * 1.6,
+    Past: screenHeight * 2.1,
   }
 
 
@@ -57,12 +59,23 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
     }
   };
 
-  let opened = 30
-  let closed = 70
-  let totalDisputes = 100
+  let openedDisputes = analyticsData?.disputedStats?.openDisputes
+  let closedDisputes = analyticsData?.disputedStats?.resolvedDisputes
+  let totalDisputes = analyticsData?.disputedStats?.totalDisputes
 
-  const openedPercentage = (opened / totalDisputes) * 100;
-  const closedPercentage = (closed / totalDisputes) * 100;
+
+  let openedSettlements = analyticsData?.openReviews
+  let closedSettlements = analyticsData?.totalSettlements
+  let totalSettlements = analyticsData?.totalReviews
+
+  const openedPercentage = (openedDisputes / totalDisputes) * 100;
+  const closedPercentage = (closedDisputes / totalDisputes) * 100;
+
+
+  const openedSettlementPercentage = (openedSettlements / totalSettlements) * 100;
+  const closedSettlementPercentage = (closedSettlements / totalSettlements) * 100;
+
+
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -77,7 +90,7 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
     }, {
       id: 3,
       name: "Customers",
-    },{
+    }, {
       id: 4,
       name: "Reviews",
     }, {
@@ -120,6 +133,8 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
+      setUser(u.user)
+
       try {
         const response = await axios.get(Apipath.getAdminAnalyticsData, {
           headers: {
@@ -128,7 +143,7 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
         })
         if (response.data) {
           if (response.data.status === true) {
-            console.log('analytics data is', response.data.data.dauCustomer)
+            console.log('analytics data is', response.data.data)
             setAnalyticsData(response.data.data)
             setRecentBusinesses(response.data.data.recentBusinesses)
             setRecentCustomers(response.data.data.recentCustomers)
@@ -295,16 +310,23 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
                 navigation.push(ScreenNames.NotificationsScreen)
               }}
             >
-              <Image source={require('../../../assets/Images/notificationIcon.png')}
-                style={GlobalStyles.image24}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                {
+                  user?.unread != 0 && (
+                    <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                  )
+                }
+                <Image source={require('../../../assets/Images/notificationIcon.png')}
+                  style={GlobalStyles.image24}
+                />
+              </View>
             </TouchableOpacity>
           </View>
 
         </View>
         <View style={{
           width: screenWidth - 30, flexDirection: 'row', justifyContent: 'space-between',
-          marginTop: 33 / 930 * screenHeight,paddingBottom:10
+          marginTop: 33 / 930 * screenHeight, paddingBottom: 10
         }}>
           {
             menue.map((item) => (
@@ -691,11 +713,11 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
             <View style={styles.summaryContainer}>
               <View style={styles.summaryBox}>
                 <Text style={styles.summaryTitle}>Total Opened</Text>
-                <Text style={styles.summaryCount}>{opened}</Text>
+                <Text style={styles.summaryCount}>{openedDisputes}</Text>
               </View>
               <View style={styles.summaryBox}>
                 <Text style={styles.summaryTitle}>Total Closed</Text>
-                <Text style={styles.summaryCount}>{closed}</Text>
+                <Text style={styles.summaryCount}>{closedDisputes}</Text>
               </View>
             </View>
 
@@ -705,7 +727,7 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
             <Text style={[GlobalStyles.text12, { color: '#828282', marginTop: 30 / 930 * screenHeight }]}
             >Total Settlements
             </Text>
-            <Text style={styles.totalCount}>{totalDisputes}</Text>
+            <Text style={styles.totalCount}>{analyticsData?.totalSettlements}</Text>
 
             {/* Legend */}
             <View style={styles.legendContainer}>
@@ -717,19 +739,19 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
 
             {/* Progress Bar */}
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${openedPercentage}%`, backgroundColor: Colors.orangeColor }]} />
-              <View style={[styles.progressBar, { width: `${closedPercentage}%`, backgroundColor: "#222222" }]} />
+              <View style={[styles.progressBar, { width: `${openedSettlementPercentage}%`, backgroundColor: Colors.orangeColor }]} />
+              <View style={[styles.progressBar, { width: `${closedSettlementPercentage}%`, backgroundColor: "#222222" }]} />
             </View>
 
             {/* Opened and Closed Summary */}
             <View style={[styles.summaryContainer, { marginBottom: 100 }]}>
               <View style={styles.summaryBox}>
                 <Text style={styles.summaryTitle}>Total Opened</Text>
-                <Text style={styles.summaryCount}>{opened}</Text>
+                <Text style={styles.summaryCount}>{openedSettlements}</Text>
               </View>
               <View style={styles.summaryBox}>
                 <Text style={styles.summaryTitle}>Total Closed</Text>
-                <Text style={styles.summaryCount}>{closed}</Text>
+                <Text style={styles.summaryCount}>{closedSettlements}</Text>
               </View>
             </View>
 

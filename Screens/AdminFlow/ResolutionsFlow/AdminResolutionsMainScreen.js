@@ -29,6 +29,8 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
   const [resolutions, setResolutions] = useState([])
   const [showSearch, setshowSearch] = useState(false)
 
+  const [user,setUser] = useState("")
+
 
   const image1 = require('../../../assets/Images/profileImage.png')
   const image2 = require('../../../assets/Images/profileImage2.png')
@@ -66,6 +68,7 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
+      setUser(u.user)
       setLoading(true)
       try {
         let path = Apipath.getResolutions
@@ -143,9 +146,16 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
                   navigation.push(ScreenNames.NotificationsScreen)
                 }}
               >
-                <Image source={require('../../../assets/Images/notificationIcon.png')}
-                  style={GlobalStyles.image24}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                  {
+                    user?.unread != 0 && (
+                      <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                    )
+                  }
+                  <Image source={require('../../../assets/Images/notificationIcon.png')}
+                    style={GlobalStyles.image24}
+                  />
+                </View>
               </TouchableOpacity>
             </View>
 

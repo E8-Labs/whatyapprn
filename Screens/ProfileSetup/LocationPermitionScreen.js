@@ -61,10 +61,9 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                 setLoading(false)
 
                 if (from == "CustomerFlow") {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: "TabBarContainer" }],
-                    });
+                    navigation.push(ScreenNames.TabbarContainer,{
+                        from:'CustomerFlow'
+                    })
                     return
                 }
                 navigation.push(ScreenNames.PlansScreen)

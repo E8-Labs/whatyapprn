@@ -34,6 +34,8 @@ const AdminBusinessMainScreen = ({ navigation }) => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [adminData, setAdminData] = useState(null)
 
+  const [user,setUser] = useState("")
+
   const searchAnim = useRef(new Animated.Value(0)).current
 
   const showAnimation = () => {
@@ -82,6 +84,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
       const data = await AsyncStorage.getItem('USER');
       if (data) {
         let user = JSON.parse(data);
+        setUser(user.user)
         let path = `${Apipath.searchCustomers}?offset=${currentOffset}&role=business`;
         if (filters) {
           if (filters.city) {
@@ -228,9 +231,16 @@ const AdminBusinessMainScreen = ({ navigation }) => {
                       navigation.push(ScreenNames.NotificationsScreen)
                     }}
                   >
-                    <Image source={require('../../../assets/Images/notificationIcon.png')}
-                      style={GlobalStyles.image24}
-                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                      {
+                        user?.unread != 0 && (
+                          <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                        )
+                      }
+                      <Image source={require('../../../assets/Images/notificationIcon.png')}
+                        style={GlobalStyles.image24}
+                      />
+                    </View>
                   </TouchableOpacity>
                 </View>
 

@@ -18,6 +18,7 @@ const AdminDashboardMainScreen = ({ navigation }) => {
 
   const [dashboardata, setDashboardData] = useState(null)
   const [rescentBusinesses, setRecentBusonesses] = useState([])
+  const [user, setUser] = useState("")
 
 
   const newUsers = [
@@ -55,6 +56,7 @@ const AdminDashboardMainScreen = ({ navigation }) => {
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
+      setUser(u.user)
       try {
         const response = await axios.get(Apipath.getAdminDashboardData, {
           headers: {
@@ -68,12 +70,12 @@ const AdminDashboardMainScreen = ({ navigation }) => {
             setRecentBusonesses(response.data.data.recentBusinesses)
             let d = response.data.data
             let data = {
-              totalCustomers:d.customers ,
+              totalCustomers: d.customers,
               totalBusinesses: d.businesses,
               totalReviews: d.totalReviews,
               activeReviews: d.activeReviews,
             }
-            AsyncStorage.setItem("AdminData",JSON.stringify(data))
+            AsyncStorage.setItem("AdminData", JSON.stringify(data))
           } else {
             console.log('darshboard api message is', response.data.message)
           }
@@ -99,10 +101,10 @@ const AdminDashboardMainScreen = ({ navigation }) => {
           marginTop: 20 / 930 * screenHeight
         }}>
           {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth }}> */}
-            <Image source={require('../../../assets/Images/logo.png')}
-              style={GlobalStyles.logoImage}
-            />
-            {/* <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
+          <Image source={require('../../../assets/Images/logo.png')}
+            style={GlobalStyles.logoImage}
+          />
+          {/* <Text style={{ fontSize: 24, color: 'black', fontFamily: CustomFonts.PoppinsMedium }}>
               Resolution
             </Text>
           </View> */}
@@ -121,9 +123,17 @@ const AdminDashboardMainScreen = ({ navigation }) => {
                 navigation.push(ScreenNames.NotificationsScreen)
               }}
             >
-              <Image source={require('../../../assets/Images/notificationIcon.png')}
-                style={GlobalStyles.image24}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                {
+                  user?.unread != 0 && (
+                    <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                  )
+                }
+                <Image source={require('../../../assets/Images/notificationIcon.png')}
+                  style={GlobalStyles.image24}
+                />
+              </View>
+
             </TouchableOpacity>
           </View>
 
@@ -163,7 +173,7 @@ const AdminDashboardMainScreen = ({ navigation }) => {
                           {dashboardata && dashboardata.customers}
                         </Text>
                         <TouchableOpacity style={{ marginRight: 0 }}
-                          onPress={()=>{
+                          onPress={() => {
                             navigation.navigate(ScreenNames.AdminUserMainScreen)
                           }}
                         >

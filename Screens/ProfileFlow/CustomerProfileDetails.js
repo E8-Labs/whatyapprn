@@ -295,7 +295,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                 }}
                             />
 
-                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 / 930 * screenHeight }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 / 930 * screenHeight, width: 210 / 430 * screenWidth}}>
                                 <Text style={GlobalStyles.text17}>
                                     {user.name}
                                 </Text>
@@ -315,10 +315,10 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                             </View>
                             {
                                 user.from === "tabbar" && (
-                                    <View style={{marginLeft: 80 / 430 * screenWidth , flexDirection: 'column', gap: 10, alignItems: 'center'}}>
-                                        <View style = {{flexDirection:'row',alignItems:'center',gap:15}}>
+                                    <View style={{ marginLeft: 0 / 430 * screenWidth, flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
                                             <TouchableOpacity
-                                                onPress={()=>{
+                                                onPress={() => {
                                                     navigation.push(ScreenNames.MessagesListScreen)
                                                 }}
                                             >
@@ -327,16 +327,16 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                                     style={GlobalStyles.image24}
                                                 />
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={()=>{
-                                                    navigation.push(ScreenNames.MyWalletScreen)
-                                                }}>
+                                            <TouchableOpacity onPress={() => {
+                                                navigation.push(ScreenNames.MyWalletScreen)
+                                            }}>
                                                 <Image
                                                     source={require("../../assets/Images/walletIcon.png")}
                                                     style={GlobalStyles.image24}
                                                 />
                                             </TouchableOpacity>
                                         </View>
-                                        <TouchableOpacity style={{ }}
+                                        <TouchableOpacity style={{}}
                                             onPress={logoutUser}
                                         >
                                             <Text style={[GlobalStyles.BtnText, { color: 'red' }]}>
@@ -354,11 +354,11 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                         borderWidth: 0, gap: 30 / 430 * screenWidth, alignSelf: 'center'
                     }}>
                         <View style={{ alignSelf: 'center', borderWidth: 0 }}>
-                            <HalfCircularProgress progress={user.yapScore3Digit||user.yapScore3Digit != "Invalid input"  ?  user.yapScore3Digit : 0} type={"Yap"} />
+                            <HalfCircularProgress progress={user.yapScore3Digit || user.yapScore3Digit != "Invalid input" ? user.yapScore3Digit : 0} type={"Yap"} />
                         </View>
                     </View>
 
-                    <View style={{ }}>
+                    <View style={{}}>
                         {
                             // user.from !== 'tabbar' ?
                             //     (
@@ -416,7 +416,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                         ))
                                     }
                                 </View>
-                                <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} from = {user.from}
+                                <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} from={user.from}
                                     hideFromPlatform={hideFromPlatform} deletePermanently={deletePermanently} suspendAccount={suspendAccount} deleteAccount={deleteAccount}
                                 />
 
