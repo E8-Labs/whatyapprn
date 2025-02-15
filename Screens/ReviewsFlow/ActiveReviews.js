@@ -200,20 +200,24 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                           <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
                             Transaction date: {item.dateOfTransaction.replace(/\s+/g, '')}
                           </Text>
+                          {
+                            item.media?.length > 0 && (
+                              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                {
+                                  item.media.map((img) => (
+                                    <Image key={img.id} source={img.thumb_url}
+                                      style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
+                                    />
+                                  ))
+                                }
 
-                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                            {
-                              item.media.map((img) => (
-                                <Image key={img.id} source={img.thumb_url}
+                                <Image source={{ uri: item.mediaUrl }}
                                   style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
                                 />
-                              ))
-                            }
+                              </View>
+                            )
+                          }
 
-                            <Image source={{ uri: item.mediaUrl }}
-                              style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
-                            />
-                          </View>
 
                           <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
                             {item.notesAboutCustomer}
@@ -267,19 +271,6 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                               item.reviewStatus !== ReviewTypes.Disputed && (
                                 <>
                                   {
-                                    // role === "business" ? (
-                                    //   <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                    //     onPress={() => {
-                                    //       navigation.push(ScreenNames.YapSattelmentAmount, {
-                                    //         review: item
-                                    //       })
-                                    //     }}
-                                    //   >
-                                    //     <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                    //       Create Settlement Offer
-                                    //     </Text>
-                                    //   </TouchableOpacity>
-                                    // ) : (
                                     role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus === ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
                                     <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                       onPress={() => {
@@ -313,6 +304,21 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                                       </Text>
                                     </TouchableOpacity>
 
+                                  }
+                                  {
+                                   role && role === "customer" && item.reviewStatus !== ReviewTypes.Resolved &&
+                                      <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                        onPress={() => {
+                                          navigation.push(ScreenNames.ReviewReplyScreen, {
+                                            review: item
+                                          })
+                                        }}
+                                      >
+                                        <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                          Reply
+                                        </Text>
+                                      </TouchableOpacity>
+                                    
                                   }
                                 </>
                               )

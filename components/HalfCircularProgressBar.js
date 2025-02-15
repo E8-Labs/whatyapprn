@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text,Image } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { screenHeight } from '../res/Constants';
+import { screenHeight, screenWidth } from '../res/Constants';
 import { CustomFonts } from '../assets/font/Fonts';
 import { GlobalStyles } from '../assets/styles/GlobalStyles';
 
@@ -73,17 +73,18 @@ const HalfCircularProgress = ({ progress, type }) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    alignSelf:'center'
+    alignSelf:'center',
     // backgroundColor:'red',
   },
   textContainer: {
     position: 'absolute',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
-    top:85/930*screenHeight
+    top:85/930*screenHeight,
+    right:135/930*screenWidth
   },
   progressText: {
     fontSize: 24,

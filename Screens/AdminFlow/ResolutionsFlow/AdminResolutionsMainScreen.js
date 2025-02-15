@@ -112,7 +112,7 @@ const AdminResolutionsMainScreen = ({ navigation }) => {
   return (
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
-        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} />
+        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} type='business/customer'/>
       </Animated.View>
 
     ) :

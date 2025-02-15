@@ -5,5 +5,7 @@ export const ReviewTypes = {
     Past: "past",
     ResolvedByAdmin: "resolvedByAdmin",
     Settlement: "settlement",
+    Rejected: "rejected",
+    RejectedByAdmin:"rejectedByAdmin"
   };
   

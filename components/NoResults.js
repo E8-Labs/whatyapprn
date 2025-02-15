@@ -4,7 +4,7 @@ import { screenHeight, screenWidth } from '../res/Constants'
 import { GlobalStyles } from '../assets/styles/GlobalStyles'
 import { ScreenNames } from '../res/ScreenNames'
 
-const NoResults = ({navigation}) => {
+const NoResults = ({navigation,type = "customer"}) => {
     return (
         <View style={{
             marginTop: 50 / 930 * screenHeight, flexDirection: 'column', alignItems: 'center', width: screenWidth,
@@ -15,7 +15,7 @@ const NoResults = ({navigation}) => {
             />
 
             <Text style = {[GlobalStyles.text17,{width:250/430*screenWidth,textAlign:'center'}]}>
-                Looks like there's no customer with that name
+                Looks like there's no {type} with that name
             </Text>
 
             <TouchableOpacity style = {GlobalStyles.capsuleBtn}
@@ -28,7 +28,7 @@ const NoResults = ({navigation}) => {
                 }}
             >
                 <Text style = {GlobalStyles.BtnText}>
-                    Add New Customer                    
+                    Add New {type}                    
                 </Text>
             </TouchableOpacity>
         </View>

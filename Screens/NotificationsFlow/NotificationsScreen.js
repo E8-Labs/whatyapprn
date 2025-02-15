@@ -7,11 +7,12 @@ import { CustomFonts } from '../../assets/font/Fonts';
 import { GlobalStyles } from '../../assets/styles/GlobalStyles';
 import moment from 'moment';
 
-import { placeholderImage } from '../../res/Constants';
+import { placeholderImage, screenWidth } from '../../res/Constants';
 import { NotificationType } from '../../res/NotificationsType';
 import { Apipath } from '../../Api/Apipaths';
 import { unreadNotification } from '../../components/UnreadNotifications';
 
+import { ScreenNames } from "../../res/ScreenNames";
 
 const { height, width } = Dimensions.get('window')
 
@@ -21,7 +22,6 @@ export default function NotificationsScreen({ navigation }) {
     const disAgreeReviewIcon = require('../../assets/Images/disAgreeReviewIcon.png')
     const profileViewIcon = require('../../assets/Images/profileViewIcon.png')
     const acceptSettlementIcon = require('../../assets/Images/acceptSettlementIcon.png')
-
 
     const [notifications, setNotifications] = useState([])
     const [loading, setLoading] = useState(false)
@@ -72,7 +72,6 @@ export default function NotificationsScreen({ navigation }) {
         }
     }
 
-
     const formateNotifications = (notArray) => {
         let today = [];
         let yesterday = [];
@@ -114,7 +113,6 @@ export default function NotificationsScreen({ navigation }) {
         }
         setSections(section)
     };
-
 
     const getNotificationType = (item) => {
         if (item.type === NotificationType.ReplyReview) {
@@ -201,6 +199,7 @@ export default function NotificationsScreen({ navigation }) {
             console.log('other notification type', item.type)
         }
     }
+
     const renderItem = (item) => {
         console.log('trying to render items', item)
         let not = getNotificationType(item)
@@ -208,14 +207,14 @@ export default function NotificationsScreen({ navigation }) {
         // return
 
         return (
-            // <TouchableOpacity
-            //     onPress={() => {
-            //         // onpressHandle(item)
-            //     }}
-            // >
+            <TouchableOpacity
+                onPress={() => {
+                    handleNotPress(item)
+                }}
+            >
                 <View style={{
                     flexDirection: 'row', alignItems: 'cemter', justifyContent: 'space-between',
-                    marginTop: 25 / 930 * height,
+                    marginTop: 25 / 930 * height,width:screenWidth-40
                 }}>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
@@ -236,10 +235,16 @@ export default function NotificationsScreen({ navigation }) {
 
 
                 </View>
-            // </TouchableOpacity>
-
+             </TouchableOpacity>
         )
+    }
 
+    const handleNotPress = (not) =>{
+        if(role === "admin"){
+            if(not.type === NotificationType.NewReview){
+                navigation.push(ScreenNames.AdminResolutionsMainScreen)
+            }
+        }
     }
 
     return (

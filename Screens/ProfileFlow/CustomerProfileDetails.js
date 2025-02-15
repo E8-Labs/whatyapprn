@@ -295,14 +295,14 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                 }}
                             />
 
-                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 / 930 * screenHeight, width: 210 / 430 * screenWidth}}>
+                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 / 930 * screenHeight, width: 210 / 430 * screenWidth }}>
                                 <Text style={GlobalStyles.text17}>
                                     {user.name}
                                 </Text>
                                 {
                                     user.city && (
                                         <Text style={[GlobalStyles.text14, { color: '#00000080' }]}>
-                                            {user.city ? user.city : null} {user.state ? ` ,${user.state}` : null}
+                                            {user.city ? user.city : null} {user.state ? `,${user.state}` : null}
                                         </Text>
                                     )
                                 }
@@ -359,70 +359,40 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                     </View>
 
                     <View style={{}}>
-                        {
-                            // user.from !== 'tabbar' ?
-                            //     (
-                            //         <>
-                            //             <View style={{
-                            //                 width: screenWidth - 80, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: 0 / 930 * screenHeight, marginBottom: 20 / 930 * screenWidth,
 
-                            //             }}>
-                            //                 <Text style={GlobalStyles.text17}>
-                            //                     Recent Reviews
-                            //                 </Text>
-
-
-
-                            //                 <TouchableOpacity>
-                            //                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                            //                         <Text style={GlobalStyles.text17}>
-                            //                             Filter
-                            //                         </Text>
-                            //                         <Image source={require('../../assets/Images/filterIcon2.png')}
-                            //                             style={{ height: 16, width: 16 }}
-                            //                         />
-                            //                     </View>
-                            //                 </TouchableOpacity>
-                            //             </View>
-                            //             <ProfileRecentReviews navigation={navigation} selectedMenu="business" reviews={reviews && reviews} />
-                            //         </>
-                            //     ) : (
-                            <>
-                                <View style={{
-                                    flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, gap: 30 / 430 * screenWidth,
-                                    marginTop: 20 / 930 * screenHeight, marginBottom: 10 / 930 * screenHeight
-                                }}>
-                                    {
-                                        menues.map((item) => (
-                                            <View key={item.id} style={{ flexDirection: 'column', }}>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setselectedMenu(item)
-                                                    }}
-                                                >
-                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth, paddingHorizontal: 15 }}>
-                                                        <Text style={[GlobalStyles.text17, { color: selectedMenu === item.value ? "black" : "#00000080" }]}>
-                                                            {item.name}
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                                {
-                                                    selectedMenu.value === item.value && (
-                                                        <View style={{ height: 2, backgroundColor: Colors.orangeColor, marginTop: 5, }}></View>
-                                                    )
-                                                }
+                        <View style={{
+                            flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, gap: 30 / 430 * screenWidth,
+                            marginTop: 20 / 930 * screenHeight, marginBottom: 10 / 930 * screenHeight
+                        }}>
+                            {
+                                menues.map((item) => (
+                                    <View key={item.id} style={{ flexDirection: 'column', }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setselectedMenu(item)
+                                            }}
+                                        >
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth, paddingHorizontal: 15 }}>
+                                                <Text style={[GlobalStyles.text17, { color: selectedMenu === item.value ? "black" : "#00000080" }]}>
+                                                    {item.name}
+                                                </Text>
                                             </View>
+                                        </TouchableOpacity>
+                                        {
+                                            selectedMenu.value === item.value && (
+                                                <View style={{ height: 2, backgroundColor: Colors.orangeColor, marginTop: 5, }}></View>
+                                            )
+                                        }
+                                    </View>
 
-                                        ))
-                                    }
-                                </View>
-                                <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} from={user.from}
-                                    hideFromPlatform={hideFromPlatform} deletePermanently={deletePermanently} suspendAccount={suspendAccount} deleteAccount={deleteAccount}
-                                />
+                                ))
+                            }
+                        </View>
+                        <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} from={user.from}
+                            hideFromPlatform={hideFromPlatform} deletePermanently={deletePermanently} suspendAccount={suspendAccount} deleteAccount={deleteAccount}
+                        />
 
-                            </>
-                            //         )
-                        }
+
                     </View>
                 </View>
             </View>

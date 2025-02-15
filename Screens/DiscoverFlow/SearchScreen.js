@@ -32,13 +32,14 @@ import calculateSpent from "../../res/CalculateSpent";
 
 const profileImage = require("../../assets/Images/profileImage.png");
 
-const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
+const SearchScreen = ({ hideAnimation, from = "discover", navigation, type = "customer" }) => {
 
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState(null);
   const [loading, setloading] = useState(false);
   const [pastSearch, setPastSearch] = useState([]);
+  const [role, setRole] = useState("")
 
 
   useEffect(() => {
@@ -72,6 +73,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
     const data = await AsyncStorage.getItem("USER");
     if (data) {
       let u = JSON.parse(data);
+      setRole(u.user.role)
       let path = Apipath.searchHistory;
       console.log("Auth token is", u.token);
       console.log("path is", path);
@@ -112,7 +114,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
   };
 
   const deleteSearch = async (item) => {
-    console.log('trying to delete',item)
+    console.log('trying to delete', item)
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
@@ -353,7 +355,7 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                           >
                             Past Search
                           </Text>
-                          <View style = {{height:screenHeight*0.25}}>
+                          <View style={{ height: screenHeight * 0.25 }}>
                             <ScrollView>
                               <View style={{ flexDirection: "column", gap: 20, marginTop: 20 }}>
                                 {pastSearch.map((item) => (
@@ -406,136 +408,146 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                               scrollEnabled={false}
                               data={customers}
                               renderItem={({ item }) => (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    Keyboard.dismiss();
-                                    handleOnpress(item);
-                                  }}
-                                >
-                                  <View
-                                    key={item.id}
-                                    style={{
-                                      width: screenWidth - 40,
-                                      alignItems: "flex-start",
-                                      flexDirection: "row",
-                                      justifyContent: "space-between",
-                                      marginTop: (20 / 930) * screenHeight,
+                                <View key={item.id} style={{
+                                  flexDirection: 'column', gap: 15
+                                }}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      Keyboard.dismiss();
+                                      handleOnpress(item);
                                     }}
                                   >
-                                    <Image
-                                      source={
-                                        item.profile_image
-                                          ? { uri: item.profile_image }
-                                          : placeholderImage
-                                      }
-                                      style={{
-                                        height: (30 / 930) * screenHeight,
-                                        width: (30 / 430) * screenWidth,
-                                        resizeMode: "cover",
-                                        borderRadius: 20,
-                                      }}
-                                    />
                                     <View
+
                                       style={{
-                                        flexDirection: "column",
+                                        width: screenWidth - 40,
                                         alignItems: "flex-start",
-                                        gap: (15 / 930) * screenHeight,
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        marginTop: (20 / 930) * screenHeight,
                                       }}
                                     >
-                                      <Text
-                                        style={[GlobalStyles.text17, { color: "black" }]}
-                                      >
-                                        {item.name}
-                                      </Text>
-                                      <Text
-                                        style={[
-                                          GlobalStyles.text17,
-                                          { color: "#00000080" },
-                                        ]}
-                                      >
-                                        {item.city ? item.city : ""}
-                                      </Text>
+                                      <Image
+                                        source={
+                                          item.profile_image
+                                            ? { uri: item.profile_image }
+                                            : placeholderImage
+                                        }
+                                        style={{
+                                          height: (30 / 930) * screenHeight,
+                                          width: (30 / 430) * screenWidth,
+                                          resizeMode: "cover",
+                                          borderRadius: 20,
+                                        }}
+                                      />
                                       <View
                                         style={{
-                                          flexDirection: "row",
-                                          alignItems: "center",
-                                          justifyContent: "space-between",
-                                          width: (200 / 430) * screenWidth,
+                                          flexDirection: "column",
+                                          alignItems: "flex-start",
+                                          gap: (15 / 930) * screenHeight,
                                         }}
                                       >
-                                        <View style={{ flexDirection: "column", gap: 5 }}>
-                                          <View style={{ flexDirection: "row" }}>
-                                            <Image
-                                              source={require("../../assets/Images/yIcon.png")}
-                                              style={GlobalStyles.yIcon}
-                                            />
+                                        <Text
+                                          style={[GlobalStyles.text17, { color: "black" }]}
+                                        >
+                                          {item.name}
+                                        </Text>
+                                        <Text
+                                          style={[
+                                            GlobalStyles.text17,
+                                            { color: "#00000080" },
+                                          ]}
+                                        >
+                                          {item.city ? item.city : ""}
+                                        </Text>
+                                        <View
+                                          style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: (200 / 430) * screenWidth,
+                                          }}
+                                        >
+                                          <View style={{ flexDirection: "column", gap: 5 }}>
+                                            <View style={{ flexDirection: "row" }}>
+                                              <Image
+                                                source={require("../../assets/Images/yIcon.png")}
+                                                style={GlobalStyles.yIcon}
+                                              />
+                                              <Text
+                                                style={{
+                                                  fontSize: 14,
+                                                  fontFamily: CustomFonts.InterMedium,
+                                                  color: "#00000080",
+                                                }}
+                                              >
+                                                ap score
+                                              </Text>
+                                            </View>
                                             <Text
                                               style={{
-                                                fontSize: 14,
-                                                fontFamily: CustomFonts.InterMedium,
-                                                color: "#00000080",
+                                                fontSize: 20,
+                                                fontFamily: CustomFonts.IntriaBold,
                                               }}
                                             >
-                                              ap score
+                                              {item.yapScore3Digit}
                                             </Text>
                                           </View>
-                                          <Text
-                                            style={{
-                                              fontSize: 20,
-                                              fontFamily: CustomFonts.IntriaBold,
-                                            }}
-                                          >
-                                            {item.yapScore3Digit}
-                                          </Text>
-                                        </View>
 
-                                        <View style={{ flexDirection: "column", gap: 5 }}>
-                                          <Text
-                                            style={{
-                                              fontSize: 13,
-                                              fontFamily: CustomFonts.InterRegular,
-                                            }}
-                                          >
-                                            Total Reviews
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontSize: 20,
-                                              fontFamily: CustomFonts.IntriaBold,
-                                            }}
-                                          >
-                                            {item.totalReviews}
-                                          </Text>
+                                          <View style={{ flexDirection: "column", gap: 5 }}>
+                                            <Text
+                                              style={{
+                                                fontSize: 13,
+                                                fontFamily: CustomFonts.InterRegular,
+                                              }}
+                                            >
+                                              Total Reviews
+                                            </Text>
+                                            <Text
+                                              style={{
+                                                fontSize: 20,
+                                                fontFamily: CustomFonts.IntriaBold,
+                                              }}
+                                            >
+                                              {item.totalReviews}
+                                            </Text>
+                                          </View>
                                         </View>
                                       </View>
-                                    </View>
 
-                                    <View
-                                      style={{
-                                        flexDirection: "column",
-                                        justifyContent: "space-between",
-                                        alignItems: "flex-end",
-                                        height: (110 / 930) * screenHeight,
-                                      }}
-                                    >
-                                      <Text
+                                      <View
                                         style={{
-                                          fontSize: 14,
-                                          fontFamily: CustomFonts.InterMedium,
+                                          flexDirection: "column",
+                                          justifyContent: "space-between",
+                                          alignItems: "flex-end",
+                                          height: (110 / 930) * screenHeight,
                                         }}
                                       >
-                                        Spent over {calculateSpent(item.totalSpent)}
-                                      </Text>
+                                        <Text
+                                          style={{
+                                            fontSize: 14,
+                                            fontFamily: CustomFonts.InterMedium,
+                                          }}
+                                        >
+                                          Spent over {calculateSpent(item.totalSpent)}
+                                        </Text>
 
-                                      {/* <TouchableOpacity> */}
-                                      <Image
-                                        source={require("../../assets/Images/farwordBtn.png")}
-                                        style={GlobalStyles.image37}
-                                      />
-                                      {/* </TouchableOpacity> */}
+                                        {/* <TouchableOpacity> */}
+                                        <Image
+                                          source={require("../../assets/Images/farwordBtn.png")}
+                                          style={GlobalStyles.image37}
+                                        />
+                                        {/* </TouchableOpacity> */}
+                                      </View>
                                     </View>
-                                  </View>
-                                </TouchableOpacity>
+                                  </TouchableOpacity>
+
+                                  <TouchableOpacity style = {{alignSelf:'flex-end'}}>
+                                    <Text style = {[GlobalStyles.BtnText,{color:Colors.orangeColor}]}>
+                                      Message
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
                               )}
 
                             // onEndReached={searchCustomers}
@@ -543,7 +555,9 @@ const SearchScreen = ({ hideAnimation, from = "discover", navigation }) => {
                             />
                           ) : (
                             searchQuery &&
-                            <NoResults navigation={navigation} />
+                            <NoResults navigation={navigation} type={
+                              role && (role === "business" ? "customer" : role === "customer" ? "business" : type)
+                            } />
                           )}
                     </View>
                   </View>

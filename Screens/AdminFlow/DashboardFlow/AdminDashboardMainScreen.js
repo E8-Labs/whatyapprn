@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GlobalStyles } from '../../../assets/styles/GlobalStyles'
 import { Image } from 'expo-image'
 import { placeholderImage, screenHeight, screenWidth } from '../../../res/Constants'
@@ -9,6 +9,7 @@ import { Colors } from '../../../res/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { Apipath } from '../../../Api/Apipaths'
+import { useFocusEffect } from '@react-navigation/native'
 
 
 const AdminDashboardMainScreen = ({ navigation }) => {
@@ -47,16 +48,18 @@ const AdminDashboardMainScreen = ({ navigation }) => {
       image: image
     },
   ]
-
-  useEffect(() => {
-    getDashboardData()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getDashboardData()
+    }, [])
+  )
 
   const getDashboardData = async () => {
     const data = await AsyncStorage.getItem("USER")
     if (data) {
       let u = JSON.parse(data)
       setUser(u.user)
+      console.log('u.user.unread', u.user.unread)
       try {
         const response = await axios.get(Apipath.getAdminDashboardData, {
           headers: {
@@ -109,6 +112,9 @@ const AdminDashboardMainScreen = ({ navigation }) => {
             </Text>
           </View> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * screenWidth }}>
+            <TouchableOpacity onPress={logoutUser}>
+              <Text style={[GlobalStyles.text17, { color: "#E33636" }]}>Logout</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.push(ScreenNames.MessagesListScreen)
@@ -359,13 +365,6 @@ const AdminDashboardMainScreen = ({ navigation }) => {
               )}
             />
 
-            <TouchableOpacity style={{ marginLeft: 80 / 430 * screenWidth }}
-              onPress={logoutUser}
-            >
-              <Text style={[GlobalStyles.BtnText, { color: 'red' }]}>
-                Logout
-              </Text>
-            </TouchableOpacity>
           </ScrollView>
         </View>
       </View>

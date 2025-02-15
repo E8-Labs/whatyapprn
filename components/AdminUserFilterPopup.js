@@ -15,7 +15,7 @@ const AdminFilterPopup = ({ close }) => {
 
 
     const [showAddressPicker, setShowAddressPicker] = useState(false)
-    const [reviewCount, setreviewCount] = useState([100, 999]);
+    const [transactionRange, settransactionRange] = useState([100, 999]);
     const [yapScore, setYapScore] = useState([1, 999]);
     const [showCalender, setShowCalender] = useState(false)
     const [selectedFromDate, setSelcetedFromDate] = useState("")
@@ -27,7 +27,7 @@ const AdminFilterPopup = ({ close }) => {
     const [state, setState] = useState("")
 
     const handleTransactionChange = (values) => {
-        setreviewCount(values);
+        settransactionRange(values);
     };
 
     const handleYapChange = (values) => {
@@ -50,8 +50,8 @@ const AdminFilterPopup = ({ close }) => {
             toDate:selectedToDate,
             minYapScore:yapScore[0],
             maxYapScore:yapScore[1],
-            minReviewCount:reviewCount[0],
-            maxReviewCount:reviewCount[1],
+            minTransactionRange:transactionRange[0],
+            maxTransactionRange:transactionRange[1],
         }
         console.log('filters', filters)
         close(filters)
@@ -212,11 +212,13 @@ const AdminFilterPopup = ({ close }) => {
                     <Text style={styles.valueText}>{yapScore[1]}</Text>
                 </View>
 
-                <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Reviews Count</Text>
+                <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>
+                    Transaction Range
+                </Text>
 
                 <View style={styles.sliderBackground}>
                     <MultiSlider
-                        values={[reviewCount[0], reviewCount[1]]}
+                        values={[transactionRange[0], transactionRange[1]]}
                         min={100}
                         max={999}
                         // step={400}
@@ -229,8 +231,8 @@ const AdminFilterPopup = ({ close }) => {
                     />
                 </View>
                 <View style={styles.valueContainer}>
-                    <Text style={styles.valueText}>{`<${reviewCount[0]}`}</Text>
-                    <Text style={styles.valueText}>{`<${reviewCount[1]}`}</Text>
+                    <Text style={styles.valueText}>{`<${transactionRange[0]}`}</Text>
+                    <Text style={styles.valueText}>{`<${transactionRange[1]}`}</Text>
                 </View>
 
 

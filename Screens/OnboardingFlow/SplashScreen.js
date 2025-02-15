@@ -4,6 +4,7 @@ import { screenHeight, screenWidth } from '../../res/Constants';
 import { GlobalStyles } from '../../assets/styles/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScreenNames } from '../../res/ScreenNames';
+import { getProfile } from '../../components/GetProfile';
 
 export default function SplashScreen({ navigation }) {
   const scaleAnim1 = useRef(new Animated.Value(1)).current;
@@ -54,13 +55,15 @@ export default function SplashScreen({ navigation }) {
     let data = await AsyncStorage.getItem("USER");
     if (data) {
       let u = JSON.parse(data);
+      let profile = await getProfile()
+
       // return
       if (u.user.role === "admin") {
         navigation.push(ScreenNames.AdminTabbarContainer);
       } else {
-        navigation.push(ScreenNames.TabbarContainer,{
-          from:'splashScreen'
-         });
+        navigation.push(ScreenNames.TabbarContainer, {
+          from: 'splashScreen'
+        });
       }
     } else {
       navigation.push(ScreenNames.OnboardingSlideScreen);
@@ -75,7 +78,7 @@ export default function SplashScreen({ navigation }) {
           source={circleImage1}
           style={[
             styles.circle,
-            { top: screenHeight * 0.01, left: screenWidth * 0.7, transform: [{ scale: scaleAnim1 }] ,height:50},
+            { top: screenHeight * 0.01, left: screenWidth * 0.7, transform: [{ scale: scaleAnim1 }], height: 50 },
           ]}
         />
         <Animated.Image
@@ -117,7 +120,7 @@ const styles = {
     width: 100,
     height: 100,
     // opacity: 0.7,
-    resizeMode:'contain'
+    resizeMode: 'contain'
   },
   loadingText: {
     fontSize: 16,

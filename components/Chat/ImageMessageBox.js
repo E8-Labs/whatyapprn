@@ -13,6 +13,7 @@ import { getEmojiView } from "./EmojiView";
 import moment from "moment";
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
 import { screenHeight, screenWidth } from "../../res/Constants";
+import { ImageViewer } from "../ImageViewer";
 
 export const ImageMessageBox = ({ item, user, sendEmoji }) => {
   let msg = item.item;
@@ -24,6 +25,8 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
   const [imageLoading, setImageLoading] = useState(true); // Track image loading state
   const [imageError, setImageError] = useState(false); // Track image load errors
   const emojiButtonRef = useRef(null);
+
+  const [openImage,setOpenImage] =useState(null)
 
   const MODAL_WIDTH = 280;
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
@@ -100,26 +103,32 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
         {/* {console.log("Image URL:", msg.media)} */}
 
         {/* Image content with error handling */}
-        <Image
-          source={{ uri: msg.media }}
-          style={{
-            width: 150,
-            height: 150,
-            borderRadius: 10,
-            marginBottom: 8,
-            backgroundColor: "#f0f0f0",
-            // display: imageLoading ? "none" : "flex",
-          }}
-          onLoadStart={() => {
-            // console.log("Image loaded successfully");
-            setImageLoading(false);
-          }}
-          onError={(error) => {
-            // console.log("Image failed to load:", error);
-            setImageLoading(false);
-            setImageError(true);
-          }}
-        />
+        <TouchableOpacity
+            onPress={()=>{
+              setOpenImage(msg.media)
+            }}
+        >
+          <Image
+            source={{ uri: msg.media }}
+            style={{
+              width: 150,
+              height: 150,
+              borderRadius: 10,
+              marginBottom: 8,
+              backgroundColor: "#f0f0f0",
+              // display: imageLoading ? "none" : "flex",
+            }}
+            onLoadStart={() => {
+              // console.log("Image loaded successfully");
+              setImageLoading(false);
+            }}
+            onError={(error) => {
+              // console.log("Image failed to load:", error);
+              setImageLoading(false);
+              setImageError(true);
+            }}
+          />
+        </TouchableOpacity>
 
         <View style={{ justifyContent: "flex-end", width: 150 }}>
           <Text style={styles.timeText}>
@@ -128,10 +137,14 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
         </View>
       </View>
 
+      <ImageViewer visible={openImage != null} close={()=>{setOpenImage(null)}} url={openImage}/>
+
       {/* Emoji Reaction Button */}
       <TouchableOpacity ref={emojiButtonRef} onPress={openEmojiPicker}>
         {getEmojiView(msg.emoji)}
       </TouchableOpacity>
+
+
 
       {/* Emoji Picker Modal */}
       <Modal animationType="fade" visible={showEmojiPicker} transparent={true}>
@@ -149,7 +162,9 @@ export const ImageMessageBox = ({ item, user, sendEmoji }) => {
         >
           <EmojiSelector
             category={Categories.all}
+            showSearchBar = {false}
             columns={6}
+            showSectionTitles = {false}
             showTabs={false}
             onEmojiSelected={handleEmojiSelected}
           />

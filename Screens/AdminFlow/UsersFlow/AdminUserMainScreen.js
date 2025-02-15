@@ -34,7 +34,7 @@ const AdminUserMainScreen = ({ navigation }) => {
 
   const [adminData, setAdminData] = useState(null)
 
-  const [user,setUser] = useState("")
+  const [user, setUser] = useState("")
 
 
   const searchAnim = useRef(new Animated.Value(0)).current
@@ -182,7 +182,7 @@ const AdminUserMainScreen = ({ navigation }) => {
   return (
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
-        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} />
+        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} type='customer' />
       </Animated.View>
 
     ) : (
@@ -275,66 +275,76 @@ const AdminUserMainScreen = ({ navigation }) => {
               </Modal>
 
               <View style={{ height: screenHeight * 0.65 }}>
-                <FlatList
-                  data={businesses}
-                  showsVerticalScrollIndicator={false}
-                  keyExtractor={(item) => item.id}
+                {
+                  businesses.length > 0 ? (
+                    <FlatList
+                      data={businesses}
+                      showsVerticalScrollIndicator={false}
+                      keyExtractor={(item) => item.id}
 
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        getProfile(item)
-                      }}
-                    >
-                      <View style={{
-                        width: screenWidth - 30, alignItems: 'center', flexDirection: 'row', justifyContent: "space-between", marginTop: 24 / 930 * screenHeight
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            getProfile(item)
+                          }}
+                        >
+                          <View style={{
+                            width: screenWidth - 30, alignItems: 'center', flexDirection: 'row', justifyContent: "space-between", marginTop: 24 / 930 * screenHeight
 
-                      }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-                          <Image source={item.profil_image ? (item.profil_image) : placeholderImage}
-                            style={GlobalStyles.image24}
-                          />
-                          <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 }}>
-                            <Text style={[GlobalStyles.text17, { color: '#000' }]}>
-                              {item.name}
-                            </Text>
-                            <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                              {item.city ? item.city : ''} {item.state ? `, ${item.state}` : ''}
-                            </Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                              <Image source={require('../../../assets/Images/starIcon.png')}
-                                style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                          }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                              <Image source={item.profil_image ? (item.profil_image) : placeholderImage}
+                                style={GlobalStyles.image24}
                               />
-                              <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                                {item.totalReviews} reviews
+                              <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 }}>
+                                <Text style={[GlobalStyles.text17, { color: '#000' }]}>
+                                  {item.name}
+                                </Text>
+                                <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
+                                  {item.city ? item.city : ''} {item.state ? `, ${item.state}` : ''}
+                                </Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                  <Image source={require('../../../assets/Images/starIcon.png')}
+                                    style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                                  />
+                                  <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
+                                    {item.totalReviews} reviews
+                                  </Text>
+                                </View>
+                              </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', gap: 4, backgroundColor: '#C0C0C020', padding: 8, borderRadius: 30 }}>
+                              <View style={{ flexDirection: 'row', }}>
+                                <Image source={require('../../../assets/Images/yIcon.png')}
+                                  style={GlobalStyles.yIcon}
+                                />
+                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                  ap score
+                                </Text>
+                              </View>
+                              <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
+                                {item.yapScore3Digit}
                               </Text>
                             </View>
+
                           </View>
-                        </View>
 
-                        <View style={{ flexDirection: 'row', gap: 4, backgroundColor: '#C0C0C020', padding: 8, borderRadius: 30 }}>
-                          <View style={{ flexDirection: 'row', }}>
-                            <Image source={require('../../../assets/Images/yIcon.png')}
-                              style={GlobalStyles.yIcon}
-                            />
-                            <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                              ap score
-                            </Text>
-                          </View>
-                          <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                            {item.yapScore3Digit}
-                          </Text>
-                        </View>
+                          <View style={GlobalStyles.divider}></View>
+                        </TouchableOpacity>
+                      )}
+                      onEndReached={loadMoreData}
+                      onEndReachedThreshold={0.7}
+                      ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} color={Colors.orangeColor} /> : null}
+                    />
 
-                      </View>
+                  ) : (
+                    <Text style={[GlobalStyles.text17, { marginTop: 30 }]}>
+                      No customer found
+                    </Text>
+                  )
+                }
 
-                      <View style={GlobalStyles.divider}></View>
-                    </TouchableOpacity>
-                  )}
-                  onEndReached={loadMoreData}
-                  onEndReachedThreshold={0.7}
-                  ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} color={Colors.orangeColor} /> : null}
-                />
               </View>
 
             </View>

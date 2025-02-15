@@ -34,7 +34,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [adminData, setAdminData] = useState(null)
 
-  const [user,setUser] = useState("")
+  const [user, setUser] = useState("")
 
   const searchAnim = useRef(new Animated.Value(0)).current
 
@@ -181,7 +181,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
   return (
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
-        <SearchScreen navigation={navigation} hideAnimation={hideAnimation} />
+        <SearchScreen type='business' navigation={navigation} hideAnimation={hideAnimation} />
       </Animated.View>
 
     ) : (
@@ -288,61 +288,70 @@ const AdminBusinessMainScreen = ({ navigation }) => {
               </Modal>
 
               <View style={{ height: screenHeight * 0.65 }}>
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  data={businesses}
-                  keyExtractor={(item) => item.id}
+                {
+                  businesses.length > 0 ? (
+                    <FlatList
+                      showsVerticalScrollIndicator={false}
+                      data={businesses}
+                      keyExtractor={(item) => item.id}
 
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        getProfile(item)
-                      }}
-                    >
-                      <View style={{
-                        width: screenWidth - 30, alignItems: 'center', flexDirection: 'row', justifyContent: "space-between", marginTop: 24 / 930 * screenHeight
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            getProfile(item)
+                          }}
+                        >
+                          <View style={{
+                            width: screenWidth - 30, alignItems: 'center', flexDirection: 'row', justifyContent: "space-between", marginTop: 24 / 930 * screenHeight
 
-                      }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-                          <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                            style={[GlobalStyles.image24, { borderRadius: 20 }]}
-                          />
-                          <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 }}>
-                            <Text style={[GlobalStyles.text17, { color: '#000' }]}>
-                              {item.name}
-                            </Text>
-                            <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                              {item.city ? item.city : ''} {item.state ? `, ${item.state}` : ''}
-                            </Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                              <Image source={require('../../../assets/Images/starIcon.png')}
-                                style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                          }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                              <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
+                                style={[GlobalStyles.image24, { borderRadius: 20 }]}
                               />
-                              <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                                {item.totalReviews} reviews
-                              </Text>
+                              <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 }}>
+                                <Text style={[GlobalStyles.text17, { color: '#000' }]}>
+                                  {item.name}
+                                </Text>
+                                <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
+                                  {item.city ? item.city : ''} {item.state ? `, ${item.state}` : ''}
+                                </Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                  <Image source={require('../../../assets/Images/starIcon.png')}
+                                    style={{ height: 14, width: 14, tintColor: '#FFC107' }}
+                                  />
+                                  <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
+                                    {item.totalReviews} reviews
+                                  </Text>
+                                </View>
+                              </View>
                             </View>
+
+                            <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 20 / 930 * screenHeight }}>
+                              <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
+                                Created on {moment(item.createdAt).format("MMM DD")}
+                              </Text>
+                              <Image source={require('../../../assets/Images/farwordArrow.png')}
+                                style={GlobalStyles.image24}
+                              />
+                            </View>
+
                           </View>
-                        </View>
 
-                        <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 20 / 930 * screenHeight }}>
-                          <Text style={[GlobalStyles.text12, { color: '#00000050' }]}>
-                            Created on {moment(item.createdAt).format("MMM DD")}
-                          </Text>
-                          <Image source={require('../../../assets/Images/farwordArrow.png')}
-                            style={GlobalStyles.image24}
-                          />
-                        </View>
+                          <View style={GlobalStyles.divider}></View>
+                        </TouchableOpacity>
+                      )}
+                      onEndReached={loadMoreData}
+                      onEndReachedThreshold={0.7}
+                      ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} color={Colors.orangeColor} /> : null}
+                    />
+                  ) : (
+                    <Text style = {[GlobalStyles.text17,{marginTop:30}]}>
+                        No business found
+                    </Text>
+                  )
+                }
 
-                      </View>
-
-                      <View style={GlobalStyles.divider}></View>
-                    </TouchableOpacity>
-                  )}
-                  onEndReached={loadMoreData}
-                  onEndReachedThreshold={0.7}
-                  ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} color={Colors.orangeColor} /> : null}
-                />
               </View>
             </View>
         }

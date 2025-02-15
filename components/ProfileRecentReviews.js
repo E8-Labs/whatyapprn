@@ -23,7 +23,7 @@ const pImage = require('../assets/Images/product.png')
 
 
 const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation, reviews, role,
-    deleteAccount, suspendAccount,from
+    deleteAccount, suspendAccount, from
 }) => {
 
     const [showPopup, setShowPopup] = useState(false)
@@ -36,8 +36,9 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
     console.log('reviews on recent review screen are', reviews)
 
     const selectView = (item) => {
-        console.log(`review id ${item.id} and status is ${item.reviewStatus}`)
-        if (item.reviewStatus === ReviewTypes.Disputed) {
+        if (item.reviewStatus === ReviewTypes.Disputed && item.yapScore < 3) {
+            console.log(`review id ${item.id} and status is ${item.reviewStatus} and yapScore is ${item.yapScore}`)
+
             return (
                 <View style={{
                     paddingVertical: 5, backgroundColor: '#F4433610',
@@ -138,14 +139,14 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
         ) :
             <View>
 
-                <View style={{ height:from === "tabbar" ? screenHeight * 0.48: screenHeight* 0.5 ,}}>
+                <View style={{ height: from === "tabbar" ? screenHeight * 0.48 : screenHeight * 0.5, }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {
                             reviews.length > 0 ? (
                                 <>
                                     <FlatList
                                         scrollEnabled={false}
-                                        style= {{marginBottom:50}}
+                                        style={{ marginBottom: 50 }}
                                         showsVerticalScrollIndicator={false}
                                         data={reviews}
                                         renderItem={({ item, index }) => (
@@ -304,19 +305,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                             item.reviewStatus !== ReviewTypes.Disputed && (
                                                                                 <>
                                                                                     {
-                                                                                        // role === "business" ? (
-                                                                                        //   <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
-                                                                                        //     onPress={() => {
-                                                                                        //       navigation.push(ScreenNames.YapSattelmentAmount, {
-                                                                                        //         review: item
-                                                                                        //       })
-                                                                                        //     }}
-                                                                                        //   >
-                                                                                        //     <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                                        //       Create Settlement Offer
-                                                                                        //     </Text>
-                                                                                        //   </TouchableOpacity>
-                                                                                        // ) : (
+
                                                                                         role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
                                                                                         <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                                             onPress={() => {
@@ -336,7 +325,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                     }
 
                                                                                     {
-                                                                                        item.reviewStatus === ReviewTypes.Active && role === "customer"  &&
+                                                                                        item.reviewStatus === ReviewTypes.Active && role === "customer" && item.yapScore <= 3 &&
                                                                                         <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                                             onPress={() => {
                                                                                                 navigation.push(ScreenNames.DisputeScreen, {
@@ -353,6 +342,22 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                     }
                                                                                 </>
                                                                             )
+                                                                        }
+
+                                                                        {
+                                                                            role && role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Disputed &&
+                                                                            <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
+                                                                                onPress={() => {
+                                                                                    navigation.push(ScreenNames.ReviewReplyScreen, {
+                                                                                        review: item
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                                                                                    Reply
+                                                                                </Text>
+                                                                            </TouchableOpacity>
+
                                                                         }
 
 

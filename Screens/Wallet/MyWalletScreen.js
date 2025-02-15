@@ -5,7 +5,7 @@ import { Colors } from '../../res/Colors'
 import { CustomFonts } from '../../assets/font/Fonts'
 import React, { useEffect, useState } from 'react'
 import { screenHeight, screenWidth } from '../../res/Constants'
-import AsyncStorage from '@react-native-async-storage/async-storage'  
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import AddCardScreen from '../PaySattleFlow/AddCardScreen'
@@ -62,7 +62,7 @@ const MyWalletScreen = ({ navigation }) => {
             My Wallet
           </Text>
           <TouchableOpacity
-            onPress={()=>{
+            onPress={() => {
               setShowAddCard(true)
             }}
           >
@@ -77,59 +77,67 @@ const MyWalletScreen = ({ navigation }) => {
           </Text>
 
 
+          {
+            cards.length > 0 ? (
+              <FlatList
+                data={cards}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedCard(item)
+                    }}
+                  >
+                    <View style={{
+                      flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
+                      borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
+                    }}>
+                      <View style={{
+                        flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
 
-          <FlatList
-            data={cards}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedCard(item)
-                }}
-              >
-                <View style={{
-                  flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
-                  borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
-                }}>
-                  <View style={{
-                    flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
-
-                  }}>
-                    <Image source={item.image}
-                      style={GlobalStyles.image37}
-                    />
-                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
-                      <Text style={GlobalStyles.text17}>
-                        {item.name} {item.disc} {item.number}
-                      </Text>
-                      {
-                        item.defaultCard && (
-                          <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
-                            Default Card
+                      }}>
+                        <Image source={item.image}
+                          style={GlobalStyles.image37}
+                        />
+                        <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
+                          <Text style={GlobalStyles.text17}>
+                            {item.name} {item.disc} {item.number}
                           </Text>
-                        )
-                      }
+                          {
+                            item.defaultCard && (
+                              <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+                                Default Card
+                              </Text>
+                            )
+                          }
+                        </View>
+
+                        <Image source={item.id === selectedCard.id ? (
+                          require('../../assets/Images/selectedIcon.png')
+                        ) : (
+                          require('../../assets/Images/unSelectedIcon.png')
+                        )}
+                          style={GlobalStyles.image24}
+
+                        />
+                      </View>
                     </View>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Text style={[GlobalStyles.text17,{marginTop:60,alignSelf:'flex-start'}]}>
+                Add your payment method
+              </Text>
+            )
+          }
 
-                    <Image source={item.id === selectedCard.id ? (
-                      require('../../assets/Images/selectedIcon.png')
-                    ) : (
-                      require('../../assets/Images/unSelectedIcon.png')
-                    )}
-                    style = {GlobalStyles.image24}
-
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
 
           <Modal
             visible={showAddCard}
             transparent={true}
             animationType="fade"
           >
-            <AddCardScreen close={()=>setShowAddCard(false)} />
+            <AddCardScreen close={() => setShowAddCard(false)} />
           </Modal>
         </View>
       </View>

@@ -15,6 +15,7 @@ import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import calculateSpent from '../../res/CalculateSpent'
 import formatAmount from '../../res/FormateAmount'
+import { ImageViewer } from '../../components/ImageViewer'
 
 const image1 = require('../../assets/Images/profileImage.png')
 const image2 = require('../../assets/Images/profileImage2.png')
@@ -27,6 +28,8 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
     const [updatedData, setUpdatedData] = useState(null)
     const [showPopup, setShowPopup] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    const [openImage, setOpenImage] = useState(null)
 
     const reviewdetails = route.params.reviewDetails
     console.log('review details are', reviewdetails.review)
@@ -310,10 +313,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                             )}
                     </View>
                     <View style={{ height: screenHeight * 0.87, borderWidth: 0 }}>
-                        {/* <FlatList
-                        showsVerticalScrollIndicator={false}
-                        data={reviewdetails.review}
-                        renderItem={({ item, index }) => ( */}
+
                         <View style={{}}>
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'column', }}>
@@ -339,21 +339,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                 }}>
                                                     {review.business.name}
                                                 </Text>
-                                                {/* <Rating
-                                                type='custom'
-                                                style={{ alignSelf: 'flex-start' }}
-                                                ratingCount={5}
-                                                ratingBackgroundColor='#FFC10730'
-                                                tintColor='white'
-                                                ratingColor='#FFC107'
-                                                imageSize={25}
-                                                readonly={true}
-                                                startingValue={review.yapScore}
-                                                fractions={0}
-                                                showRating={false}
-                                            // onFinishRating={ratingCompleted}
 
-                                            /> */}
                                             </View>
 
                                             <View style={{ alignSelf: 'flex-start', flexDirection: 'row', gap: 8 }}>
@@ -399,19 +385,25 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                     Transaction date: {review.dateOfTransaction.replace(/\s+/g, '')}
                                                 </Text>
 
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                    {
-                                                        review.media.map((img) => (
-                                                            <Image source={{ uri: img.thumb_url }}
-                                                                style={{ height: 45 / 930 * screenHeight, width: 45 / 930 * screenHeight, borderRadius: 5, resizeMode: 'cover' }}
-                                                            />
-                                                        ))
-                                                    }
+                                                {
+                                                    review.media?.length > 0 && (
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                            {
+                                                                review.media.map((img) => (
+                                                                    <TouchableOpacity onPress={()=>{
+                                                                        setOpenImage(img.thumb_url)
+                                                                    }}>
+                                                                        <Image source={{ uri: img.thumb_url }}
+                                                                            style={{ height: 45 / 930 * screenHeight, width: 45 / 930 * screenHeight, borderRadius: 5, resizeMode: 'cover' }}
+                                                                        />
+                                                                    </TouchableOpacity>
+                                                                ))
+                                                            }
+                                                        </View>
+                                                    )
+                                                }
 
-                                                    {/* <Image source={require('../../assets/Images/product.png')}
-                                                        style={{ height: 45 / 930 * screenHeight, width: 40 / 430 * screenWidth, borderRadius: 3 }}
-                                                    /> */}
-                                                </View>
+                                                <ImageViewer visible={openImage !=null} close={()=>setOpenImage(null)} url={openImage}/>
 
                                                 <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
                                                     {review.notesAboutCustomer}
@@ -486,7 +478,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                 backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
                                                             }}>
                                                                 <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                    Spent over ${calculateSpent(item.spent)}
+                                                                    Spent over {calculateSpent(item.user.totalSpent)}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -502,7 +494,10 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                     }}></View>
 
                                     {
-                                        role === 'admin' ? (
+                                        role === 'admin' && !(
+                                            review.reviewStatus === ReviewTypes.RejectedByAdmin || review.reviewStatus === ReviewTypes.Resolved || review.reviewStatus === ReviewTypes.Rejected
+                                            || review.reviewStatus === ReviewTypes.ResolvedByAdmin
+                                        ) ? (
                                             <View style={{
                                                 borderWidth: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: screenWidth - 50,
                                                 marginTop: 20
@@ -535,19 +530,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                 {review.reviewStatus !== ReviewTypes.Disputed && (
                                                     <>
                                                         {
-                                                            //  role === "business" && review.reviewStatus !== ReviewTypes.Resolved ? (
-                                                            //     <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                            //         onPress={() => {
-                                                            //             navigation.push(ScreenNames.YapSattelmentAmount, {
-                                                            //                 review: review
-                                                            //             })
-                                                            //         }}
-                                                            //     >
-                                                            //         <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                            //             Create Settlement Offer
-                                                            //         </Text>
-                                                            //     </TouchableOpacity>
-                                                            // ) : (
+
                                                             role === "customer" && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.ResolvedByAdmin && review.reviewStatus !== ReviewTypes.Resolved && review.settlementOffer &&
                                                             <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                 onPress={() => {
@@ -565,7 +548,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                         }
 
                                                         {
-                                                            review.reviewStatus === ReviewTypes.Active && role === "customer" &&
+                                                            review.reviewStatus === ReviewTypes.Active && role === "customer" && review.yapScore <= 3 &&
                                                             <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                 onPress={() => {
                                                                     navigation.push(ScreenNames.DisputeScreen, {
@@ -665,10 +648,10 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                         <View style={{ flexDirection: 'column', gap: 6 }}>
                                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
-                                                                    <Image source={review.business.profile_image ? { uri: review.business.profile_image } : placeholderImage}
+                                                                    <Image source={review.customer.profile_image ? { uri: review.customer.profile_image } : placeholderImage}
                                                                         style={[GlobalStyles.image24, { borderRadius: 20 }]}
                                                                     />
-                                                                    <Text style={GlobalStyles.text14} > {review.business.name}</Text>
+                                                                    <Text style={GlobalStyles.text14} > {review.customer.name}</Text>
                                                                     <Text style={[GlobalStyles.text12, { color: Colors.orangeColor }]} > Customer</Text>
                                                                 </View>
                                                                 <View style={{
@@ -680,7 +663,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                             style={GlobalStyles.yIcon}
                                                                         />
                                                                         <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                            ap score {review.customer.totalYapScore}
+                                                                            ap score {review.customer.yapScore3Digit}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
@@ -691,7 +674,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                     style={{ height: 14, width: 14, tintColor: '#FFC107' }}
                                                                 />
 
-                                                                <Text style={GlobalStyles.text12} > {review.business.totalReviews} reviews</Text>
+                                                                <Text style={GlobalStyles.text12} > {review.customer.totalReviews} reviews</Text>
 
                                                             </View>
                                                         </View>

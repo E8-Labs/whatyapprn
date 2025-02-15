@@ -357,7 +357,7 @@ const AdminAnalyticsMainScreen = ({ navigation }) => {
                   Revenue
                 </Text>
                 <Text style={{ fontSize: 24, fontFamily: CustomFonts.InterMedium, color: '#000' }}>
-                  $
+                  $0
                 </Text>
               </View>
 

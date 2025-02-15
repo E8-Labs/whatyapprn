@@ -99,23 +99,15 @@ const ReviewReplyScreen = ({ navigation, route }) => {
           width: screenWidth - 80, gap: 15 / 930 * screenHeight
         }}>
 
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
-            <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <Image source={review.customer.profile_image ? { uri: review.customer.profile_image } : placeholderImage}
-                style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
+                style={[GlobalStyles.image37, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
               />
-            </View>
-            <View style={{ flexDirection: 'column', gap: 5 }}>
+            
               <Text style={[GlobalStyles.text17, { color: '#000' }]}>
                 {review.customer.name}
               </Text>
-              <Text style={[GlobalStyles.text14, { color: Colors.orangeColor }]}>
-                Customer Response
-              </Text>
-
-
-            </View>
-
+            
           </View>
           <Text style={[GlobalStyles.text17,]}>
             {review.notesAboutCustomer}
@@ -135,7 +127,7 @@ const ReviewReplyScreen = ({ navigation, route }) => {
                 </Text>
               </View>
               <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                {review.yapScore}
+                {review.customer.yapScore3Digit}
               </Text>
             </View>
 
@@ -146,7 +138,7 @@ const ReviewReplyScreen = ({ navigation, route }) => {
 
 
               <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                Spent over {review.totalSpent}
+                Spent over {calculateSpent(review.customer.totalSpent)}
               </Text>
             </View>
           </View>

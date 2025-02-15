@@ -116,6 +116,9 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
     }
 
     const suspendAccount = async () => {
+        if(user.accountStatus === "suspended"){
+            return
+        }
         setLoading(true)
         // setShowPopup(false)
         const data = await AsyncStorage.getItem("USER")
@@ -365,7 +368,7 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
                                             }}
                                         >
                                             <Text style={GlobalStyles.BtnText}>
-                                                Suspend Account
+                                               {user.accountStatus === "suspended"?"Suspended":"Suspend Account"} 
                                             </Text>
                                         </TouchableOpacity>
 

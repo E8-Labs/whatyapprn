@@ -80,7 +80,30 @@ const ProfileMainScreen = ({ navigation }) => {
           flexDirection: "column",
         }}
       >
-        <Text style={GlobalStyles.heading}>My Profile</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth - 40 }}>
+          <Text style={[GlobalStyles.heading,{width:screenWidth-100}]}>My Profile</Text>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push(ScreenNames.MessagesListScreen)
+              }}
+            >
+              <Image
+                source={require("../../assets/Images/messageIcon.png")}
+                style={GlobalStyles.image24}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.push(ScreenNames.MyWalletScreen)
+            }}>
+              <Image
+                source={require("../../assets/Images/walletIcon.png")}
+                style={GlobalStyles.image24}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -142,7 +165,7 @@ const ProfileMainScreen = ({ navigation }) => {
               width: screenWidth - 80,
             }}
           >
-            <Text style={[GlobalStyles.text17,{color:'#000'}]}>Credit Points</Text>
+            <Text style={[GlobalStyles.text17, { color: '#000' }]}>Credit Points</Text>
 
             <TouchableOpacity
               style={{
@@ -169,7 +192,7 @@ const ProfileMainScreen = ({ navigation }) => {
 
           <Progress.Bar
             style={{ marginTop: 10 }}
-            progress={user ? user.credits_available/100 : 0}
+            progress={user ? user.credits_available / 100 : 0}
             width={350}
             unfilledColor="#FF570020"
             borderWidth={0}
@@ -206,7 +229,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 }
                 style={[GlobalStyles.image24, { borderRadius: 24 }]}
               />
-              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Business Information</Text>
+              <Text style={[GlobalStyles.text17, { color: '#000' }]}>Business Information</Text>
             </View>
 
             <Image
@@ -235,7 +258,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 source={require("../../assets/Images/walletIcon.png")}
                 style={GlobalStyles.image24}
               />
-              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Plans</Text>
+              <Text style={[GlobalStyles.text17, { color: '#000' }]}>Plans</Text>
             </View>
 
             <Image
@@ -260,7 +283,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 source={require("../../assets/Images/lockIcon.png")}
                 style={GlobalStyles.image24}
               />
-              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Privacy Policy</Text>
+              <Text style={[GlobalStyles.text17, { color: '#000' }]}>Privacy Policy</Text>
             </View>
 
             <Image
@@ -270,7 +293,7 @@ const ProfileMainScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
 
-        
+
 
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
@@ -288,7 +311,7 @@ const ProfileMainScreen = ({ navigation }) => {
                 source={require("../../assets/Images/lockIcon.png")}
                 style={GlobalStyles.image24}
               />
-              <Text style={[GlobalStyles.text17,{color:'#000'}]}>Terms and Condition</Text>
+              <Text style={[GlobalStyles.text17, { color: '#000' }]}>Terms and Condition</Text>
             </View>
 
             <Image
@@ -298,7 +321,7 @@ const ProfileMainScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
 
-        
+
 
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
@@ -315,7 +338,7 @@ const ProfileMainScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-          onPress={handleEmail}
+            onPress={handleEmail}
           >
             <Text style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
               Send Feedback

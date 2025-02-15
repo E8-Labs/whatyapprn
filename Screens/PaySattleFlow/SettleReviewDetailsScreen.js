@@ -116,12 +116,9 @@ const SettleReviewDetailsScreen = ({ navigation, route }) => {
                     }}>
                         <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
-                                <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
-                                    <Image source={item.thumbUrl ? { uri: item.thumbUrl } : placeholderImage}
-                                        style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
-                                    />
-
-                                </View>
+                                <Image source={item.business.profile_image ? { uri: item.business.profile_image } : placeholderImage}
+                                    style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
+                                />
                                 <Rating
                                     type='custom'
                                     style={{ alignSelf: 'flex-start' }}
@@ -156,9 +153,6 @@ const SettleReviewDetailsScreen = ({ navigation, route }) => {
                         </View>
 
                         <View style={{ flexDirection: 'row', width: screenWidth - 40, alignSelf: 'center', marginTop: 15 / 930 * screenHeight, }}>
-
-
-
                             <>
                                 <View style={{ height: 3, width: 3, borderRadius: 2, backgroundColor: '#B9B9B9', marginLeft: 18 / 430 * screenWidth }}></View>
                                 <View style={{ width: 1, backgroundColor: '#B9B9B9', marginLeft: -2 }}></View>

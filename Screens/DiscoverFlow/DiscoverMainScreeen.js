@@ -104,7 +104,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
 
-        <SearchScreen navigation={navigation} hideAnimation={hideAnimation}
+        <SearchScreen  navigation={navigation} hideAnimation={hideAnimation}
           from={showFilterPopup ? "filter" : ''}
         />
       </Animated.View>
@@ -290,7 +290,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.push(ScreenNames.AllCustomersScreen)
+                    navigation.push(ScreenNames.AllCustomersScreen,)
                   }}
                 >
                   <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>

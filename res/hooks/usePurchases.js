@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import Purchases from "react-native-purchases";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { ScreenNames } from "../ScreenNames";
 
 const usePurchases = (RevenueCatApiKey) => {
   const [loading, setLoading] = useState(false);
@@ -93,7 +94,7 @@ const usePurchases = (RevenueCatApiKey) => {
         setLoading2(null);
         navigation.reset({
           index: 0,
-          routes: [{ name: "TabBarContainer" }],
+          routes: [{ name: ScreenNames.TabbarContainer }],
         });
       }
     } catch (e) {

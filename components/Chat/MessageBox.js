@@ -154,6 +154,7 @@ const MessageBox = ({ item, user, sendEmoji }) => {
           <EmojiSelector
             category={Categories.all}
             columns={6}
+            showSearchBar = {false}
             showTabs={false}
             onEmojiSelected={handleEmojiSelected}
           />

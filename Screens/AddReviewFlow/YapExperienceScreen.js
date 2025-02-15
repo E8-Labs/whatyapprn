@@ -55,7 +55,7 @@ const YapExperienceScreen = ({ navigation, route }) => {
                 }
 
                 apidata.append("service", yap.service)
-                apidata.append("amountOfTransaction", transactionAmount)
+                apidata.append("amountOfTransaction", yap.transactionAmount)
                 apidata.append("dateOfTransaction", yap.dateOfTransaction)
                 apidata.append("yapScore", yap.yapScore)
                 {
@@ -65,7 +65,7 @@ const YapExperienceScreen = ({ navigation, route }) => {
                 }
                 {
                     yap.settlementAmount && (
-                        apidata.append("settlementAmount", settlementAmount)
+                        apidata.append("settlementAmount", yap.settlementAmount)
                     )
                 }
                 apidata.append("notesAboutCustomer", experience)
