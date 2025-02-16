@@ -35,10 +35,13 @@ export const Apipath = {
   deleteFromPlatform: baseUrl + "admin/deleteFromPlatform",
   deleteAccout: baseUrl + "admin/deleteAccount",
   suspendAccount: baseUrl + "admin/suspendAccount",
-  resolveOrReject:baseUrl+"admin/resolveOrReject",
+  resolveOrReject: baseUrl + "admin/resolveOrReject",
   PurchaseCredits: `${baseUrl}user/purchaseCredits`,
   checkLicenseExists: `${baseUrl}user/checkDriverLicenseExists`,
-  getCards:`${baseUrl}user/list_cards`,
-  addNewCard:`${baseUrl}user/add_card`,
-  adminUnreadChat:`${baseUrl}user/readNotifications`
+  getCards: `${baseUrl}user/list_cards`,
+  addNewCard: `${baseUrl}user/add_card`,
+  adminUnreadChat: `${baseUrl}user/readNotifications`,
+
+  //chat
+  createChat: `${baseUrl}review/createchat`,
 };

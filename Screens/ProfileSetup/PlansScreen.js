@@ -11,7 +11,7 @@ import { screenHeight, screenWidth } from "../../res/Constants";
 import { Colors } from "../../res/Colors";
 import { CustomFonts } from "../../assets/font/Fonts";
 import { ScreenNames } from "../../res/ScreenNames";
-import { ApiKeys } from "../../Api/keys";
+import { ApiKeys } from "../../Api/ApiKeys";
 import usePurchases from "../../res/hooks/usePurchases";
 
 const PlansScreen = ({ navigation }) => {
@@ -22,7 +22,7 @@ const PlansScreen = ({ navigation }) => {
       price: "$499/yr",
       disc: "$50/Month",
       identifier: "Yearly_Premium_1118",
-      oldPrice: '$999'
+      oldPrice: "$999",
     },
     {
       id: 2,
@@ -30,7 +30,7 @@ const PlansScreen = ({ navigation }) => {
       price: "$49/m",
       disc: "",
       identifier: "Monthly_Premium_1118",
-      oldPrice: '$99'
+      oldPrice: "$99",
     },
   ];
   const RevenueCatApiKey = ApiKeys.RevenueCatApiKey; //"appl_xmLtPRVaCdpCrklyeHGUMguQRlb";
@@ -60,8 +60,8 @@ const PlansScreen = ({ navigation }) => {
               marginTop: (100 / 930) * screenHeight,
             }}
           />
-          <View style={{ position: "absolute", bottom: 50,}}>
-            <View style={{width:screenWidth,alignItems:'center'}}>
+          <View style={{ position: "absolute", bottom: 50 }}>
+            <View style={{ width: screenWidth, alignItems: "center" }}>
               <Text style={GlobalStyles.heading}>Subscription Plan</Text>
               <Text
                 style={[
@@ -155,13 +155,16 @@ const PlansScreen = ({ navigation }) => {
                               color: "black",
                             }}
                           >
-                            {item.price} <Text style={{
-                              fontSize: 17,
-                              fontFamily: CustomFonts.PoppinsMedium,
-                              fontWeight: "700",
-                              color: "black",
-                              textDecorationLine: 'line-through'
-                            }}>
+                            {item.price}{" "}
+                            <Text
+                              style={{
+                                fontSize: 17,
+                                fontFamily: CustomFonts.PoppinsMedium,
+                                fontWeight: "700",
+                                color: "black",
+                                textDecorationLine: "line-through",
+                              }}
+                            >
                               {item.oldPrice}
                             </Text>
                           </Text>
@@ -216,9 +219,9 @@ const PlansScreen = ({ navigation }) => {
                   textAlign: "center",
                 }}
               >
-                This subscription automically renews unless auto-renew is turn off
-                ateast 24hrs before current period eands. Payment is charged to
-                your iTunes Account.
+                This subscription automically renews unless auto-renew is turn
+                off ateast 24hrs before current period eands. Payment is charged
+                to your iTunes Account.
               </Text>
             </View>
           </View>

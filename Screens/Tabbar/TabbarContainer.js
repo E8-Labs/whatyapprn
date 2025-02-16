@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Animated, Platform
+  Animated,
+  Platform,
 } from "react-native";
 import Purchases from "react-native-purchases";
 import { Image } from "expo-image";
@@ -29,11 +30,11 @@ import SearchScreen from "../DiscoverFlow/SearchScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import { getProfile } from "../../components/GetProfile";
 
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 import { updateProfile } from "../../components/UpdateProfile";
-import { ApiKeys } from "../../Api/keys";
+import { ApiKeys } from "../../Api/ApiKeys";
 
 const TabbarContainer = ({ navigation, route }) => {
   const Tab = createBottomTabNavigator();
@@ -47,7 +48,6 @@ const TabbarContainer = ({ navigation, route }) => {
 
   const from = route.params.from;
   const RevenueCatApiKey = ApiKeys.RevenueCatApiKey; //"appl_xmLtPRVaCdpCrklyeHGUMguQRlb";
-
 
   useEffect(() => {
     if (user) {
@@ -84,10 +84,9 @@ const TabbarContainer = ({ navigation, route }) => {
     });
   };
 
-
   useEffect(() => {
-    getNotificationPermission()
-  }, [])
+    getNotificationPermission();
+  }, []);
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -163,25 +162,23 @@ const TabbarContainer = ({ navigation, route }) => {
   }
 
   const getNotificationPermission = async () => {
-    console.log('enter in function')
-    registerForPushNotificationsAsync().then(
-      async (token) => {
-        if (token) {
-          // setFcmToken(token)
-        }
-        console.log('token', token)
-        let apidata = {
-          fcm_token: token
-        }
-        let data = await updateProfile(apidata)
-
-        if (data) {
-          // navigation.push(ScreenNames.LocationPremitionScreen)
-        }
-        // updateProfile(token)
+    console.log("enter in function");
+    registerForPushNotificationsAsync().then(async (token) => {
+      if (token) {
+        // setFcmToken(token)
       }
-    );
-  }
+      console.log("token", token);
+      let apidata = {
+        fcm_token: token,
+      };
+      let data = await updateProfile(apidata);
+
+      if (data) {
+        // navigation.push(ScreenNames.LocationPremitionScreen)
+      }
+      // updateProfile(token)
+    });
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -191,8 +188,8 @@ const TabbarContainer = ({ navigation, route }) => {
           let u = JSON.parse(data);
           // console.log('user role in user role function is', u.user.role)
           // u.user.from = "tabbar";
-          let d = await getProfile()
-          d.from = "tabbar"
+          let d = await getProfile();
+          d.from = "tabbar";
           setUser(d);
           setRole(d.role);
           // console.log("user after update is", d);
@@ -200,10 +197,10 @@ const TabbarContainer = ({ navigation, route }) => {
       };
       checkUserRole();
     }, [])
-  )
+  );
 
   useEffect(() => {
-    console.log('trying to refresh subscription status')
+    console.log("trying to refresh subscription status");
     refreshSubscriptionStatus();
   }, []);
 

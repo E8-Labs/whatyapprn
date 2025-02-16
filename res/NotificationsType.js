@@ -8,4 +8,5 @@ export const NotificationType = {
   NewUser: "NewUser",
   SettlementAmountPaid: "SettlementAmountPaid",
   NewReview: "NewReview",
+  FiveStarReview: "5StartReview",
 };

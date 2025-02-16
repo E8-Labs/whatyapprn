@@ -17,7 +17,7 @@ import React, { useState, useEffect } from "react";
 import { Colors } from "../../res/Colors";
 import { ScreenNames } from "../../res/ScreenNames";
 import Purchases from "react-native-purchases";
-import { ApiKeys } from "../../Api/keys";
+import { ApiKeys } from "../../Api/ApiKeys";
 import { Apipath } from "../../Api/Apipaths";
 
 const BuyCreditScreen = ({ navigation }) => {
