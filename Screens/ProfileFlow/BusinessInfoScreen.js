@@ -47,6 +47,8 @@ const BusinessInfoScreen = ({ navigation, route }) => {
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
 
+  let from = route.params.from
+
   useFocusEffect(
     React.useCallback(() => {
       const getUserProfile = async () => {
@@ -55,14 +57,19 @@ const BusinessInfoScreen = ({ navigation, route }) => {
         setLoading(false);
         setUser(u);
       };
-      getUserProfile();
+      if (from != "notification") {
+        getUserProfile();
+      } else {
+        let u = route.params.user
+        setUser(u)
+      }
     }, [])
   );
 
   useEffect(() => {
     let u = user;
     const setValues = () => {
-      console.log("user profile_image is", u.profile_image);
+      console.log("user profile_image is", u);
       setCity(u.city);
       setState(u.state);
       setEmail(u.email);
@@ -72,6 +79,9 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     };
     setValues();
   }, [user]);
+
+
+
 
 
   const pickImage = async () => {
@@ -179,7 +189,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
     const lastPart = url ? url.split('/').pop() : '';
     console.log(lastPart);
     return lastPart
-}
+  }
 
 
   return (
@@ -247,20 +257,26 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <TouchableOpacity
-                onPress={() => {
-                  setShowPopup(true);
-                }}
-              >
-                <Image
-                  source={require("../../assets/Images/cameraImage.png")}
-                  style={{
-                    width: (40 / 430) * screenWidth,
-                    height: (40 / 930) * screenHeight,
-                    resizeMode: "contain",
-                  }}
-                />
-              </TouchableOpacity>
+              {
+                from != "notification" && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowPopup(true);
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/Images/cameraImage.png")}
+                      style={{
+                        width: (40 / 430) * screenWidth,
+                        height: (40 / 930) * screenHeight,
+                        resizeMode: "contain",
+                      }}
+                    />
+                  </TouchableOpacity>
+                )
+              }
+
+
             </View>
 
             <View
@@ -276,20 +292,26 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 Media
               </Text>
 
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.push(ScreenNames.UploadMediaScreen, {
-                    from: "profile",
-                    media:user.media
-                  });
-                }}
-              >
-                <Text
-                  style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              {
+                from != "notification" && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.push(ScreenNames.UploadMediaScreen, {
+                        from: "profile",
+                        media: user.media
+                      });
+                    }}
+                  >
+                    <Text
+                      style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                )
+              }
+
+
             </View>
 
             {user.media ? (
@@ -362,20 +384,22 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               <Text style={[GlobalStyles.text14, { color: "#00000080" }]}>
                 Industry
               </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.push(ScreenNames.BusinessIndustryScreen, {
-                    from: "profile",
-                  });
-                }}
-              >
-                <Text
-                  style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              {
+                from != "notification" && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.push(ScreenNames.BusinessIndustryScreen, {
+                        from: "profile",
+                      });
+                    }}
+                  >
+                    <Text
+                      style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                )}
             </View>
 
             <Text
@@ -403,21 +427,25 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 Number of Employee
               </Text>
 
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.push(ScreenNames.EmployeesScreen, {
-                    user: {
-                      from: "profile",
-                    },
-                  });
-                }}
-              >
-                <Text
-                  style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              {
+                from != "notification" && (
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.push(ScreenNames.EmployeesScreen, {
+                        user: {
+                          from: "profile",
+                        },
+                      });
+                    }}
+                  >
+                    <Text
+                      style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                )}
             </View>
 
             <Text
@@ -445,21 +473,25 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 About Business
               </Text>
 
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.push(ScreenNames.BusinessDetailsScreen, {
-                    user: {
-                      from: "profile",
-                    },
-                  });
-                }}
-              >
-                <Text
-                  style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
+              {
+                from != "notification" && (
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.push(ScreenNames.BusinessDetailsScreen, {
+                        user: {
+                          from: "profile",
+                        },
+                      });
+                    }}
+                  >
+                    <Text
+                      style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                )}
             </View>
 
             <Text
@@ -564,14 +596,20 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={GlobalStyles.capsuleBtn}
-              onPress={() => {
-                saveChanges();
-              }}
-            >
-              <Text style={GlobalStyles.BtnText}>Save Updates</Text>
-            </TouchableOpacity>
+            {
+              from != "notification" && (
+                <TouchableOpacity
+                  style={GlobalStyles.capsuleBtn}
+                  onPress={() => {
+                    saveChanges();
+                  }}
+                >
+                  <Text style={GlobalStyles.BtnText}>Save Updates</Text>
+                </TouchableOpacity>
+
+              )
+            }
+
 
             {/* Gallery popup */}
 

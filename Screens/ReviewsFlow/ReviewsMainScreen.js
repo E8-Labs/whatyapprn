@@ -21,6 +21,7 @@ const ReviewsMainScreen = ({ navigation }) => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(false)
   const [role, setRole] = useState('')
+  const [user,setUser] = useState("")
 
   const menues = [
     {
@@ -49,6 +50,7 @@ const ReviewsMainScreen = ({ navigation }) => {
       const data = await AsyncStorage.getItem("USER")
       if (data) {
         let u = JSON.parse(data)
+        setUser(u.user)
         setRole(u.user.role)
         console.log('user data in user role function is', u.user.role)
       }
@@ -127,9 +129,17 @@ const ReviewsMainScreen = ({ navigation }) => {
                   navigation.push(ScreenNames.NotificationsScreen)
                 }}
               >
-                <Image source={require('../../assets/Images/notificationIcon.png')}
-                  style={GlobalStyles.image24}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                  {
+                    user?.unread != 0 && (
+                      <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                    )
+                  }
+                  <Image source={require('../../assets/Images/notificationIcon.png')}
+                    style={GlobalStyles.image24}
+                  />
+                </View>
+
               </TouchableOpacity>
             </View>
           </View>

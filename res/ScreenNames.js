@@ -74,6 +74,8 @@ export const ScreenNames = {
   AdminTabbarContainer: "AdminTabbarContainer",
   AddCardScreen:"AddCardScreen",
 
+  ReviewNotificationScreen:"ReviewNotificationScreen",
+
   TestFile: "TestFile",
   Testfile2: "Testfile2",
 };

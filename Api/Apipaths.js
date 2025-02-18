@@ -35,6 +35,7 @@ export const Apipath = {
   deleteFromPlatform: baseUrl + "admin/deleteFromPlatform",
   deleteAccout: baseUrl + "admin/deleteAccount",
   suspendAccount: baseUrl + "admin/suspendAccount",
+  unsuspendAccount: baseUrl + "admin/unsuspendAccount",
   resolveOrReject: baseUrl + "admin/resolveOrReject",
   PurchaseCredits: `${baseUrl}user/purchaseCredits`,
   checkLicenseExists: `${baseUrl}user/checkDriverLicenseExists`,
@@ -44,4 +45,7 @@ export const Apipath = {
 
   //chat
   createChat: `${baseUrl}review/createchat`,
+
+
+  getSuspendedUsers:`${baseUrl}admin/suspendedUsers`
 };

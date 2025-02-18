@@ -41,9 +41,9 @@ export default function NotificationsScreen({ navigation }) {
     getNotifications();
   }, []);
 
-  useEffect(() => {
-    console.log("sections are ", sections);
-  }, [sections]);
+  // useEffect(() => {
+  //   console.log("sections are ", sections);
+  // }, [sections]);
 
   const getNotifications = async () => {
     console.log("trying to get notifications");
@@ -127,7 +127,7 @@ export default function NotificationsScreen({ navigation }) {
   };
 
   const getNotificationType = (item) => {
-    console.log("Getting not type for ", item.type);
+    // console.log("Getting not type for ", item.type);
     //Wohoo! You received a 5 star review
     if (item.type === NotificationType.FiveStarReview) {
       let not = {
@@ -232,9 +232,9 @@ export default function NotificationsScreen({ navigation }) {
   };
 
   const renderItem = (item) => {
-    console.log("trying to render items", item);
+    // console.log("trying to render items", item);
     let not = getNotificationType(item);
-    console.log("notification object is", not);
+    // console.log("notification object is", not);
     // return
 
     return (
@@ -266,7 +266,11 @@ export default function NotificationsScreen({ navigation }) {
               }}
             />
             <View style={{ flexDirection: "column", gap: 10 }}>
-              <Text style={[GlobalStyles.text17, { color: "#333" }]}>
+              <Text style={[GlobalStyles.text17, {
+                color: "#333",
+                width: screenWidth - 100,
+                borderWidth: 0
+              }]}>
                 {not.message}
               </Text>
               <Text style={GlobalStyles.text12}>
@@ -280,11 +284,68 @@ export default function NotificationsScreen({ navigation }) {
   };
 
   const handleNotPress = (not) => {
+
     if (role === "admin") {
+
       if (not.type === NotificationType.NewReview) {
-        navigation.push(ScreenNames.AdminResolutionsMainScreen);
+        navigation.push(ScreenNames.ReviewNotificationScreen, {
+          reviewDetails: {
+            review: not,
+            from: 'notification',
+          }
+        });
+      } else {
+        if (not.type === NotificationType.NewUser) {
+          // if (not.fromUser?.role === "business") {
+          navigation.push(ScreenNames.AdminBusinessProfileDetailsScreen, {
+            user: not.fromUser
+          })
+
+        }
       }
+
+      // if(not.type === NotificationType.SettlementAmountPaid){
+      //   navigation.push(ScreenNames.AdminBusinessProfileDetailsScreen,{
+      //     user:not.fromUser
+      //   })
+      // }
+    } else {
+
+      if (not.type === NotificationType.NewReview //||not.type === NotificationType.ReplyReview
+        
+       ) {
+        navigation.push(ScreenNames.ReviewNotificationScreen, {
+          reviewDetails: {
+            review: not,
+            from: 'notification',
+          }
+        });
+      }
+
+      if (not.type === NotificationType.NewMessage) {
+
+        not.chat.Customer = not.toUser
+        not.chat.Business = not.fromUser
+
+        navigation.push(ScreenNames.ChatScreen, {
+          chat: not.chat
+        })
+      } else if (not.type === NotificationType.ProfileView) {
+        if (not.fromUser.role === "business") {
+          navigation.push(ScreenNames.BusinessInfoScreen, {
+            user: not.fromUser,
+            from: "notification"
+          })
+        } else if (not.fromUser.role === "business") {
+          navigation.push(ScreenNames.BusinessInfoScreen, {
+            user: not.fromUser,
+            from: "notification"
+          })
+        }
+      }
+
     }
+
   };
 
   return (
@@ -348,6 +409,7 @@ export default function NotificationsScreen({ navigation }) {
                       fontSize: 14,
                       color: "#999999",
                       fontFamily: CustomFonts.InterMedium,
+
                     }}
                   >
                     {title}

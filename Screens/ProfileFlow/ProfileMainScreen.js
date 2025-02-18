@@ -203,7 +203,7 @@ const ProfileMainScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.push(ScreenNames.BusinessInfoScreen, {
-              user: user,
+              user: "",
               from: "Business",
             });
           }}

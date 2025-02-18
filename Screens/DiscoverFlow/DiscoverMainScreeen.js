@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Animated, Modal } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Image } from 'expo-image'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { placeholderImage, screenHeight, screenWidth } from '../../res/Constants'
@@ -14,6 +14,7 @@ import { Apipath } from '../../Api/Apipaths'
 import { getCutomerProfile } from '../../components/GetCustomerProfile'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import calculateSpent from '../../res/CalculateSpent'
+import { useFocusEffect } from '@react-navigation/native'
 
 
 const profileImage = require('../../assets/Images/profileImage.png')
@@ -26,6 +27,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
   const [recentlyViewed, setRecentlyViewed] = useState([])
   const [loading, setLoading] = useState(false)
   const [role, setRole] = useState("")
+  const [user, setUser] = useState("")
 
   const searchAnim = useRef(new Animated.Value(0)).current
 
@@ -51,8 +53,14 @@ const DiscoverMainScreeen = ({ navigation }) => {
     })
   }
 
+  useFocusEffect(
+    useCallback(()=>{
+      getDashboardData()
+    },[])
+  )
+
   useEffect(() => {
-    getDashboardData()
+    // getDashboardData()
   }, [])
 
   const getDashboardData = async () => {
@@ -62,7 +70,8 @@ const DiscoverMainScreeen = ({ navigation }) => {
       if (data) {
         let u = JSON.parse(data)
         setRole(u.user.role)
-        console.log('user data is', u)
+        setUser(u.user)
+        console.log('user data is', u.user.id)
         const response = await axios.get(Apipath.getDashboardData, {
           headers: {
             "Authorization": 'Bearer ' + u.token
@@ -104,7 +113,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
     showSearch ? (
       <Animated.View style={{ opacity: searchAnim }}>
 
-        <SearchScreen  navigation={navigation} hideAnimation={hideAnimation}
+        <SearchScreen navigation={navigation} hideAnimation={hideAnimation}
           from={showFilterPopup ? "filter" : ''}
         />
       </Animated.View>
@@ -138,9 +147,17 @@ const DiscoverMainScreeen = ({ navigation }) => {
                 navigation.push(ScreenNames.NotificationsScreen)
               }}
             >
-              <Image source={require('../../assets/Images/notificationIcon.png')}
-                style={GlobalStyles.image24}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'fex-start', justifyContent: 'flex-start' }}>
+                {
+                  user?.unread != 0 && (
+                    <View style={{ height: 8, width: 8, borderRadius: 5, backgroundColor: Colors.orangeColor, marginRight: -5 }}></View>
+                  )
+                }
+                <Image source={require('../../assets/Images/notificationIcon.png')}
+                  style={GlobalStyles.image24}
+                />
+              </View>
+
             </TouchableOpacity>
           </View>
         </View>
@@ -170,6 +187,10 @@ const DiscoverMainScreeen = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
+              if (!role) {
+                console.log('role is', role)
+                return
+              }
               setShowFilter(true)
               showAnimation()
             }}
@@ -290,7 +311,9 @@ const DiscoverMainScreeen = ({ navigation }) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.push(ScreenNames.AllCustomersScreen,)
+                    navigation.push(ScreenNames.AllCustomersScreen, {
+                      role: role
+                    })
                   }}
                 >
                   <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
@@ -312,15 +335,15 @@ const DiscoverMainScreeen = ({ navigation }) => {
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
 
-                          <View style = {{flexDirection:'row',alignItems:"center",gap:5}}>
-                          <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                            style={{
-                              height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, borderRadius: 20, resizeMode: 'cover'
-                            }}
-                          />
-                          <Text style={[GlobalStyles.text17, { color: 'black' }]}>
-                            {item.name}
-                          </Text>
+                          <View style={{ flexDirection: 'row', alignItems: "center", gap: 5 }}>
+                            <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
+                              style={{
+                                height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, borderRadius: 20, resizeMode: 'cover'
+                              }}
+                            />
+                            <Text style={[GlobalStyles.text17, { color: 'black' }]}>
+                              {item.name}
+                            </Text>
                           </View>
 
                           <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
@@ -333,7 +356,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                           </Text>
                           <View style={{
                             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                            width: screenWidth-70,
+                            width: screenWidth - 70,
                           }}>
                             <View style={{ flexDirection: 'column', gap: 5 }}>
                               <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>

@@ -12,7 +12,10 @@ import calculateSpent from '../../res/CalculateSpent'
 const profileImage = require('../../assets/Images/profileImage.png')
 
 
-const AllCustomersScreen = ({ navigation }) => {
+const AllCustomersScreen = ({ navigation,route }) => {
+
+    let role = route.params.role
+    console.log('role on all customer screen is', role)
 
     const [customers,setCustomers] = useState([])
     // const customers = [
@@ -70,7 +73,17 @@ const AllCustomersScreen = ({ navigation }) => {
             if (data) {
                 let u = JSON.parse(data)
 
-                const response = await axios.get(Apipath.getAllCustomers, {
+                let path = Apipath.getAllCustomers + "?role="
+                if(role === "business"){
+                    path = path+"customer"
+                }else{
+                    path = path+"business"
+                }
+                 
+
+                console.log('path', path)
+
+                const response = await axios.get(path, {
                     headers: {
                         'Authorization': 'Bearer ' + u.token
                     }

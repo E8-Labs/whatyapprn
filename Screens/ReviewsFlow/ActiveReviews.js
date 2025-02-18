@@ -290,7 +290,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                                   }
 
                                   {
-                                    item.reviewStatus === ReviewTypes.Active && role === "customer" &&
+                                    item.reviewStatus === ReviewTypes.Active && role === "customer" && item.yapScore <= 3 &&
                                     <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                       onPress={() => {
                                         navigation.push(ScreenNames.DisputeScreen, {

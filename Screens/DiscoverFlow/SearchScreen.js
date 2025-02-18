@@ -342,7 +342,7 @@ const SearchScreen = ({
                 animationType="slide"
                 transparent={true}
               >
-                <FilterPoopup close={closeModal} />
+                <FilterPoopup close={closeModal}  role = {role}/>
               </Modal>
               <View
                 style={{

@@ -18,7 +18,6 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
 
     const user = route.params.user
 
-
     const [showPopup, setShowPopup] = useState(false)
     const [image, setImage] = useState('')
     const [name, setName] = useState("")
@@ -30,10 +29,7 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
     const [media, setMedia] = useState([])
     const [industry, setIndustry] = useState("")
     const [role,setRole] = useState("")
-
     const [password, setPassword] = useState("")
-
-
     const [reviews, setReviews] = useState([])
 
 
@@ -117,6 +113,7 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
 
     const suspendAccount = async () => {
         if(user.accountStatus === "suspended"){
+            unsuspendAccount()
             return
         }
         setLoading(true)
@@ -147,6 +144,41 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
                 }
             } catch (e) {
                 console.log('error in delete permantly api is', e)
+            }
+        }
+    }
+
+    const unsuspendAccount = async () => {
+       
+        setLoading(true)
+        // setShowPopup(false)
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let u = JSON.parse(data)
+            let apidata = {
+                userId: user.id
+            }
+            console.log('apidata', apidata)
+            // return
+            try {
+                const response = await axios.post(Apipath.unsuspendAccount, apidata, {
+                    headers: {
+                        'Authorization': 'Bearer ' + u.token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                setLoading(false)
+                if (response.data) {
+                    if (response.data.status === true) {
+                        console.log('un suspend account api data', response.data)
+                        navigation.goBack()
+                    } else {
+                        console.log('unsuspend account api message', response.data.message)
+                    }
+                }
+            } catch (e) {
+                setLoading(false)
+                console.log('error in unsuspend permantly api is', e)
             }
         }
     }
@@ -235,8 +267,6 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
                                     </Text>
                                 </View>
                             </View>
-
-
                         </View>
 
                         <View style={{
@@ -368,7 +398,7 @@ const AdminBusinessProfileDetailsScreen = ({ navigation, route }) => {
                                             }}
                                         >
                                             <Text style={GlobalStyles.BtnText}>
-                                               {user.accountStatus === "suspended"?"Suspended":"Suspend Account"} 
+                                               {user.accountStatus === "suspended"?"Unsuspend Account":"Suspend Account"} 
                                             </Text>
                                         </TouchableOpacity>
 
