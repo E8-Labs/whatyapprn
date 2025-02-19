@@ -57,7 +57,7 @@ const TabbarContainer = ({ navigation, route }) => {
         appUserID: `${user?.id}`,
       });
     }
-  }, []);
+  }, [user]);
 
   const openModal = () => {
     console.log("Add button pressed");
@@ -202,7 +202,7 @@ const TabbarContainer = ({ navigation, route }) => {
   useEffect(() => {
     console.log("trying to refresh subscription status");
     refreshSubscriptionStatus();
-  }, []);
+  }, [user]);
 
   function checkSubscriptionStatus(info) {
     if (typeof info.entitlements.active["premium"] !== "undefined") {
@@ -211,8 +211,11 @@ const TabbarContainer = ({ navigation, route }) => {
         info.entitlements.active["premium"]
       );
     } else {
-      console.log("User not subscribed");
-      navigation.navigate(ScreenNames.PlansScreen);
+      console.log("User not subscribed", user.role);
+      if (user.role == "business") {
+        console.log("Navigating to Plans");
+        navigation.navigate(ScreenNames.PlansScreen);
+      }
     }
   }
 
