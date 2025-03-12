@@ -9,7 +9,7 @@ import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 
 
-const AdminFilterPopup = ({ close }) => {
+const AdminFilterPopup = ({ close, role }) => {
 
     const date = new Date()
 
@@ -21,10 +21,49 @@ const AdminFilterPopup = ({ close }) => {
     const [selectedFromDate, setSelcetedFromDate] = useState("")
     const [selectedToDate, setSelcetedToDate] = useState("")
     const [selectedCalender, setSelectedCalender] = useState("")
-    const [error,setError] = useState("")
+    const [error, setError] = useState("")
 
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
+    const [selectedIndustry, setSelectedIndustry] = useState("")
+
+
+    const industries = [
+        {
+            id: 1,
+            name: 'Finance'
+        },
+        {
+            id: 2,
+            name: 'Management'
+        },
+        {
+            id: 3,
+            name: 'Information & Technology'
+        },
+        {
+            id: 4,
+            name: 'Service'
+        },
+        {
+            id: 5,
+            name: 'Sales'
+        },
+
+    ]
+
+    const handleIndustrySelect = (item) => {
+        setSelectedIndustry((prevSelected) => {
+            if (prevSelected.includes(item.name)) {
+                // Remove industry if already selected
+                return prevSelected.filter((industry) => industry !== item.name);
+            } else {
+                // Add industry if not selected
+                return [...prevSelected, item.name];
+            }
+        });
+    };
+
 
     const handleTransactionChange = (values) => {
         settransactionRange(values);
@@ -34,24 +73,29 @@ const AdminFilterPopup = ({ close }) => {
         setYapScore(values);
     };
 
-    const handleApplyPress = () =>{
+    const handleApplyPress = () => {
         let date1 = selectedFromDate
         let date2 = selectedToDate
 
-        if(date1>date2){
+        if (date1 > date2) {
             setError("From date must be smaller to the To date")
             return
         }
 
         const filters = {
-            city:city,
-            state:state,
-            fromDate:selectedFromDate,
-            toDate:selectedToDate,
-            minYapScore:yapScore[0],
-            maxYapScore:yapScore[1],
-            minTransactionRange:transactionRange[0],
-            maxTransactionRange:transactionRange[1],
+            city: city,
+            state: state,
+            fromDate: selectedFromDate,
+            toDate: selectedToDate,
+            minYapScore: yapScore[0],
+            maxYapScore: yapScore[1],
+
+        }
+        if (role !== 'business') {
+            filters.minTransaction = transactionRange[0];
+            filters.maxTransaction = transactionRange[1];
+        } else {
+            filters.industry = selectedIndustry.join(",");
         }
         console.log('filters', filters)
         close(filters)
@@ -142,7 +186,7 @@ const AdminFilterPopup = ({ close }) => {
                             To
                         </Text>
                         <TouchableOpacity
-                            onPress={()=>{
+                            onPress={() => {
                                 setShowCalender(true)
                                 setError("")
                                 setSelectedCalender("to")
@@ -165,7 +209,7 @@ const AdminFilterPopup = ({ close }) => {
                 </View>
 
                 {
-                    error && <Text style = {GlobalStyles.errorText}>{error}</Text>
+                    error && <Text style={GlobalStyles.errorText}>{error}</Text>
                 }
 
                 <DatePicker
@@ -191,26 +235,61 @@ const AdminFilterPopup = ({ close }) => {
 
 
 
-                <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Yap Score</Text>
+                {
+                    role === "customer" ? (
 
-                <View style={styles.sliderBackground}>
-                    <MultiSlider
-                        values={[yapScore[0], yapScore[1]]}
-                        min={1}
-                        max={999}
-                        // step={999}
-                        selectedStyle={{ backgroundColor: '#FF5700' }}
-                        unselectedStyle={{ backgroundColor: '#FF570050' }} // Make outer transparent, handled by background
-                        trackStyle={styles.trackStyle}                  // Adjust track height
-                        markerStyle={styles.markerStyle}                // Customize knob (thumb) size and color
-                        onValuesChange={handleYapChange}
-                        containerStyle={styles.sliderContainer}         // Adjusting slider container
-                    />
-                </View>
-                <View style={styles.valueContainer}>
-                    <Text style={styles.valueText}>{yapScore[0]}</Text>
-                    <Text style={styles.valueText}>{yapScore[1]}</Text>
-                </View>
+                        <>
+                            <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Yap Score</Text>
+
+                            <View style={styles.sliderBackground}>
+                                <MultiSlider
+                                    values={[yapScore[0], yapScore[1]]}
+                                    min={1}
+                                    max={999}
+                                    // step={999}
+                                    selectedStyle={{ backgroundColor: '#FF5700' }}  // In-range track color (orange)
+                                    unselectedStyle={{ backgroundColor: '#FF570050' }} // Make outer transparent, handled by background
+                                    trackStyle={styles.trackStyle}                  // Adjust track height
+                                    markerStyle={styles.markerStyle}                // Customize knob (thumb) size and color
+                                    onValuesChange={handleYapChange}
+                                    containerStyle={styles.sliderContainer}         // Adjusting slider container
+                                />
+                            </View>
+                            <View style={styles.valueContainer}>
+                                <Text style={styles.valueText}>{yapScore[0]}</Text>
+                                <Text style={styles.valueText}>{yapScore[1]}</Text>
+                            </View>
+
+                        </>
+                    ) : (
+                        <>
+                            <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>
+                                Business Industry
+                            </Text>
+                            <View style={{
+                                flexDirection: 'row', alignItems: 'center', gap: 15, width: screenWidth - 40, flexWrap: 'wrap',
+                                marginTop: 32 / 930 * screenHeight
+                            }}>
+                                {
+                                    industries.map((item) => (
+                                        <TouchableOpacity key={item.id} style={{
+                                            padding: 15, borderRadius: 50,
+                                            backgroundColor: selectedIndustry.includes(item.name) ? Colors.orangeColor : "transparent",
+                                            borderWidth: 1, borderColor: Colors.grayColor
+                                        }}
+                                            onPress={() => { handleIndustrySelect(item) }}
+                                        >
+                                            <Text style={[GlobalStyles.text17, { color: selectedIndustry.includes(item.name) ? "white" : "black" }]}>
+                                                {item.name}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))
+                                }
+                            </View>
+                        </>
+                    )
+                }
+
 
                 <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>
                     Transaction Range

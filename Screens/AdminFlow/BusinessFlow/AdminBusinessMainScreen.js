@@ -284,7 +284,7 @@ const AdminBusinessMainScreen = ({ navigation }) => {
                 animationType='slide'
                 transparent={true}
               >
-                <AdminFilterPopup close={closeModal} />
+                <AdminFilterPopup close={closeModal} role = "business" />
               </Modal>
 
               <View style={{ height: screenHeight * 0.65 }}>

@@ -271,7 +271,7 @@ const AdminUserMainScreen = ({ navigation }) => {
                 animationType='slide'
                 transparent={true}
               >
-                <AdminFilterPopup close={closeModal} />
+                <AdminFilterPopup close={closeModal} role = "customer" />
               </Modal>
 
               <View style={{ height: screenHeight * 0.65 }}>
