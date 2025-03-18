@@ -46,16 +46,16 @@ const YapExperienceScreen = ({ navigation, route }) => {
                 let settlementAmount;
                 if (yap.settlementAmount) {
                     console.log('yap.settlementAmount', yap.settlementAmount)
-                    transactionAmount = Number(yap.settlementAmount && yap.transactionAmount.replace(",", ""))
+                    settlementAmount = Number(yap.settlementAmount && yap.settlementAmount.replace(",", ""))
                 }
                 if (yap.transactionAmount) {
                     console.log('yap.transactionAmount',yap.transactionAmount)
 
-                    settlementAmount = Number(yap.transactionAmount && yap.transactionAmount.replace(",", ""))
+                    transactionAmount = Number(yap.transactionAmount && yap.transactionAmount.replace(",", ""))
                 }
 
                 apidata.append("service", yap.service)
-                apidata.append("amountOfTransaction", yap.transactionAmount)
+                apidata.append("amountOfTransaction", transactionAmount||0)
                 apidata.append("dateOfTransaction", yap.dateOfTransaction)
                 apidata.append("yapScore", yap.yapScore)
                 {
@@ -65,7 +65,7 @@ const YapExperienceScreen = ({ navigation, route }) => {
                 }
                 {
                     yap.settlementAmount && (
-                        apidata.append("settlementAmount", yap.settlementAmount)
+                        apidata.append("settlementAmount", settlementAmount||0)
                     )
                 }
                 apidata.append("notesAboutCustomer", experience)

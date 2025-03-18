@@ -40,6 +40,7 @@ export const Apipath = {
   PurchaseCredits: `${baseUrl}user/purchaseCredits`,
   checkLicenseExists: `${baseUrl}user/checkDriverLicenseExists`,
   getCards: `${baseUrl}user/list_cards`,
+  getTransactions: `${baseUrl}user/get_transactions`,
   addNewCard: `${baseUrl}user/add_card`,
   adminUnreadChat: `${baseUrl}user/readNotifications`,
 

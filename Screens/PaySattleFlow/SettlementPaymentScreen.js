@@ -95,6 +95,22 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
     }
   }
 
+
+  //function to get card brand image
+  const getCardImage = (item) => {
+    if (item.brand === "visa") {
+      return require("../../assets/Images/visaIcon.png");
+    } else if (item.brand === "Mastercard") {
+      return require("../../assets/Images/Mastercard.svg");
+    } else if (item.brand === "amex") {
+      return require("../../assets/Images/Amex.svg");
+    } else if (item.brand === "discover") {
+      return require("../../assets/Images/Discover.svg");
+    } else if (item.brand === "dinersClub") {
+      return require("../../assets/Images/DinersClub.svg");
+    }
+  };
+
   return (
     <SafeAreaView style={GlobalStyles.container}>
       {
@@ -168,107 +184,57 @@ const SettlementPaymentScreen = ({ navigation, route }) => {
                 <Text style={[GlobalStyles.text17, { alignSelf: 'flex-start' }]}>
                   Select Card
                 </Text>
-
-                <FlatList
-                  data={cards}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSelectedCard(item)
-                      }}
-                    >
-                      <View style={{
-                        flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
-                        borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
-                      }}>
+                <View style={{ height: screenHeight*0.3 }}>
+                  <FlatList
+                    data={cards}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setSelectedCard(item)
+                        }}
+                      >
                         <View style={{
-                          flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
-
+                          flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
+                          borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
                         }}>
-                          <Image source={item.image}
-                            style={GlobalStyles.image37}
-                          />
-                          <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
-                            <Text style={GlobalStyles.text17}>
-                              {item.brand} Ending with {item.last4}
-                            </Text>
-                            {
-                              item.isDefault && (
-                                <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
-                                  Default Card
-                                </Text>
-                              )
-                            }
+                          <View style={{
+                            flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
+
+                          }}>
+                            <Image source={getCardImage(item)}
+                              style={GlobalStyles.image37}
+                            />
+                            <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
+                              <Text style={GlobalStyles.text17}>
+                                {item.brand} Ending with {item.last4}
+                              </Text>
+                              {
+                                item.isDefault && (
+                                  <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
+                                    Default Card
+                                  </Text>
+                                )
+                              }
+                            </View>
+
+                            <Image source={item.id === selectedCard.id ? (
+                              require('../../assets/Images/selectedIcon.png')
+                            ) : (
+                              require('../../assets/Images/unSelectedIcon.png')
+                            )}
+                              style={GlobalStyles.image24}
+
+                            />
                           </View>
-
-                          <Image source={item.id === selectedCard.id ? (
-                            require('../../assets/Images/selectedIcon.png')
-                          ) : (
-                            require('../../assets/Images/unSelectedIcon.png')
-                          )}
-                            style={GlobalStyles.image24}
-
-                          />
                         </View>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
+                      </TouchableOpacity>
+                    )}
+                  />
+                </View>
 
               </>
             )
           }
-
-          <Text style={[GlobalStyles.text17, { alignSelf: 'flex-start' }]}>
-            Select Card
-          </Text>
-
-          <FlatList
-            data={cards}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedCard(item)
-                }}
-              >
-                <View style={{
-                  flexDirection: 'column', alignItems: 'center', padding: 15, borderWidth: 1, borderColor: Colors.lightGray,
-                  borderRadius: 10, width: screenWidth - 40, marginTop: 22 / 930 * screenHeight
-                }}>
-                  <View style={{
-                    flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',
-
-                  }}>
-                    <Image source={item.image}
-                      style={GlobalStyles.image37}
-                    />
-                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 10 / 930 * screenHeight }}>
-                      <Text style={GlobalStyles.text17}>
-                        {item.name} {item.disc} {item.number}
-                      </Text>
-                      {
-                        item.defaultCard && (
-                          <Text style={[GlobalStyles.text14, { color: '#00000090' }]}>
-                            Default Card
-                          </Text>
-                        )
-                      }
-                    </View>
-
-                    <Image source={item.id === selectedCard.id ? (
-                      require('../../assets/Images/selectedIcon.png')
-                    ) : (
-                      require('../../assets/Images/unSelectedIcon.png')
-                    )}
-                      style={GlobalStyles.image24}
-
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-
           <TouchableOpacity style={{ alignSelf: 'flex-start' }}
             onPress={() => {
               setShowAddCard(true)

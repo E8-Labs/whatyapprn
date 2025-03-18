@@ -17,11 +17,11 @@ import {
 import { screenHeight, screenWidth } from "../../res/Constants";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
 import { ShowMessage } from "../../components/ShowMessage";
-import keys from "../../Api/ApiKeys";
 import axios from "axios";
-import { Apipath } from "../../Api/Apipaths";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../res/Colors";
+import { ApiKeys } from "../../Api/keys";
+import { Apipath } from "../../Api/Apipaths";
 
 const AddCardScreen = ({ close }) => {
   const [cardDetails, setCardDetails] = useState({});
@@ -64,6 +64,8 @@ const AddCardScreen = ({ close }) => {
   };
 
   const addNewCard = async (tokenId) => {
+    console.log('tokenId', tokenId)
+    // return
     try {
       const data = await AsyncStorage.getItem("USER");
 
@@ -74,10 +76,9 @@ const AddCardScreen = ({ close }) => {
 
       if (data) {
         let u = JSON.parse(data);
+        console.log('u.token', u.token)
         const response = await axios.post(
-          Apipath.addNewCard,
-          { apiData },
-          {
+          Apipath.addNewCard,apiData ,{
             headers: {
               Authorization: "Bearer " + u.token,
               "Content-Type": "application/json",
@@ -86,8 +87,9 @@ const AddCardScreen = ({ close }) => {
         );
 
         if (response.data) {
+          console.log('response.data', response.data)
           setLoading(false);
-          if (response.data.status == 200) {
+          if (response.data.status === true) {
             ShowMessage("Card added successfully!", "green");
             close();
           } else {
@@ -106,7 +108,7 @@ const AddCardScreen = ({ close }) => {
   };
 
   return (
-    <StripeProvider publishableKey={keys.stripeTestKey}>
+    <StripeProvider publishableKey={ApiKeys.stripeTestKey}>
       <Modal visible={true} transparent={true} animationType="fade">
         <View style={styles.container}>
           <View style={styles.modalContent}>
