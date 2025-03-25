@@ -25,6 +25,8 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     })
     const [reviews, setReviews] = useState([])
     const [loading, setLoading] = useState(false)
+    const [loading2, setLoading2] = useState(false);
+
     const menues = [
         {
             id: 1,
@@ -237,6 +239,56 @@ const CustomerProfileDetails = ({ navigation, route }) => {
         }
     }
 
+
+    async function createChat(user) {
+        setLoading(true);
+
+        try {
+            console.log("trying to search customer");
+            const data = await AsyncStorage.getItem("USER");
+            if (data) {
+                let u = JSON.parse(data);
+
+                let path = Apipath.createChat;
+
+                // setloading(true)
+                const response = await axios.post(
+                    path,
+                    { chatUserId: user.id },
+                    {
+                        headers: {
+                            Authorization: "Bearer " + u.token,
+                        },
+                    }
+                );
+                setLoading(false);
+                if (response.data) {
+                    // if(response.data.data.status === true ){}
+                    console.log("create chat response is", response.data.chat);
+                    navigation.push(ScreenNames.ChatScreen, {
+                        chat: response.data.chat,
+                    });
+                }
+            }
+        } catch (e) {
+            setLoading(false);
+            console.log("error in search customers", e);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const shouldShowMessageIcon = (user) => {
+        console.log('user', user)
+        if (
+            (user.role === "business" && role === "customer") ||
+            (user.role === "business" && role === "business")
+
+        ) {
+            return true
+        }
+    }
+
     return (
         // <SafeAreaView style={GlobalStyles.container}>
         <View style={GlobalStyles.container}>
@@ -317,6 +369,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                 user.from === "tabbar" && (
                                     <View style={{ marginLeft: 0 / 430 * screenWidth, flexDirection: 'column', gap: 10, alignItems: 'center' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     navigation.push(ScreenNames.MessagesListScreen)
@@ -327,6 +380,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                                     style={GlobalStyles.image24}
                                                 />
                                             </TouchableOpacity>
+
                                             <TouchableOpacity onPress={() => {
                                                 navigation.push(ScreenNames.MyWalletScreen)
                                             }}>
@@ -344,19 +398,42 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                )}
+                                )
+                            }
+
+
 
 
                         </View>
+                        {
+                            shouldShowMessageIcon(user) && (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        createChat(user)
+                                    }}
+                                >
+                                    <Image
+                                        source={require("../../assets/Images/messageIcon.png")}
+                                        style={GlobalStyles.image24}
+                                    />
+                                </TouchableOpacity>
+
+                            )
+                        }
                     </View>
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: screenWidth - 40,
-                        borderWidth: 0, gap: 30 / 430 * screenWidth, alignSelf: 'center'
-                    }}>
-                        <View style={{ alignSelf: 'center', borderWidth: 0 }}>
-                            <HalfCircularProgress progress={user.yapScore3Digit || user.yapScore3Digit != "Invalid input" ? user.yapScore3Digit : 0} type={"Yap"} />
-                        </View>
-                    </View>
+                    {
+                        user.role != "business" && (
+
+                            <View style={{
+                                flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: screenWidth - 40,
+                                borderWidth: 0, gap: 30 / 430 * screenWidth, alignSelf: 'center'
+                            }}>
+                                <View style={{ alignSelf: 'center', borderWidth: 0 }}>
+                                    <HalfCircularProgress progress={user.yapScore3Digit || user.yapScore3Digit != "Invalid input" ? user.yapScore3Digit : 0} type={"Yap"} />
+                                </View>
+                            </View>
+                        )
+                    }
 
                     <View style={{}}>
 

@@ -332,6 +332,7 @@ const AdminDashboardMainScreen = ({ navigation }) => {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={() => {
+                    // item.accountStatus = "suspended"
                     navigation.push(ScreenNames.AdminBusinessProfileDetailsScreen, {
                       user: item,
                     })

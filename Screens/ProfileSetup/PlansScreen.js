@@ -20,7 +20,7 @@ const PlansScreen = ({ navigation }) => {
       id: 1,
       name: "YEARLY",
       price: "$499/yr",
-      disc: "$50/Month",
+      // disc: "$50/Month",
       identifier: "Yearly_Premium_1118",
       oldPrice: "$999",
     },

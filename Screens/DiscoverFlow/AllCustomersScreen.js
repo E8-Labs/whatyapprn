@@ -12,12 +12,12 @@ import calculateSpent from '../../res/CalculateSpent'
 const profileImage = require('../../assets/Images/profileImage.png')
 
 
-const AllCustomersScreen = ({ navigation,route }) => {
+const AllCustomersScreen = ({ navigation, route }) => {
 
     let role = route.params.role
     console.log('role on all customer screen is', role)
 
-    const [customers,setCustomers] = useState([])
+    const [customers, setCustomers] = useState([])
     // const customers = [
     //     {
     //         id: 1,
@@ -62,9 +62,9 @@ const AllCustomersScreen = ({ navigation,route }) => {
     //     },
     // ]
 
-    useEffect(()=>{
+    useEffect(() => {
         getCustomersList()
-    },[])
+    }, [])
 
 
     const getCustomersList = async () => {
@@ -74,12 +74,12 @@ const AllCustomersScreen = ({ navigation,route }) => {
                 let u = JSON.parse(data)
 
                 let path = Apipath.getAllCustomers + "?role="
-                if(role === "business"){
-                    path = path+"customer"
-                }else{
-                    path = path+"business"
+                if (role === "business") {
+                    path = path + "customer"
+                } else {
+                    path = path + "business"
                 }
-                 
+
 
                 console.log('path', path)
 
@@ -94,12 +94,12 @@ const AllCustomersScreen = ({ navigation,route }) => {
                         console.log('customers list is', response.data.data)
                         setCustomers(response.data.data)
 
-                    }else{
+                    } else {
                         console.log('error message is', response.data.message)
                     }
                 }
             }
-        } catch (e){
+        } catch (e) {
             console.log('error in get all customers api is', e)
         }
     }
@@ -125,7 +125,7 @@ const AllCustomersScreen = ({ navigation,route }) => {
                 </View>
 
                 <Text style={[GlobalStyles.subheading, { marginTop: 30 / 930 * screenHeight }]}>
-                    Customers Near Me
+                    {role === "business" ? "Customers" : "Businesses"}  Near Me
                 </Text>
                 <View style={{ height: screenHeight * 0.8 }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
@@ -133,12 +133,12 @@ const AllCustomersScreen = ({ navigation,route }) => {
                             {
                                 customers.map((item) => (
                                     <View key={item.id} style={{
-                                        width: screenWidth - 40, alignItems: 'flex-start', flexDirection: 'row',gap:10 ,
+                                        width: screenWidth - 40, alignItems: 'flex-start', flexDirection: 'row', gap: 10,
                                         marginTop: 30 / 930 * screenHeight
                                     }}>
-                                        <Image source={item.profile_image?{uri:item.profile_image}:placeholderImage}
+                                        <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
                                             style={{
-                                                height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, resizeMode: 'cover',borderRadius:20
+                                                height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, resizeMode: 'cover', borderRadius: 20
                                             }}
                                         />
                                         <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 15 / 930 * screenHeight }}>
@@ -146,32 +146,35 @@ const AllCustomersScreen = ({ navigation,route }) => {
                                                 {item.name}
                                             </Text>
                                             <Text style={[GlobalStyles.text17, { color: '#00000080' }]}>
-                                                {item.city?item.city:''}
+                                                {item.city ? item.city : ''}
                                             </Text>
                                             <View style={{
                                                 flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                                                 width: 200 / 430 * screenWidth
                                             }}>
-                                                <View style={{ flexDirection: 'column', gap: 5 }}>
-                                                    <View style={{ flexDirection: 'row', }}>
-                                                        <Image source={require('../../assets/Images/yIcon.png')}
-                                                            style={GlobalStyles.yIcon}
-                                                        />
-                                                        <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                                            ap score
-                                                        </Text>
-                                                    </View>
-                                                    <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                                        {item.yapScore?item.yapScore:''}
-                                                    </Text>
-                                                </View>
+                                                {
+                                                    item.role != "business" && (
+                                                        <View style={{ flexDirection: 'column', gap: 5 }}>
+                                                            <View style={{ flexDirection: 'row', }}>
+                                                                <Image source={require('../../assets/Images/yIcon.png')}
+                                                                    style={GlobalStyles.yIcon}
+                                                                />
+                                                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                                                    ap score
+                                                                </Text>
+                                                            </View>
+                                                            <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
+                                                                {item.yapScore ? item.yapScore : ''}
+                                                            </Text>
+                                                        </View>
+                                                    )}
 
                                                 <View style={{ flexDirection: 'column', gap: 5 }}>
                                                     <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
                                                         Total Reviews
                                                     </Text>
                                                     <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                                        {item.reviews?item.reviews:''}
+                                                        {item.reviews ? item.reviews : 0}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -179,12 +182,16 @@ const AllCustomersScreen = ({ navigation,route }) => {
 
                                         <View style={{
                                             flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end',
-                                            height: 110 / 930 * screenHeight,marginLeft:20/430*screenWidth
+                                            height: 110 / 930 * screenHeight, marginLeft: 20 / 430 * screenWidth
                                         }}>
-                                            <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium ,color:'#00000080'}}>
-                                                Spent over {item.spent?calculateSpent(item.spent):''}
-                                            </Text>
-
+                                            {
+                                                item.role != "business" ? (
+                                                    <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: '#00000080' }}>
+                                                        Spent over {item.spent ? calculateSpent(item.spent) : ''}
+                                                    </Text>
+                                                ):(
+                                                    <View style= {{width:100}}></View>
+                                                )}
                                             <TouchableOpacity>
                                                 <Image source={require('../../assets/Images/farwordBtn.png')}
                                                     style={GlobalStyles.image37}

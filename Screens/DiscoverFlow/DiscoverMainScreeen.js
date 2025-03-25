@@ -54,9 +54,9 @@ const DiscoverMainScreeen = ({ navigation }) => {
   }
 
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       getDashboardData()
-    },[])
+    }, [])
   )
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                         ))
                       ) : (
                         <Text style={[GlobalStyles.text14Intria, { alignSelf: 'center', marginLeft: 40 / 430 * screenWidth }]}>
-                          No recently viewed customers
+                          No recently viewed
                         </Text>
                       )
                     }
@@ -345,10 +345,12 @@ const DiscoverMainScreeen = ({ navigation }) => {
                               {item.name}
                             </Text>
                           </View>
-
-                          <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
-                            Spent over {calculateSpent(item.totalSpent)}
-                          </Text>
+                          {
+                            item.role != "business" && (
+                              <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
+                                Spent over {calculateSpent(item.totalSpent)}
+                              </Text>
+                            )}
                         </View>
                         <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 30 / 430 * screenWidth }}>
                           <Text style={[GlobalStyles.text17, { color: '#00000080' }]}>
@@ -356,23 +358,28 @@ const DiscoverMainScreeen = ({ navigation }) => {
                           </Text>
                           <View style={{
                             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                            width: screenWidth - 70,
+                            width: screenWidth - 70,marginTop:10
                           }}>
-                            <View style={{ flexDirection: 'column', gap: 5 }}>
-                              <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
-                                Yap score
-                              </Text>
-                              <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.yapScore3Digit}
-                              </Text>
-                            </View>
+                            {
+                              item.role != "business" && (
+                                <View style={{ flexDirection: 'column', gap: 5 }}>
+
+                                  <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
+                                    Yap score
+                                  </Text>
+                                  <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
+                                    {item.yapScore3Digit}
+                                  </Text>
+                                </View>
+                              )
+                            }
 
                             <View style={{ flexDirection: 'column', gap: 5 }}>
                               <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
                                 Total Reviews
                               </Text>
                               <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.totalReviews}
+                                {item.totalReviews?item.totalReviews:0}
                               </Text>
                             </View>
 

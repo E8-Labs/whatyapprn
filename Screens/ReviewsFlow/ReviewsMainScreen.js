@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Linking } from 'react-native'
 import { screenHeight, screenWidth } from '../../res/Constants'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
@@ -42,10 +42,11 @@ const ReviewsMainScreen = ({ navigation }) => {
   ]
   useFocusEffect(
     useCallback(() => {
+      checkUserRole()
       getReviews()
     }, [selectedMenu])
   )
-  useEffect(() => {
+ 
     const checkUserRole = async () => {
       const data = await AsyncStorage.getItem("USER")
       if (data) {
@@ -55,9 +56,6 @@ const ReviewsMainScreen = ({ navigation }) => {
         console.log('user data in user role function is', u.user.role)
       }
     }
-
-    checkUserRole()
-  }, [])
 
   const getReviews = async () => {
     try {
@@ -147,7 +145,9 @@ const ReviewsMainScreen = ({ navigation }) => {
             <Text style={{ fontSize: 13, fontFamily: CustomFonts.PoppinsRegular, flexWrap: 'wrap' }}>
               Post a review to get your business account ranked higher.{' '}
               <Text
-                onPress={() => console.log('Learn More pressed')}
+                onPress={()=>{
+                  Linking.openURL("https://docs.google.com/document/d/1Gt7BEKxoQ5ZlyQMP07jGndSXzmhnkAH9BnFbFma5VSs/edit?usp=sharing")
+                }}
                 style={{ color: Colors.orangeColor }}
               >
                 Learn More

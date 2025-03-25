@@ -390,7 +390,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                             {
                                                                 review.media.map((img) => (
-                                                                    <TouchableOpacity onPress={()=>{
+                                                                    <TouchableOpacity onPress={() => {
                                                                         setOpenImage(img.thumb_url)
                                                                     }}>
                                                                         <Image source={{ uri: img.thumb_url }}
@@ -403,7 +403,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                     )
                                                 }
 
-                                                <ImageViewer visible={openImage !=null} close={()=>setOpenImage(null)} url={openImage}/>
+                                                <ImageViewer visible={openImage != null} close={() => setOpenImage(null)} url={openImage} />
 
                                                 <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
                                                     {review.notesAboutCustomer}
@@ -455,24 +455,26 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                             {item.message}
                                                         </Text>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+                                                            {
 
-                                                            <View style={{
-                                                                paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
-                                                                backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
-                                                            }}>
-                                                                <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                                                                    <Image source={require('../../assets/Images/yIcon.png')}
-                                                                        style={GlobalStyles.yIcon}
-                                                                    />
-                                                                    <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                        ap score
-                                                                    </Text>
-                                                                </View>
-                                                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                    {item.user.yapScore3Digit}
-                                                                </Text>
-                                                            </View>
-
+                                                                item.user.role != "business" && (
+                                                                    <View style={{
+                                                                        paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                        backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                    }}>
+                                                                        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                                            <Image source={require('../../assets/Images/yIcon.png')}
+                                                                                style={GlobalStyles.yIcon}
+                                                                            />
+                                                                            <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                                ap score
+                                                                            </Text>
+                                                                        </View>
+                                                                        <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
+                                                                            {item.user.yapScore3Digit}
+                                                                        </Text>
+                                                                    </View>
+                                                                )}
                                                             <View style={{
                                                                 paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
                                                                 backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,

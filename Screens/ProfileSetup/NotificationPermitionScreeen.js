@@ -116,9 +116,9 @@ const NotificationPermitionScreeen = ({ navigation,route}) => {
                 <Text style={[GlobalStyles.heading, { marginTop: 20 }]}>
                     Notification permission
                 </Text>
-                <Text style={[GlobalStyles.subheading14, { marginTop: 20 }]}>
+                {/* <Text style={[GlobalStyles.subheading14, { marginTop: 20 }]}>
                     Lorem ipsum dolor sit amet consectetur. Id feugiat sit magna fermentum bibendum tincidunt. Dolor sit et et enim.
-                </Text>
+                </Text> */}
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 40 }]}
                     onPress={getNotificationPermission}
                 >

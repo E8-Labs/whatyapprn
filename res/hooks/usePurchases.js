@@ -4,6 +4,7 @@ import Purchases from "react-native-purchases";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenNames } from "../ScreenNames";
+import { updateProfile } from "../../components/UpdateProfile";
 
 const usePurchases = (RevenueCatApiKey) => {
   const [loading, setLoading] = useState(false);
@@ -89,7 +90,7 @@ const usePurchases = (RevenueCatApiKey) => {
         let p = customerInfo.entitlements.active["premium"];
         let date = p.originalPurchaseDateMillis;
         console.log("Original date ", date);
-        await UpdateProfile(JSON.stringify({ originalPurchaseDate: date }));
+        await updateProfile(JSON.stringify({ originalPurchaseDate: date }));
         console.log("Profile updated");
         setLoading2(null);
         navigation.reset({

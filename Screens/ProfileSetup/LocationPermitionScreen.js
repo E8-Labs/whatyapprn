@@ -61,8 +61,8 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                 setLoading(false)
 
                 if (from == "CustomerFlow") {
-                    navigation.push(ScreenNames.TabbarContainer,{
-                        from:'CustomerFlow'
+                    navigation.push(ScreenNames.TabbarContainer, {
+                        from: 'CustomerFlow'
                     })
                     return
                 }
@@ -87,9 +87,9 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                 <Text style={[GlobalStyles.heading, { marginTop: 20, textAlign: 'center' }]}>
                     Location permission
                 </Text>
-                <Text style={[GlobalStyles.subheading14, { marginTop: 20, textAlign: 'center' }]}>
+                {/* <Text style={[GlobalStyles.subheading14, { marginTop: 20, textAlign: 'center' }]}>
                     Lorem ipsum dolor sit amet consectetur. Id feugiat sit magna fermentum bibendum tincidunt. Dolor sit et et enim.
-                </Text>
+                </Text> */}
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 40 }]}
                     onPress={getLocation}
                 >
@@ -100,6 +100,12 @@ const LocationPremitionScreen = ({ navigation, route }) => {
 
                 <TouchableOpacity style={{ marginTop: 40 }}
                     onPress={() => {
+                        if (from == "CustomerFlow") {
+                            navigation.push(ScreenNames.TabbarContainer, {
+                                from: 'CustomerFlow'
+                            })
+                            return
+                        }
                         navigation.push(ScreenNames.PlansScreen)
                     }}
                 >

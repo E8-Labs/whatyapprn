@@ -214,7 +214,7 @@ const TabbarContainer = ({ navigation, route }) => {
       console.log("User not subscribed", user.role);
       if (user.role == "business") {
         console.log("Navigating to Plans");
-        // navigation.navigate(ScreenNames.PlansScreen);
+        navigation.navigate(ScreenNames.PlansScreen);
       }
     }
   }

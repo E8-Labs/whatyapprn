@@ -207,6 +207,7 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                     }
                 }
             } catch (e) {
+                setLoading(false)
                 console.log('error in delete permantly api is', e)
             }
         }
@@ -391,7 +392,7 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                             {
                                                                 review.review.media.map((img) => (
-                                                                    <TouchableOpacity onPress={()=>{
+                                                                    <TouchableOpacity onPress={() => {
                                                                         setOpenImage(img.thumb_url)
                                                                     }}>
                                                                         <Image source={{ uri: img.thumb_url }}
@@ -404,7 +405,7 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                     )
                                                 }
 
-                                                <ImageViewer visible={openImage !=null} close={()=>setOpenImage(null)} url={openImage}/>
+                                                <ImageViewer visible={openImage != null} close={() => setOpenImage(null)} url={openImage} />
 
                                                 <Text style={[GlobalStyles.text17, { marginTop: 10 / 930 * screenHeight }]}>
                                                     {review.review.notesAboutCustomer}
@@ -456,32 +457,40 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                             {item.message}
                                                         </Text>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+                                                            {
+                                                                item.user.role != "business" && (
+                                                                    <View style={{
+                                                                        paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                        backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                    }}>
+                                                                        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                                            <Image source={require('../../assets/Images/yIcon.png')}
+                                                                                style={GlobalStyles.yIcon}
+                                                                            />
+                                                                            <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                                ap score
+                                                                            </Text>
+                                                                        </View>
+                                                                        <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
+                                                                            {item.user.yapScore3Digit}
+                                                                        </Text>
+                                                                    </View>
+                                                                )
+                                                            }
 
-                                                            <View style={{
-                                                                paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
-                                                                backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
-                                                            }}>
-                                                                <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                                                                    <Image source={require('../../assets/Images/yIcon.png')}
-                                                                        style={GlobalStyles.yIcon}
-                                                                    />
-                                                                    <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                        ap score
-                                                                    </Text>
-                                                                </View>
-                                                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                    {item.user.yapScore3Digit}
-                                                                </Text>
-                                                            </View>
+                                                            {
 
-                                                            <View style={{
-                                                                paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
-                                                                backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
-                                                            }}>
-                                                                <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                    Spent over {calculateSpent(item.user.totalSpent)}
-                                                                </Text>
-                                                            </View>
+                                                                item.user.role != "business" && (
+
+                                                                    <View style={{
+                                                                        paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                        backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                    }}>
+                                                                        <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                            Spent over {calculateSpent(item.user.totalSpent)}
+                                                                        </Text>
+                                                                    </View>
+                                                                )}
                                                         </View>
                                                     </View>
                                                 </View>
@@ -659,14 +668,17 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                                     paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
                                                                     backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
                                                                 }}>
-                                                                    <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                                                                        <Image source={require('../../assets/Images/yIcon.png')}
-                                                                            style={GlobalStyles.yIcon}
-                                                                        />
-                                                                        <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                            ap score {review.toUser.yapScore3Digit}
-                                                                        </Text>
-                                                                    </View>
+                                                                    {
+                                                                        review.toUser.role != "business" && (
+                                                                            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                                                                <Image source={require('../../assets/Images/yIcon.png')}
+                                                                                    style={GlobalStyles.yIcon}
+                                                                                />
+                                                                                <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                                    ap score {review.toUser.yapScore3Digit}
+                                                                                </Text>
+                                                                            </View>
+                                                                        )}
                                                                 </View>
                                                             </View>
                                                             <Text style={GlobalStyles.text12} > {review.toUser.city} {review.toUser.state}</Text>
