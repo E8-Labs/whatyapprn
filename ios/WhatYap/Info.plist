@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>16</string>
 	<key>FacebookAppID</key>
 	<string>1490848418243027</string>
 	<key>FacebookClientToken</key>
@@ -58,8 +58,6 @@
 			</dict>
 		</dict>
 	</dict>
-	
-			
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to open the camera</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

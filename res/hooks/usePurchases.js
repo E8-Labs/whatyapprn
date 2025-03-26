@@ -93,10 +93,9 @@ const usePurchases = (RevenueCatApiKey) => {
         await updateProfile(JSON.stringify({ originalPurchaseDate: date }));
         console.log("Profile updated");
         setLoading2(null);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: ScreenNames.TabbarContainer }],
-        });
+        navigation.push(ScreenNames.TabbarContainer, {
+          from: "PlanScreen"
+        })
       }
     } catch (e) {
       setLoading2(null);

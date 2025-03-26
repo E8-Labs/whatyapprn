@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
@@ -35,7 +36,7 @@ const PlansScreen = ({ navigation }) => {
   ];
   const RevenueCatApiKey = ApiKeys.RevenueCatApiKey; //"appl_xmLtPRVaCdpCrklyeHGUMguQRlb";
   const [selectedPlan, setselectedPlan] = useState(plans[0]);
-  const { loading, products, fetchProducts, buyProduct } =
+  const { loading, products, fetchProducts, buyProduct, loading2 } =
     usePurchases(RevenueCatApiKey);
 
   const selectedImage = require("../../assets/Images/selectedIcon.png");
@@ -200,15 +201,21 @@ const PlansScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 ))
               )}
+              {
+                loading2 ? (
+                  <ActivityIndicator color={Colors.orangeColor} />
+                ) : (
+                  <TouchableOpacity
+                    style={GlobalStyles.capsuleBtn}
+                    onPress={() => {
+                      buyProduct(selectedPlan)
+                    }}
+                  >
+                    <Text style={GlobalStyles.BtnText}>Subscribe</Text>
+                  </TouchableOpacity>
 
-              <TouchableOpacity
-                style={GlobalStyles.capsuleBtn}
-                onPress={() => {
-                  buyProduct(selectedPlan);
-                }}
-              >
-                <Text style={GlobalStyles.BtnText}>Subscribe</Text>
-              </TouchableOpacity>
+                )
+              }
 
               <Text
                 style={{
