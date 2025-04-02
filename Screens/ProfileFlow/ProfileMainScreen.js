@@ -204,7 +204,7 @@ const ProfileMainScreen = ({ navigation }) => {
           onPress={() => {
             navigation.push(ScreenNames.BusinessInfoScreen, {
               user: "",
-              from: "Business",
+              from: "business",
             });
           }}
         >

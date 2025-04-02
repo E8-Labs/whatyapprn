@@ -57,7 +57,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
         setLoading(false);
         setUser(u);
       };
-      if (from != "notification") {
+      if (from === "business") {
         getUserProfile();
       } else {
         let u = route.params.user
@@ -258,7 +258,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </View>
 
               {
-                from != "notification" && (
+                from === "business" && (
                   <TouchableOpacity
                     onPress={() => {
                       setShowPopup(true);
@@ -293,7 +293,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </Text>
 
               {
-                from != "notification" && (
+                from === "business" && (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.push(ScreenNames.UploadMediaScreen, {
@@ -385,7 +385,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 Industry
               </Text>
               {
-                from != "notification" && (
+                from === "business" && (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.push(ScreenNames.BusinessIndustryScreen, {
@@ -428,7 +428,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </Text>
 
               {
-                from != "notification" && (
+                from === "business" && (
 
                   <TouchableOpacity
                     onPress={() => {
@@ -474,7 +474,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </Text>
 
               {
-                from != "notification" && (
+                from === "business" && (
 
                   <TouchableOpacity
                     onPress={() => {
@@ -597,7 +597,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
             </View>
 
             {
-              from != "notification" && (
+              from === "business" && (
                 <TouchableOpacity
                   style={GlobalStyles.capsuleBtn}
                   onPress={() => {

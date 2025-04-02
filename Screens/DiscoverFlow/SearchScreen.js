@@ -29,6 +29,7 @@ import LoadingAnimation from "../../components/LoadingAnimation";
 import { ScreenNames } from "../../res/ScreenNames";
 import NoResults from "../../components/NoResults";
 import calculateSpent from "../../res/CalculateSpent";
+import { getCutomerProfile } from "../../components/GetCustomerProfile";
 
 const profileImage = require("../../assets/Images/profileImage.png");
 
@@ -61,7 +62,7 @@ const SearchScreen = ({
       } else {
         setCustomers([]);
       }
-    }, 500);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -184,14 +185,14 @@ const SearchScreen = ({
             path = path + "&maxYapScore=" + filters.maxYapScore;
           }
           if (filters.minTransaction) {
-            path = path + "&minTransaction=" + filters.minTransaction;
+            path = path + "&minTransactionAmount=" + filters.minTransaction;
           }
           if (filters.maxTransaction) {
-            path = path + "&maxTransaction=" + filters.maxTransaction;
+            path = path + "&maxTransactionAmount=" + filters.maxTransaction;
           }
         }
         console.log("path is", path);
-        // setloading(true)
+        setloading(true)
         const response = await axios.get(path, {
           headers: {
             Authorization: "Bearer " + u.token,
@@ -212,8 +213,15 @@ const SearchScreen = ({
     }
   };
 
-  const handleOnpress = (item) => {
+  const handleOnpress = async(item) => {
+
     console.log("item is", item);
+    setloading(true)
+        let data = await getCutomerProfile(item)
+        console.log('data is', data)
+        data.from = "search"
+        setloading(false)
+        if (data) {
     if (from === "tabbar") {
       navigation.push(ScreenNames.YapServiceScreen, {
         user: item,
@@ -224,6 +232,7 @@ const SearchScreen = ({
         from: "User",
       });
     }
+  }
   };
 
   const closeModal = (filters) => {

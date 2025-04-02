@@ -23,7 +23,10 @@ import { Colors } from "../../res/Colors";
 import { ApiKeys } from "../../Api/keys";
 import { Apipath } from "../../Api/Apipaths";
 
-const AddCardScreen = ({ close }) => {
+const AddCardScreen = ({ 
+  close,
+  updateCards,
+ }) => {
   const [cardDetails, setCardDetails] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -100,6 +103,7 @@ const AddCardScreen = ({ close }) => {
         }
       }
     } catch (error) {
+      updateCards()
       close();
       setLoading(false);
       console.error("API Error:", error);

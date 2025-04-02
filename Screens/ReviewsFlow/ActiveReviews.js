@@ -231,11 +231,11 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
 
                             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
                               {/* <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}> */}
-                              <Image source={item.customer.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
+                              <Image source={item.customer?.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
                                 style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
                               />
                               <Text style={[GlobalStyles.text17, { color: '#000' }]}>
-                                {item.customer.name}
+                                {item.customer?.name}
                               </Text>
                             </View>
 
@@ -254,7 +254,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                                   </Text>
                                 </View>
                                 <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                  {item.customer.yapScore3Digit}
+                                  {item.customer?.yapScore3Digit}
                                 </Text>
                               </View>
                             </View>

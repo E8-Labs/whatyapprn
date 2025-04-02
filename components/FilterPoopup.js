@@ -7,7 +7,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AddressPicker from './AddressPicker';
 
 
-const FilterPoopup = ({role,close}) => {
+const FilterPoopup = ({ role, close }) => {
 
     // console.log('role', role)
 
@@ -72,14 +72,14 @@ const FilterPoopup = ({role,close}) => {
             minYapScore: yapScore[0],
             maxYapScore: yapScore[1],
         };
-        
+
         if (role === 'business') {
             filters.minTransaction = transactionValue[0];
             filters.maxTransaction = transactionValue[1];
         } else {
             filters.industry = selectedIndustry.join(",");
         }
-        
+
         console.log('filters', filters)
         close(filters)
     }
@@ -136,57 +136,57 @@ const FilterPoopup = ({role,close}) => {
                     />
                 </Modal>
 
-                <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Transaction Range</Text>
+                <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Number of reviews</Text>
 
                 <View style={styles.sliderBackground}>
                     <MultiSlider
-                        values={[transactionValue[0], transactionValue[1]]}
-                        min={500}
-                        max={50000}
-                        // step={400}
+                        values={[yapScore[0], yapScore[1]]}
+                        min={1}
+                        max={999}
+                        // step={999}
                         selectedStyle={{ backgroundColor: '#FF5700' }}  // In-range track color (orange)
-                        unselectedStyle={{ backgroundColor: '#FF570030' }} // Make outer transparent, handled by background
+                        unselectedStyle={{ backgroundColor: '#FF570050' }} // Make outer transparent, handled by background
                         trackStyle={styles.trackStyle}                  // Adjust track height
                         markerStyle={styles.markerStyle}                // Customize knob (thumb) size and color
-                        onValuesChange={handleTransactionChange}
+                        onValuesChange={handleYapChange}
                         containerStyle={styles.sliderContainer}         // Adjusting slider container
                     />
                 </View>
                 <View style={styles.valueContainer}>
-                    <Text style={styles.valueText}>${transactionValue[0]}</Text>
-                    <Text style={styles.valueText}>${transactionValue[1]}</Text>
+                    <Text style={styles.valueText}>{yapScore[0]}</Text>
+                    <Text style={styles.valueText}>{yapScore[1]}</Text>
                 </View>
 
                 {
                     role !== "customer" ? (
 
                         <>
-                            <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Yap Score</Text>
+                            <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>Transaction Range</Text>
 
                             <View style={styles.sliderBackground}>
                                 <MultiSlider
-                                    values={[yapScore[0], yapScore[1]]}
-                                    min={1}
-                                    max={999}
-                                    // step={999}
+                                    values={[transactionValue[0], transactionValue[1]]}
+                                    min={500}
+                                    max={50000}
+                                    // step={400}
                                     selectedStyle={{ backgroundColor: '#FF5700' }}  // In-range track color (orange)
-                                    unselectedStyle={{ backgroundColor: '#FF570050' }} // Make outer transparent, handled by background
+                                    unselectedStyle={{ backgroundColor: '#FF570030' }} // Make outer transparent, handled by background
                                     trackStyle={styles.trackStyle}                  // Adjust track height
                                     markerStyle={styles.markerStyle}                // Customize knob (thumb) size and color
-                                    onValuesChange={handleYapChange}
+                                    onValuesChange={handleTransactionChange}
                                     containerStyle={styles.sliderContainer}         // Adjusting slider container
                                 />
                             </View>
                             <View style={styles.valueContainer}>
-                                <Text style={styles.valueText}>{yapScore[0]}</Text>
-                                <Text style={styles.valueText}>{yapScore[1]}</Text>
+                                <Text style={styles.valueText}>${transactionValue[0]}</Text>
+                                <Text style={styles.valueText}>${transactionValue[1]}</Text>
                             </View>
 
                         </>
                     ) : (
                         <>
                             <Text style={[GlobalStyles.text14, { marginTop: 32 / 930 * screenHeight }]}>
-                               Business Industry
+                                Business Industry
                             </Text>
                             <View style={{
                                 flexDirection: 'row', alignItems: 'center', gap: 15, width: screenWidth - 40, flexWrap: 'wrap',

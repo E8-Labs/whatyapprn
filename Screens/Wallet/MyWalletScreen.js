@@ -421,7 +421,7 @@ const MyWalletScreen = ({ navigation }) => {
             transparent={true}
             animationType="fade"
           >
-            <AddCardScreen close={() => setShowAddCard(false)} />
+            <AddCardScreen updateCards={getCards()} close={() => setShowAddCard(false)} />
           </Modal>
         </View>
       </View>

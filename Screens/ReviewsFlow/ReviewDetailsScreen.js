@@ -550,7 +550,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                         }
 
                                                         {
-                                                            review.reviewStatus === ReviewTypes.Active && role === "customer" && review.yapScore <= 3 &&
+                                                            review.reviewStatus === ReviewTypes.Active &&  !review.settlementOffer  && role === "customer" && review.yapScore <= 3 &&
                                                             <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                 onPress={() => {
                                                                     navigation.push(ScreenNames.DisputeScreen, {

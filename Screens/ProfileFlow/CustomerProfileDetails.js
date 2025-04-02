@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, SafeAreaView, FlatList, Modal } from 'react-native'
+import { View, Text, Image, TouchableOpacity, SafeAreaView, FlatList, Modal, ActivityIndicator, DeviceEventEmitter } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { Colors } from '../../res/Colors'
@@ -13,6 +13,10 @@ import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import { useFocusEffect } from '@react-navigation/native'
 import moment from 'moment'
+import GaleryCamPopup from '../../components/GaleryCamPopup'
+import * as ImagePicker from 'expo-image-picker';
+import { updateProfile } from '../../components/UpdateProfile'
+
 
 const CustomerProfileDetails = ({ navigation, route }) => {
 
@@ -26,6 +30,10 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     const [reviews, setReviews] = useState([])
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false);
+    const [showGalleryPopup, setShowGalleryPopup] = useState(false)
+    const [image, setImage] = useState('')
+    const [imageLoader, setImageLoader] = useState(false)
+
 
     const menues = [
         {
@@ -289,6 +297,112 @@ const CustomerProfileDetails = ({ navigation, route }) => {
         }
     }
 
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Please allow Whatyapp gallery access to complete profile');
+            return;
+        }
+        console.log('trying to open galery')
+        // setError(null)
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            const ImageUrl = result.assets[0].uri;
+            console.log('Image url recieved is', ImageUrl)
+            setImage(ImageUrl)
+            setShowGalleryPopup(false)
+            try {
+                const formData = new FormData()
+                setImageLoader(true)
+                formData.append('media', {
+                    name: 'image',
+                    type: 'JPEG',
+                    uri: ImageUrl
+                })
+                console.log(result.assets[0].uri);
+
+
+
+                await updateProfile(formData)
+
+                DeviceEventEmitter.emit("UpdateProfile", "UpdateProfile")
+                setImageLoader(false)
+            } catch (e) {
+                console.log('e', e)
+            }
+
+        } else {
+            // alert('You did not select any image.');
+        }
+    }
+
+    const captureImage = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Please allow Whatyap camera access to complete profile');
+            return;
+        }
+
+
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            const ImageUrl = result.assets[0].uri;
+            // console.log("Base 64 image ", result.assets[0].base64)
+            console.log('Image url recieved is', ImageUrl)
+            // setPopup(false)
+            setImage(ImageUrl)
+            setImageLoader(true)
+
+            try {
+                const formData = new FormData()
+                setImageLoader(true)
+                formData.append('media', {
+                    name: 'image',
+                    type: 'JPEG',
+                    uri: ImageUrl
+                })
+                console.log(result.assets[0].uri);
+
+
+
+                await updateProfile(formData)
+
+                DeviceEventEmitter.emit("UpdateProfile", "UpdateProfile")
+                setImageLoader(false)
+            } catch (e) {
+                console.log('e', e)
+            }
+            setShowGalleryPopup(false)
+            // generateThumbnail(ImageUrl)
+            console.log(result.assets[0].uri);
+        } else {
+            // setPopup(false)
+            // alert('You did not select any video.');
+        }
+    };
+
+    function getImage() {
+
+        console.log('user.profile_image', user.profile_image)
+
+        if (image) {
+            return image
+        }
+        if (user.profile_image) {
+            return user.profile_image
+        }
+    }
     return (
         // <SafeAreaView style={GlobalStyles.container}>
         <View style={GlobalStyles.container}>
@@ -340,12 +454,30 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                             flexDirection: 'row', alignItems: 'flex-start', marginTop: 20 / 930 * screenHeight, alignSelf: 'flex-start',
                             gap: 20 / 430 * screenWidth
                         }}>
-                            <Image source={user.profile_image ? { uri: user.profile_image } : placeholderImage}
-                                style={{
-                                    height: 75 / 930 * screenHeight, width: 75 / 930 * screenHeight, resizeMode: 'cover',
-                                    borderWidth: 2, borderColor: 'white', borderRadius: 40
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    role === "customer" && (
+                                        setShowGalleryPopup(true)
+                                    )
                                 }}
-                            />
+                            >
+                                {
+                                    imageLoader ? (
+                                        <ActivityIndicator size={"large"} color={Colors.orangeColor} />
+                                    ) : (
+                                        <Image source={image || user.profile_image ? { uri: image || user.profile_image } : placeholderImage}
+                                            style={{
+                                                height: 75 / 930 * screenHeight, width: 75 / 930 * screenHeight, resizeMode: 'cover',
+                                                borderWidth: 2, borderColor: 'white', borderRadius: 40
+                                            }}
+                                        />
+                                    )
+                                }
+                            </TouchableOpacity>
+
+
+
 
                             <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 / 930 * screenHeight, width: 210 / 430 * screenWidth }}>
                                 <Text style={GlobalStyles.text17}>
@@ -473,6 +605,29 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
+
+
+            <Modal
+                visible={showGalleryPopup}
+                transparent={true}
+                animationType='slide'
+            >
+                <GaleryCamPopup close={() => {
+                    setShowGalleryPopup(false)
+
+                }}
+                    handleBtnPress={(value) => {
+                        console.log('button pressed', value)
+                        if (value === "galery") {
+                            pickImage()
+                        } else if (value === "camera") {
+                            captureImage()
+                        }
+                    }}
+
+                />
+
+            </Modal>
 
 
 

@@ -21,7 +21,7 @@ const ReviewsMainScreen = ({ navigation }) => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(false)
   const [role, setRole] = useState('')
-  const [user,setUser] = useState("")
+  const [user, setUser] = useState("")
 
   const menues = [
     {
@@ -46,16 +46,16 @@ const ReviewsMainScreen = ({ navigation }) => {
       getReviews()
     }, [selectedMenu])
   )
- 
-    const checkUserRole = async () => {
-      const data = await AsyncStorage.getItem("USER")
-      if (data) {
-        let u = JSON.parse(data)
-        setUser(u.user)
-        setRole(u.user.role)
-        console.log('user data in user role function is', u.user.role)
-      }
+
+  const checkUserRole = async () => {
+    const data = await AsyncStorage.getItem("USER")
+    if (data) {
+      let u = JSON.parse(data)
+      setUser(u.user)
+      setRole(u.user.role)
+      console.log('user data in user role function is', u.user.role)
     }
+  }
 
   const getReviews = async () => {
     try {
@@ -141,19 +141,24 @@ const ReviewsMainScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ paddingLeft: 25 / 430 * screenWidth, width: screenWidth - 80, marginTop: 15 / 930 * screenHeight, alignSelf: 'flex-start' }}>
-            <Text style={{ fontSize: 13, fontFamily: CustomFonts.PoppinsRegular, flexWrap: 'wrap' }}>
-              Post a review to get your business account ranked higher.{' '}
-              <Text
-                onPress={()=>{
-                  Linking.openURL("https://docs.google.com/document/d/1Gt7BEKxoQ5ZlyQMP07jGndSXzmhnkAH9BnFbFma5VSs/edit?usp=sharing")
-                }}
-                style={{ color: Colors.orangeColor }}
-              >
-                Learn More
-              </Text>
-            </Text>
-          </View>
+          {
+            role && role != "customer"&&(
+
+              <View style={{ paddingLeft: 25 / 430 * screenWidth, width: screenWidth - 80, marginTop: 15 / 930 * screenHeight, alignSelf: 'flex-start' }}>
+                <Text style={{ fontSize: 13, fontFamily: CustomFonts.PoppinsRegular, flexWrap: 'wrap' }}>
+                  Post a review to get your business account ranked higher.{' '}
+                  <Text
+                    onPress={() => {
+                      navigation.push(ScreenNames.LearnMore)
+                    }}
+                    style={{ color: Colors.orangeColor }}
+                  >
+                    Learn More
+                  </Text>
+                </Text>
+              </View>
+            )
+          }
 
           <View style={{
             flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, justifyContent: 'space-between',

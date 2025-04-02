@@ -68,6 +68,7 @@ import AdminUserMainScreen from "./Screens/AdminFlow/UsersFlow/AdminUserMainScre
 import AdminBusinessProfileDetailsScreen from "./Screens/ProfileFlow/AdminBusinessProfileDetailsScreen";
 import AddCardScreen from "./Screens/PaySattleFlow/AddCardScreen";
 import ReviewNotificationScreen from "./Screens/NotificationScreens/ReviewNotificationScreen";
+import LearnMore from "./Screens/ResourcesFlow/LearnMore";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -452,6 +453,12 @@ export default function App() {
           name={ScreenNames.ReviewNotificationScreen}
           component={ReviewNotificationScreen}
           options={{ gestureEnabled: false }}
+        />
+
+        <Stack.Screen
+          name={ScreenNames.LearnMore}
+          component={LearnMore}
+          options={{ gestureEnabled: true }}
         />
       </Stack.Navigator>
     </NavigationContainer>

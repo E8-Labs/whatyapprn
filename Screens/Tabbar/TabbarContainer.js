@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Animated,
   Platform,
+  DeviceEventEmitter,
 } from "react-native";
 import Purchases from "react-native-purchases";
 import { Image } from "expo-image";
@@ -180,8 +181,14 @@ const TabbarContainer = ({ navigation, route }) => {
     });
   };
 
+  
+
   useFocusEffect(
+
     useCallback(() => {
+      DeviceEventEmitter.addListener("UpdateProfile", (data) => {
+       checkUserRole()
+      });
       const checkUserRole = async () => {
         const data = await AsyncStorage.getItem("USER");
         if (data) {
@@ -314,7 +321,7 @@ const TabbarContainer = ({ navigation, route }) => {
           )}
 
           <Tab.Screen
-            name="Resourses"
+            name="Resources"
             component={ResoursesMainScreen}
             options={{
               tabBarIcon: ({ focused }) => (

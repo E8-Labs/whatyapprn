@@ -36,7 +36,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
     console.log('reviews on recent review screen are', reviews)
 
     const selectView = (item) => {
-        if (item.reviewStatus === ReviewTypes.Disputed && item.yapScore < 3) {
+        if (item.reviewStatus === ReviewTypes.Disputed &&!item.settlementOffer && item.yapScore < 3) {
             console.log(`review id ${item.id} and status is ${item.reviewStatus} and yapScore is ${item.yapScore}`)
 
             return (
@@ -170,7 +170,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                             <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
                                                                     <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
-                                                                        <Image source={item.business.profile_image ? { uri: item.business.profile_image } : placeholderImage}
+                                                                        <Image source={item.business?.profile_image ? { uri: item.business.profile_image } : placeholderImage}
                                                                             style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
                                                                         />
                                                                     </View>
@@ -178,7 +178,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                         fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
                                                                         //borderWidth:1
                                                                     }}>
-                                                                        {item.business.name}
+                                                                        {item.business?.name}
                                                                     </Text>
 
 
@@ -265,11 +265,11 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
 
                                                                         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 15 }}>
                                                                             {/* <View style={{ borderWidth: 2, borderColor: '#FF570020', borderRadius: 20 }}> */}
-                                                                            <Image source={item.customer.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
+                                                                            <Image source={item.customer?.profile_image ? { uri: item.customer.profile_image } : placeholderImage}
                                                                                 style={[GlobalStyles.image24, { borderRadius: 30, borderWidth: 2, borderColor: 'white' }]}
                                                                             />
                                                                             <Text style={[GlobalStyles.text17, { color: '#000' }]}>
-                                                                                {item.customer.name}
+                                                                                {item.customer?.name}
                                                                             </Text>
                                                                         </View>
 
@@ -288,7 +288,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                     </Text>
                                                                                 </View>
                                                                                 <Text style={{ fontSize: 14, fontFamily: CustomFonts.IntriaBold }}>
-                                                                                    {item.customer.yapScore3Digit}
+                                                                                    {item.customer?.yapScore3Digit}
                                                                                 </Text>
                                                                             </View>
                                                                         </View>
@@ -306,7 +306,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                 <>
                                                                                     {
 
-                                                                                        role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Active && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
+                                                                                        role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.ResolvedByAdmin && item.settlementOffer &&
                                                                                         <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                                             onPress={() => {
                                                                                                 navigation.push(ScreenNames.SettleReviewDetailsScreen, {
@@ -326,6 +326,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
 
                                                                                     {
                                                                                         item.reviewStatus === ReviewTypes.Active && role === "customer" && item.yapScore <= 3 &&
+                                                                                        !item.settlementOffer &&
                                                                                         <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                                             onPress={() => {
                                                                                                 navigation.push(ScreenNames.DisputeScreen, {

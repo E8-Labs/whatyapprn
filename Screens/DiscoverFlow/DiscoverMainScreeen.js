@@ -102,10 +102,17 @@ const DiscoverMainScreeen = ({ navigation }) => {
     data.from = "discover"
     setLoading(false)
     if (data) {
-      navigation.push(ScreenNames.CustomerProfileDetails, {
-        user: item,
-        from: 'User'
-      })
+      if (item.role === "customer") {
+        navigation.push(ScreenNames.CustomerProfileDetails, {
+          user: item,
+          from: 'User'
+        })
+      }else{
+        navigation.push(ScreenNames.BusinessInfoScreen, {
+          user: item,
+          from: 'User'
+        })
+      }
     }
   }
 
@@ -241,11 +248,14 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                   }}
                                 />
                                 {/* </View> */}
-                                <View style={{ backgroundColor: "#FF570020", padding: 8 / 930 * screenHeight, alignItems: 'center', borderRadius: 20 }}>
-                                  <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
-                                    Spent over {calculateSpent(item.totalSpent)}
-                                  </Text>
-                                </View>
+                                {
+                                  item.role != "business" && (
+                                    <View style={{ backgroundColor: "#FF570020", padding: 8 / 930 * screenHeight, alignItems: 'center', borderRadius: 20 }}>
+                                      <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
+                                        Spent over {calculateSpent(item.totalSpent)}
+                                      </Text>
+                                    </View>
+                                  )}
                               </View>
                               <View style={{
                                 width: 200 / 430 * screenWidth, flexDirection: 'column', alignItems: 'flex-start',
@@ -260,6 +270,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 </Text>
 
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 200 / 430 * screenWidth }}>
+                                  { }
                                   <View style={{ flexDirection: 'column', gap: 4 }}>
                                     <View style={{ flexDirection: 'row', }}>
                                       <Image source={require('../../assets/Images/yIcon.png')}
@@ -358,7 +369,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                           </Text>
                           <View style={{
                             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                            width: screenWidth - 70,marginTop:10
+                            width: screenWidth - 70, marginTop: 10
                           }}>
                             {
                               item.role != "business" && (
@@ -379,7 +390,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 Total Reviews
                               </Text>
                               <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.totalReviews?item.totalReviews:0}
+                                {item.totalReviews ? item.totalReviews : 0}
                               </Text>
                             </View>
 
