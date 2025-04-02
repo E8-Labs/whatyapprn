@@ -100,10 +100,10 @@ const MessageBox = ({ item, user, sendEmoji }) => {
             style={{
               fontSize: 14,
               fontFamily: CustomFonts.InterMedium,
-              color: msgUser.id === user.user.id ? "white" : "black",
+              color: msgUser?.id === user.user.id ? "white" : "black",
             }}
           >
-            {msg.message}
+            {msg?.message}
           </Text>
           {msgUser && msgUser.id === user.user.id ? (
             <>

@@ -644,7 +644,7 @@ const SearchScreen = ({
                                   </TouchableOpacity>
 
                                   {
-                                    !(role === "business" && item.role === "customer") &&
+                                    !(role === "customer" && item.role === "customer") &&
 
                                     <TouchableOpacity
                                       style={{ alignSelf: "flex-end" }}

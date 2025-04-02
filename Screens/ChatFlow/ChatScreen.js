@@ -276,9 +276,9 @@ const ChatScreen = ({ navigation, route }) => {
   function getSenderUserName(chat) {
     if (user) {
       if (user.user.role == "customer") {
-        return chat.Business.name;
+        return chat.Business?.name;
       }
-      return chat.Customer.name;
+      return chat.Customer?.name;
     }
 
     return "";
@@ -445,10 +445,10 @@ const ChatScreen = ({ navigation, route }) => {
           <View style={{ alignItems: "center", gap: 5 }}>
             <Image
               source={
-                user && user.user.id === chat.Business.id ? (chat.Customer.profile_image
-                  ? { uri: chat.Customer.profile_image }
-                  : placeholderImage) : (chat.Business.profile_image
-                    ? { uri: chat.Business.profile_image }
+                user && user.user.id === chat.Business?.id ? (chat.Customer?.profile_image
+                  ? { uri: chat.Customer?.profile_image }
+                  : placeholderImage) : (chat.Business?.profile_image
+                    ? { uri: chat.Business?.profile_image }
                     : placeholderImage
 
                 )

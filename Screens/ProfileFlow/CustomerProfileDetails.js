@@ -288,11 +288,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
 
     const shouldShowMessageIcon = (user) => {
         console.log('user', user)
-        if (
-            (user.role === "business" && role === "customer") ||
-            (user.role === "business" && role === "business")
-
-        ) {
+        if (!(user.role === "customer" && role === "customer")) {
             return true
         }
     }
@@ -457,7 +453,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    role === "customer" && (
+                                    role === "customer" &&  user.from == "tabbar" && (
                                         setShowGalleryPopup(true)
                                     )
                                 }}

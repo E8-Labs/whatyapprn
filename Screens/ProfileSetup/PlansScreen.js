@@ -133,7 +133,7 @@ const PlansScreen = ({ navigation }) => {
                         <View
                           style={{
                             flexDirection: "column",
-                            alignItems: "center",
+                            alignItems: "start",
                             gap: 15,
                           }}
                         >

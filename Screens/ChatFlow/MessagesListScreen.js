@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
-import { screenHeight, screenWidth } from "../../res/Constants";
+import { placeholderImage, screenHeight, screenWidth } from "../../res/Constants";
 import { screensEnabled } from "react-native-screens";
 import { CustomFonts } from "../../assets/font/Fonts";
 import { Colors } from "../../res/Colors";
@@ -72,9 +72,9 @@ const MessagesListScreen = ({ navigation }) => {
   function getSenderUserName(chat) {
     if (user) {
       if (user.user.role == "customer") {
-        return chat.Business.name;
+        return chat.Business?.name;
       }
-      return chat.Customer.name;
+      return chat.Customer?.name;
     }
 
     return "";
@@ -134,11 +134,11 @@ const MessagesListScreen = ({ navigation }) => {
                       >
                         <Image
                           source={
-                            user&&user.user.id === item.Business.id ? (item.Customer.profile_image
-                              ? { uri: item.Customer.profile_image }
-                              : placeholder ):(item.Business.profile_image
-                                ? { uri: item.Business.profile_image }
-                                : placeholder 
+                            user&&user.user.id === item.Business?.id ? (item.Customer?.profile_image
+                              ? { uri: item.Customer?.profile_image }
+                              : placeholder ):(item.Business?.profile_image
+                                ? { uri: item.Business?.profile_image }
+                                : placeholderImage
 
                               )
                           }

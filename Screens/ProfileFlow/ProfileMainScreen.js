@@ -193,7 +193,7 @@ const ProfileMainScreen = ({ navigation }) => {
           <Progress.Bar
             style={{ marginTop: 10 }}
             progress={user ? user.credits_available / 100 : 0}
-            width={350}
+            width={350/430*screenWidth}
             unfilledColor="#FF570020"
             borderWidth={0}
             color={Colors.orangeColor}
