@@ -73,6 +73,7 @@ export const ScreenNames = {
 
   ReviewNotificationScreen:"ReviewNotificationScreen",
   LearnMore:"LearnMore",
+  Feedback: "Feedback",
 
   TestFile: "TestFile",
   Testfile2: "Testfile2",

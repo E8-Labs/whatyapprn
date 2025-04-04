@@ -81,7 +81,7 @@ const ProfileMainScreen = ({ navigation }) => {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth - 40 }}>
-          <Text style={[GlobalStyles.heading,{width:screenWidth-100}]}>My Profile</Text>
+          <Text style={[GlobalStyles.heading, { width: screenWidth - 100 }]}>My Profile</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
             <TouchableOpacity
@@ -193,7 +193,7 @@ const ProfileMainScreen = ({ navigation }) => {
           <Progress.Bar
             style={{ marginTop: 10 }}
             progress={user ? user.credits_available / 100 : 0}
-            width={350/430*screenWidth}
+            width={350 / 430 * screenWidth}
             unfilledColor="#FF570020"
             borderWidth={0}
             color={Colors.orangeColor}
@@ -338,7 +338,9 @@ const ProfileMainScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={handleEmail}
+            onPress={() => {
+              navigation.push(ScreenNames.Feedback);
+            }}
           >
             <Text style={[GlobalStyles.text17, { color: Colors.orangeColor }]}>
               Send Feedback

@@ -453,7 +453,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    role === "customer" &&  user.from == "tabbar" && (
+                                    role === "customer" && user.from == "tabbar" && (
                                         setShowGalleryPopup(true)
                                     )
                                 }}
@@ -517,7 +517,10 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                                     style={GlobalStyles.image24}
                                                 />
                                             </TouchableOpacity>
+
+
                                         </View>
+
                                         <TouchableOpacity style={{}}
                                             onPress={logoutUser}
                                         >
@@ -564,35 +567,55 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                     }
 
                     <View style={{}}>
-
                         <View style={{
-                            flexDirection: 'row', alignItems: 'center', width: screenWidth - 80, gap: 30 / 430 * screenWidth,
-                            marginTop: 20 / 930 * screenHeight, marginBottom: 10 / 930 * screenHeight
+                            width: screenWidth - 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                            marginBottom: 10 / 930 * screenHeight, marginTop: 20 / 930 * screenHeight,
                         }}>
-                            {
-                                menues.map((item) => (
-                                    <View key={item.id} style={{ flexDirection: 'column', }}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setselectedMenu(item)
-                                            }}
-                                        >
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth, paddingHorizontal: 15 }}>
-                                                <Text style={[GlobalStyles.text17, { color: selectedMenu === item.value ? "black" : "#00000080" }]}>
-                                                    {item.name}
-                                                </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        {
-                                            selectedMenu.value === item.value && (
-                                                <View style={{ height: 2, backgroundColor: Colors.orangeColor, marginTop: 5, }}></View>
-                                            )
-                                        }
-                                    </View>
+                            <View style={{
+                                flexDirection: 'row', alignItems: 'center', gap: 30 / 430 * screenWidth,
+                                // borderWidth: 1
+                            }}>
+                                {
+                                    menues.map((item) => (
+                                        <View key={item.id} style={{ flexDirection: 'column', }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setselectedMenu(item)
+                                                }}
+                                            >
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 / 430 * screenWidth, paddingHorizontal: 15 }}>
+                                                    <Text style={[GlobalStyles.text17, { color: selectedMenu === item.value ? "black" : "#00000080" }]}>
+                                                        {item.name}
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            {
+                                                selectedMenu.value === item.value && (
+                                                    <View style={{ height: 2, backgroundColor: Colors.orangeColor, marginTop: 5, }}></View>
+                                                )
+                                            }
+                                        </View>
 
-                                ))
+                                    ))
+                                }
+                            </View>
+
+                            {
+                               user.from === "tabbar" && (
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.push(ScreenNames.Feedback)
+                                    }}>
+                                        <Text style={[GlobalStyles.text14, { color: Colors.orangeColor, }]}>
+                                            Feedback
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+
                             }
+
+
                         </View>
+
                         <ProfileRecentReviews navigation={navigation} selectedMenu="active" reviews={reviews && reviews} role={role && role} from={user.from}
                             hideFromPlatform={hideFromPlatform} deletePermanently={deletePermanently} suspendAccount={suspendAccount} deleteAccount={deleteAccount}
                         />

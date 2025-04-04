@@ -48,5 +48,7 @@ export const Apipath = {
   createChat: `${baseUrl}review/createchat`,
 
 
-  getSuspendedUsers:`${baseUrl}admin/suspendedUsers`
+  getSuspendedUsers:`${baseUrl}admin/suspendedUsers`,
+
+  sendFeedback : `${baseUrl}admin/sendFeedback`,
 };
