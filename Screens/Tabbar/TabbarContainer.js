@@ -221,7 +221,7 @@ const TabbarContainer = ({ navigation, route }) => {
       console.log("User not subscribed", user.role);
       if (user.role == "business") {
         console.log("Navigating to Plans");
-        navigation.navigate(ScreenNames.PlansScreen);
+        // navigation.navigate(ScreenNames.PlansScreen);
       }
     }
   }
@@ -334,7 +334,7 @@ const TabbarContainer = ({ navigation, route }) => {
                 />
               ),
               tabBarLabel: ({ focused }) =>
-                focused ? <Text style={styles.labelText}>Resourses</Text> : "",
+                focused ? <Text style={styles.labelText}>Resources</Text> : "",
             }}
           />
           <Tab.Screen

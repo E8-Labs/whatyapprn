@@ -107,7 +107,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
           user: item,
           from: 'User'
         })
-      }else{
+      } else {
         navigation.push(ScreenNames.BusinessInfoScreen, {
           user: item,
           from: 'User'
@@ -270,20 +270,22 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                 </Text>
 
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 200 / 430 * screenWidth }}>
-                                  { }
-                                  <View style={{ flexDirection: 'column', gap: 4 }}>
-                                    <View style={{ flexDirection: 'row', }}>
-                                      <Image source={require('../../assets/Images/yIcon.png')}
-                                        style={GlobalStyles.yIcon}
-                                      />
-                                      <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                        ap score
-                                      </Text>
-                                    </View>
-                                    <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                      {item.yapScore3Digit}
-                                    </Text>
-                                  </View>
+                                  {
+                                    item.role != "business" && (
+                                      <View style={{ flexDirection: 'column', gap: 4 }}>
+                                        <View style={{ flexDirection: 'row', }}>
+                                          <Image source={require('../../assets/Images/yIcon.png')}
+                                            style={GlobalStyles.yIcon}
+                                          />
+                                          <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                            ap score
+                                          </Text>
+                                        </View>
+                                        <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
+                                          {item.yapScore3Digit}
+                                        </Text>
+                                      </View>
+                                  )}
                                   <View style={{ flexDirection: 'column', gap: 4 }}>
                                     <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
                                       Total Reviews
