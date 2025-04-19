@@ -229,13 +229,12 @@ const YapMediaUploadScreen = ({ navigation, route }) => {
                                         />
 
                                         <View style={{ width: 270 / 430 * screenWidth, alignItems: 'flex-start', flexDirection: 'column', gap: 8 }}>
-                                            <Text style={{
+                                            {/* <Text style={{
                                                 fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
                                                 opacity: 0.7
                                             }}>
                                                 {item.name}
-                                                {/* {getName(item.url)} */}
-                                            </Text>
+                                            </Text> */}
                                             {/* <Text numberOfLines={2} style={[GlobalStyles.text17, { width: 250 / 430 * screenWidth }]}>
                                                 {item.caption}
                                             </Text> */}

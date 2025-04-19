@@ -553,7 +553,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                         }
                     </View>
                     {
-                        user.role != "business" && (
+                        user.role != "business" ? (
 
                             <View style={{
                                 flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: screenWidth - 40,
@@ -563,6 +563,79 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                     <HalfCircularProgress progress={user.yapScore3Digit || user.yapScore3Digit != "Invalid input" ? user.yapScore3Digit : 0} type={"Yap"} />
                                 </View>
                             </View>
+                        ) : (
+
+                            <View
+                                style={{
+                                    width: screenWidth - 40,
+                                    marginTop: (30 / 930) * screenHeight,
+                                }}
+                            >
+                                <Text style={[GlobalStyles.text14, { color: "#00000080" }]}>
+                                    Media
+                                </Text>
+
+                                {user.media?.length > 0 ? (
+                                    user.media.map((item) => (
+                                        <View
+                                            key={item.id}
+                                            style={{
+                                                width: screenWidth - 40,
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: (20 / 430) * screenWidth,
+                                                marginTop: (20 / 930) * screenHeight,
+                                            }}
+                                        >
+                                            <Image
+                                                source={item.type === "image" ? item.url : item.thumb_url}
+                                                style={{
+                                                    height: (75 / 930) * screenHeight,
+                                                    width: (73 / 430) * screenWidth,
+                                                    resizeMode: "cover",
+                                                    borderRadius: 10,
+                                                }}
+                                            />
+
+                                            <View
+                                                style={{
+                                                    width: (270 / 430) * screenWidth,
+                                                    alignItems: "flex-start",
+                                                    flexDirection: "column",
+                                                    gap: 8,
+                                                }}
+                                            >
+                                                {/* <Text
+                                                      style={{
+                                                        fontSize: 14,
+                                                        fontFamily: CustomFonts.InterMedium,
+                                                        color: Colors.lightBlack,
+                                                        opacity: 0.7,
+                                                      }}
+                                                    >
+                                                      {getMediaName(item.url)}
+                                                    </Text> */}
+                                                <Text
+                                                    numberOfLines={2}
+                                                    style={[
+                                                        GlobalStyles.text17,
+                                                        { width: (250 / 430) * screenWidth },
+                                                    ]}
+                                                >
+                                                    {item.caption}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text style={[GlobalStyles.text12, { marginTop: 10 }]}>
+                                        No media
+                                    </Text>
+                                )}
+
+
+                            </View>
+
                         )
                     }
 
@@ -601,7 +674,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             {
-                               user.from === "tabbar" && (
+                                user.from === "tabbar" && (
                                     <TouchableOpacity onPress={() => {
                                         navigation.push(ScreenNames.Feedback)
                                     }}>

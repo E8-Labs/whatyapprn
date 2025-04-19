@@ -346,7 +346,7 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                         }
 
                                                                         {
-                                                                            role && role === "customer" && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.Disputed &&
+                                                                            role && !(role === "business" && item.yapScore >= 3) && item.reviewStatus !== ReviewTypes.Resolved && item.reviewStatus !== ReviewTypes.ResolvedByAdmin &&
                                                                             <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                                                                 onPress={() => {
                                                                                     navigation.push(ScreenNames.ReviewReplyScreen, {
@@ -358,7 +358,6 @@ const ProfileRecentReviews = ({ deletePermanently, hideFromPlatform, navigation,
                                                                                     Reply
                                                                                 </Text>
                                                                             </TouchableOpacity>
-
                                                                         }
 
 

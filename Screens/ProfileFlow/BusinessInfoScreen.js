@@ -525,7 +525,9 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 { marginTop: (20 / 930) * screenHeight },
               ]}
               onPress={() => {
-                setShowAddressPicker(true);
+                if( from === "business"){
+                  setShowAddressPicker(true);
+                }
               }}
             >
               <Text>
@@ -533,7 +535,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
 
-            <View
+            {/* <View
               style={[
                 GlobalStyles.input,
                 {
@@ -557,9 +559,9 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                 source={require("../../assets/Images/emailIcon.png")}
                 style={GlobalStyles.image24}
               />
-            </View>
+            </View> */}
 
-            <View
+            {/* <View
               style={[
                 GlobalStyles.input,
                 {
@@ -594,7 +596,7 @@ const BusinessInfoScreen = ({ navigation, route }) => {
                   style={GlobalStyles.image24}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {
               from === "business" && (

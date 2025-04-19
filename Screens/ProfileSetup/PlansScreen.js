@@ -227,7 +227,7 @@ const PlansScreen = ({ navigation }) => {
                 }}
               >
                 This subscription automically renews unless auto-renew is turn
-                off ateast 24hrs before current period eands. Payment is charged
+                off ateast 24hrs before current period ends. Payment is charged
                 to your iTunes Account.
               </Text>
             </View>

@@ -306,7 +306,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
 
                                   }
                                   {
-                                   role && role === "customer" && item.reviewStatus !== ReviewTypes.Resolved &&
+                                   role && !(role === "business" && item.yapScore >= 3) && item.reviewStatus !== ReviewTypes.Resolved &&
                                       <TouchableOpacity style={{ marginTop: 50 / 930 * screenHeight }}
                                         onPress={() => {
                                           navigation.push(ScreenNames.ReviewReplyScreen, {

@@ -567,7 +567,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
 
                                                         }
                                                         {
-                                                            role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Resolved && (
+                                                            role && !(role === "business" && review.yapScore >= 3) && review.reviewStatus !== ReviewTypes.Resolved && review.reviewStatus !== ReviewTypes.RejectedByAdmin && (
                                                                 <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                     onPress={() => {
                                                                         navigation.push(ScreenNames.ReviewReplyScreen, {
@@ -580,19 +580,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                         Reply
                                                                     </Text>
                                                                 </TouchableOpacity>
-                                                            ) : (review.reviewStatus !== ReviewTypes.Resolved &&
-                                                                <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
-                                                                    onPress={() => {
-                                                                        navigation.push(ScreenNames.ReviewReplyScreen, {
-                                                                            review: review
-                                                                        })
-                                                                    }}
-                                                                >
-                                                                    <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                                                                        Reply
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            )
+                                                            ) 
                                                         }
                                                     </>
                                                 )

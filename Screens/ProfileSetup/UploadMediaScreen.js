@@ -498,12 +498,12 @@ const UploadMediaScreen = ({ navigation, route }) => {
 
                                         }}
                                     />
-                                    <Text style={{
+                                    {/* <Text style={{
                                         fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.lightBlack,
                                         opacity: 0.8
                                     }}>
                                         {selectedImageNme}
-                                    </Text>
+                                    </Text> */}
 
                                 </View>
                                 <TextInput

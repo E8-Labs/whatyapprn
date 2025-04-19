@@ -71,37 +71,39 @@ const LicenseScreen = ({ navigation, route }) => {
             Alert.alert('Error', 'Failed to extract text from the image');
         }
     };
+    
     const validateLicenseDetails = (text) => {
-        // First extract a candidate using your OCR techniques.
-        // For instance, assume you extract the substring after "DL" up to "DOB":
-        const dlRegexExtraction = /DL\s+([\w\s\-]+?)(?=\s+DOB)/i;
-        const dlMatch = text.match(dlRegexExtraction);
-        const candidateDL = dlMatch ? dlMatch[1].trim() : '';
-      
-        // Choose which validation to use (composite or generic)
-        const isValid = isValidDriverLicenseComposite(candidateDL);
-        // Alternatively: const isValid = isValidDriverLicenseGeneric(candidateDL);
-      
-        // For demonstration, we’ll return the candidate and whether it’s valid:
+        const fnRegex = /\bFN:?\s*([A-Za-z]+)\b/i;
+        // Last name after “LN:”
+        const lnRegex = /\bLN:?\s*([A-Za-z]+)\b/i;
+
+        const dobRegex = /(?:DOB|Date of Birth|Birth Date):?\s*(\d{2}[/-]\d{2}[/-]\d{4})/i;
+        const dlRegex = /(?:DL|ID|License|LIC|No|Number):?\s*([A-Z\d]{1,9})/i;
+
+        const fnMatch = text.match(fnRegex);
+        const lnMatch = text.match(lnRegex);
+        const dobMatch = text.match(dobRegex);
+        const dlMatch = text.match(dlRegex);
+
+    let name = ""
+
+    if(fnMatch || lnMatch){
+        name = fnMatch[1].trim()
+        name = name + fnMatch
+    }else{
+        name = "Name not found"
+    }
+
         return {
-          driverLicense: isValid ? candidateDL : 'Invalid DL format',
-          // You can add extraction for the name and other details here as well
+            name: name,
+            dateOfBirth: dobMatch ? dobMatch[1].trim() : 'DOB not found',
+            driverLicense: dlMatch ? dlMatch[1].trim() : 'DL not found',
         };
-      };
-      
-      const isValidDriverLicenseComposite = (licenseNumber) => {
-        const normalized = licenseNumber.replace(/[\s\-]/g, '');
-        const dlRegexComposite = /^(?:[A-Za-z]\d{7}|\d{9}|\d{8}|[A-Za-z]\d{12})$/;
-        return dlRegexComposite.test(normalized);
-      };
-      
-      const isValidDriverLicenseGeneric = (licenseNumber) => {
-        const normalized = licenseNumber.trim();
-        const dlRegexGeneric = /^(?=[A-Za-z0-9\- ]{5,16}$)(?=.*\d)[A-Za-z0-9\- ]+$/;
-        return dlRegexGeneric.test(normalized);
-      };
-      
-      
+    };
+
+
+
+
     const handleContinuePress = () => {
         if (user.role === 'business') {
             navigation.push(ScreenNames.LicenseDetailsScreen, {
@@ -131,13 +133,13 @@ const LicenseScreen = ({ navigation, route }) => {
                     flashMode={RNCamera.Constants.FlashMode.auto}
                 >
                     {/* Scan Box Overlay */}
-                    <View style={styles.overlay}>
+
+                    {/* <View style={styles.overlay}>
                         <View style={styles.topLeftCorner} />
                         <View style={styles.topRightCorner} />
                         <View style={styles.bottomLeftCorner} />
                         <View style={styles.bottomRightCorner} />
-                    </View>
-
+                    </View>  */}
                     <View style={styles.bottomControls}>
                         <View style={styles.actionButtonsContainer}>
 

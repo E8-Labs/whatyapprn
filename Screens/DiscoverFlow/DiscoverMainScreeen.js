@@ -102,17 +102,17 @@ const DiscoverMainScreeen = ({ navigation }) => {
     data.from = "discover"
     setLoading(false)
     if (data) {
-      if (item.role === "customer") {
+      // if (item.role === "customer") {
         navigation.push(ScreenNames.CustomerProfileDetails, {
           user: item,
           from: 'User'
         })
-      } else {
-        navigation.push(ScreenNames.BusinessInfoScreen, {
-          user: item,
-          from: 'User'
-        })
-      }
+      // } else {
+      //   navigation.push(ScreenNames.BusinessInfoScreen, {
+      //     user: item,
+      //     from: 'User'
+      //   })
+      // }
     }
   }
 
@@ -265,7 +265,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                                   {item.name}
                                 </Text>
 
-                                <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                <Text numberOfLines={1} style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
                                   {item.city ? item.city : ''} {item.state && `, ${item.state}`}
                                 </Text>
 
