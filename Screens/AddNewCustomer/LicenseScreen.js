@@ -73,33 +73,29 @@ const LicenseScreen = ({ navigation, route }) => {
     };
     
     const validateLicenseDetails = (text) => {
-        const fnRegex = /\bFN:?\s*([A-Za-z]+)\b/i;
-        // Last name after “LN:”
-        const lnRegex = /\bLN:?\s*([A-Za-z]+)\b/i;
-
-        const dobRegex = /(?:DOB|Date of Birth|Birth Date):?\s*(\d{2}[/-]\d{2}[/-]\d{4})/i;
-        const dlRegex = /(?:DL|ID|License|LIC|No|Number):?\s*([A-Z\d]{1,9})/i;
-
+        // 1) license number: “DL” followed by digits
+        const dlRegex  = /DL\s*(\w+)/;
+        // 2) first name: “FN” then letters (handles both “FN: IMA” and “FNIMA”)
+        const fnRegex  = /FN([A-Z]+)/;
+        // 3) last name: “LN” then letters
+        const lnRegex  = /LN\s*([A-Z]+)/;
+      
+        const dlMatch = text.match(dlRegex);
         const fnMatch = text.match(fnRegex);
         const lnMatch = text.match(lnRegex);
-        const dobMatch = text.match(dobRegex);
-        const dlMatch = text.match(dlRegex);
-
-    let name = ""
-
-    if(fnMatch || lnMatch){
-        name = fnMatch[1].trim()
-        name = name + fnMatch
-    }else{
-        name = "Name not found"
-    }
-
+      
+        const firstName = fnMatch ? fnMatch[1].trim() : '';
+        const lastName  = lnMatch ? lnMatch[1].trim() : '';
+        const fullName  = [firstName, lastName].filter(Boolean).join(' ') || 'Name not found';
+      
         return {
-            name: name,
-            dateOfBirth: dobMatch ? dobMatch[1].trim() : 'DOB not found',
-            driverLicense: dlMatch ? dlMatch[1].trim() : 'DL not found',
+          driverLicense: dlMatch ? dlMatch[1] : 'DL not found',
+          firstName, 
+          lastName,
+          name: fullName
         };
-    };
+      };
+      
 
 
 

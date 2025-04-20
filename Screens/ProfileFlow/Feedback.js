@@ -40,6 +40,7 @@ const Feedback = ({ navigation }) => {
 
                 }
 
+                console.log('apidata', apidata)
                 const response = await axios.post(path, apidata, {
                     headers: {
                         "Authorization": `Bearer ${u.token}`,
@@ -55,6 +56,7 @@ const Feedback = ({ navigation }) => {
                         setMessage('')
                         navigation.goBack()
                     } else {
+                        console.log('response.data.message', response.data.message)
                         alert('Something went wrong')
                     }
                 }

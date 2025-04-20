@@ -16,7 +16,6 @@ const eyeSlash = require('../../assets/Images/eye-slash.png')
 
 const LicenseDetailsScreen = ({ navigation, route }) => {
 
-
     const [weburl, setWeburl] = useState('')
     const [name, setName] = useState('')
     const [lNumber, setLNumber] = useState('')
@@ -56,7 +55,7 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
         if (from === "AddCustomer") {
             console.log('user is', user)
             // return
-            navigation.push(ScreenNames.CustomerEmailScreen, {
+            navigation.push(ScreenNames.CustomerNameScreen, {
                 user: {
                     name: name,
                     licenseNumber: lNumber,

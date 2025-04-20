@@ -65,7 +65,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     let user = route.params.user
 
     // let user = role && role === "business" ? usr.viewed : usr
-    console.log('user on prfile datails screen ', user)
+    console.log('user on prfile datails screen ', user.media)
 
     useFocusEffect(
         useCallback(() => {
@@ -588,7 +588,7 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                             }}
                                         >
                                             <Image
-                                                source={item.type === "image" ? item.url : item.thumb_url}
+                                                source={{uri:item.thumb_url}}
                                                 style={{
                                                     height: (75 / 930) * screenHeight,
                                                     width: (73 / 430) * screenWidth,
