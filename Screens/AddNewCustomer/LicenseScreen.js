@@ -71,33 +71,30 @@ const LicenseScreen = ({ navigation, route }) => {
             Alert.alert('Error', 'Failed to extract text from the image');
         }
     };
-    
+
     const validateLicenseDetails = (text) => {
         // 1) license number: “DL” followed by digits
-        const dlRegex  = /DL\s*(\w+)/;
+        const dlRegex = /DL\s*(\w+)/;
         // 2) first name: “FN” then letters (handles both “FN: IMA” and “FNIMA”)
-        const fnRegex  = /FN([A-Z]+)/;
+        const fnRegex = /FN([A-Z]+)/;
         // 3) last name: “LN” then letters
-        const lnRegex  = /LN\s*([A-Z]+)/;
-      
+        const lnRegex = /LN\s*([A-Z]+)/;
+
         const dlMatch = text.match(dlRegex);
         const fnMatch = text.match(fnRegex);
         const lnMatch = text.match(lnRegex);
-      
+
         const firstName = fnMatch ? fnMatch[1].trim() : '';
-        const lastName  = lnMatch ? lnMatch[1].trim() : '';
-        const fullName  = [firstName, lastName].filter(Boolean).join(' ') || 'Name not found';
-      
+        const lastName = lnMatch ? lnMatch[1].trim() : '';
+        const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Name not found';
+
         return {
-          driverLicense: dlMatch ? dlMatch[1] : 'DL not found',
-          firstName, 
-          lastName,
-          name: fullName
+            driverLicense: dlMatch ? dlMatch[1] : 'DL not found',
+            firstName,
+            lastName,
+            name: fullName
         };
-      };
-      
-
-
+    };
 
 
     const handleContinuePress = () => {

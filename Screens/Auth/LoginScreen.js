@@ -396,7 +396,7 @@ const LoginScreen = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ marginTop: 50 / 430 * screenHeight }}
+                        <TouchableOpacity style={{ marginTop: 40 / 430 * screenHeight }}
                             onPress={() => {
                                 navigation.push(ScreenNames.RoleSelectionScreen)
                             }}

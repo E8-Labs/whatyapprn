@@ -578,7 +578,10 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                             role && role === "business" ? messages.length > 0 && review.reviewStatus !== ReviewTypes.Resolved && (
                                                                 <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                     onPress={() => {
+                                                                        review.customer = review.fromUser
+                                                                        console.log('review.customer', review.fromUser)
                                                                         navigation.push(ScreenNames.ReviewReplyScreen, {
+                                                                           
                                                                             review: review,
                                                                             role: role
                                                                         })
@@ -591,6 +594,8 @@ const ReviewNotificationScreen = ({ navigation, route }) => {
                                                             ) : (review.reviewStatus !== ReviewTypes.Resolved &&
                                                                 <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                     onPress={() => {
+                                                                        review.customer = review.fromUser
+                                                                        console.log('review.customer', review.fromUser)
                                                                         navigation.push(ScreenNames.ReviewReplyScreen, {
                                                                             review: review
                                                                         })

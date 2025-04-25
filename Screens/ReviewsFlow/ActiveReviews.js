@@ -132,7 +132,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                       <View style={{ width: screenWidth - 40, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8 }}>
                           <View style={{ borderWidth: 2, borderRadius: 20, borderColor: '#FF570020' }}>
-                            <Image source={item.business.profile_image ? { uri: item.business.profile_image } : placeholderImage}
+                            <Image source={item.business?.profile_image ? { uri: item.business.profile_image } : placeholderImage}
                               style={[GlobalStyles.image37, { borderWidth: 2, borderColor: 'white', borderRadius: 20 }]}
                             />
                           </View>
@@ -140,7 +140,7 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                             fontSize: 17 / 930 * screenHeight, fontFamily: CustomFonts.InterSemibold,
                             //borderWidth:1
                           }}>
-                            {item.business.name}
+                            {item.business?.name}
                           </Text>
 
 
@@ -283,8 +283,6 @@ const ActiveReviews = ({ navigation, reviews, role }) => {
                                         Settle
                                       </Text>
                                     </TouchableOpacity>
-
-
 
                                     // )
                                   }

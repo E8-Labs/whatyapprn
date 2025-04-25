@@ -55,7 +55,7 @@ const LicenseDetailsScreen = ({ navigation, route }) => {
         if (from === "AddCustomer") {
             console.log('user is', user)
             // return
-            navigation.push(ScreenNames.CustomerNameScreen, {
+            navigation.push(ScreenNames.CustomerEmailScreen, {
                 user: {
                     name: name,
                     licenseNumber: lNumber,

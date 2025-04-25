@@ -21,7 +21,7 @@ const PlansScreen = ({ navigation }) => {
       id: 1,
       name: "YEARLY",
       price: "$499/yr",
-      // disc: "$50/Month",
+      disc: "3 months free then $499/yr",
       identifier: "Yearly_Premium_1118",
       oldPrice: "$999",
     },
@@ -29,7 +29,7 @@ const PlansScreen = ({ navigation }) => {
       id: 2,
       name: "MONTHLY",
       price: "$49/m",
-      disc: "",
+      disc: "3 months free then $49/mo",
       identifier: "Monthly_Premium_1118",
       oldPrice: "$99",
     },
@@ -147,7 +147,6 @@ const PlansScreen = ({ navigation }) => {
                           >
                             {item.name}
                           </Text>
-
                           <Text
                             style={{
                               fontSize: 17,
@@ -169,6 +168,7 @@ const PlansScreen = ({ navigation }) => {
                               {item.oldPrice}
                             </Text>
                           </Text>
+
                         </View>
 
                         <View
@@ -187,14 +187,23 @@ const PlansScreen = ({ navigation }) => {
                             }
                             style={GlobalStyles.image24}
                           />
-                          <Text
-                            style={{
-                              fontSize: 17,
-                              fontFamily: CustomFonts.InterRegular,
-                            }}
-                          >
-                            {item.disc}
-                          </Text>
+                          <View style = {{alignItems:'flex-end',justifyContent:'flex-end',borderWidth:0,}}>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                fontFamily: CustomFonts.InterRegular,
+                                color: Colors.orangeColor,
+                                width: 200 / 430 * screenWidth,
+                                borderWidth: 0,
+                                textAlign:'right'
+
+                              }}
+                            >
+                              {item.disc}
+                            </Text>
+                          </View>
+
+
                         </View>
                       </View>
                     </View>

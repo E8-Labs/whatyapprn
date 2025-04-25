@@ -16,6 +16,7 @@ import moment from 'moment'
 import GaleryCamPopup from '../../components/GaleryCamPopup'
 import * as ImagePicker from 'expo-image-picker';
 import { updateProfile } from '../../components/UpdateProfile'
+import { ImageViewer } from '../../components/ImageViewer'
 
 
 const CustomerProfileDetails = ({ navigation, route }) => {
@@ -33,6 +34,8 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     const [showGalleryPopup, setShowGalleryPopup] = useState(false)
     const [image, setImage] = useState('')
     const [imageLoader, setImageLoader] = useState(false)
+
+    const [showImage,setShowImage] = useState(null)
 
 
     const menues = [
@@ -443,6 +446,12 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                     )
                 }
 
+                <ImageViewer 
+                    visible={showImage!= null}
+                    url={showImage}
+                    close={()=>setShowImage(null)}
+                />
+
 
                 <View style={{ flexDirection: 'column', alignItems: 'center', width: screenWidth - 40, marginTop: 20 / 930 * screenHeight }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
@@ -587,15 +596,22 @@ const CustomerProfileDetails = ({ navigation, route }) => {
                                                 marginTop: (20 / 930) * screenHeight,
                                             }}
                                         >
-                                            <Image
-                                                source={{uri:item.thumb_url}}
-                                                style={{
-                                                    height: (75 / 930) * screenHeight,
-                                                    width: (73 / 430) * screenWidth,
-                                                    resizeMode: "cover",
-                                                    borderRadius: 10,
+                                            <TouchableOpacity
+                                                onPress={()=>{
+                                                    setShowImage(item.thumb_url )
                                                 }}
-                                            />
+                                            >
+
+                                                <Image
+                                                    source={{ uri: item.thumb_url }}
+                                                    style={{
+                                                        height: (75 / 930) * screenHeight,
+                                                        width: (73 / 430) * screenWidth,
+                                                        resizeMode: "cover",
+                                                        borderRadius: 10,
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
 
                                             <View
                                                 style={{

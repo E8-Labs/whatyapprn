@@ -475,14 +475,19 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                         </Text>
                                                                     </View>
                                                                 )}
-                                                            <View style={{
-                                                                paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
-                                                                backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
-                                                            }}>
-                                                                <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
-                                                                    Spent over {calculateSpent(item.user.totalSpent)}
-                                                                </Text>
-                                                            </View>
+
+                                                            {
+
+                                                                item.user.role != "business" && (
+                                                                    <View style={{
+                                                                        paddingVertical: 5, borderRadius: 20, alignItems: 'center', flexDirection: 'row',
+                                                                        backgroundColor: '#C0C0C020', paddingHorizontal: 8, gap: 8,
+                                                                    }}>
+                                                                        <Text style={[GlobalStyles.text14, { color: Colors.lightBlack }]}>
+                                                                            Spent over {calculateSpent(item.user.totalSpent)}
+                                                                        </Text>
+                                                                    </View>
+                                                                )}
                                                         </View>
                                                     </View>
                                                 </View>
@@ -550,7 +555,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                         }
 
                                                         {
-                                                            review.reviewStatus === ReviewTypes.Active &&  !review.settlementOffer  && role === "customer" && review.yapScore <= 3 &&
+                                                            review.reviewStatus === ReviewTypes.Active && role === "customer" && review.yapScore <= 3 &&
                                                             <TouchableOpacity style={{ marginTop: 0 / 930 * screenHeight }}
                                                                 onPress={() => {
                                                                     navigation.push(ScreenNames.DisputeScreen, {
@@ -580,7 +585,7 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                                         Reply
                                                                     </Text>
                                                                 </TouchableOpacity>
-                                                            ) 
+                                                            )
                                                         }
                                                     </>
                                                 )

@@ -130,7 +130,9 @@ const UploadImageScreen = ({ navigation, route }) => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, width: 270 / 430 * screenWidth, }}>
 
                             <TouchableOpacity onPress={() => {
-                                setShowPopup(true)
+                                if(!image){
+                                    setShowPopup(true)
+                                }
                             }}>
                                 <Image source={image ? { uri: image } : require('../../../assets/Images/placeholderImage.png')}
                                     style={{
@@ -154,7 +156,9 @@ const UploadImageScreen = ({ navigation, route }) => {
 
                         <TouchableOpacity
                             onPress={() => {
-                                setShowPopup(true)
+                                if(!image){
+                                    setShowPopup(true)
+                                }
                             }}
                         >
                             <Image source={require('../../../assets/Images/cameraImage.png')}
