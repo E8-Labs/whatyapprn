@@ -377,25 +377,6 @@ const LoginScreen = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
 
-
-                        <TouchableOpacity
-                            onPress={()=>{
-                                handleFacebookLogin()
-                            }}
-                        >
-                            
-                            <View style={styles.socialContainer}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                                    <Image source={require('../../assets/Images/facebookIcon.png')}
-                                        style={GlobalStyles.image24}
-                                    />
-                                    <Text style={styles.socialText}>
-                                        Sign in with Facebook
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
                         <TouchableOpacity style={{ marginTop: 40 / 430 * screenHeight }}
                             onPress={() => {
                                 navigation.push(ScreenNames.RoleSelectionScreen)

@@ -600,7 +600,14 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                         <View style={{ marginTop: 50 / 930 * screenHeight }}>
                                             <Text style={[GlobalStyles.text14, { color: '#00000050' }]}>Active Parties</Text>
 
-                                            <TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.push(ScreenNames.CustomerProfileDetails, {
+                                                        user: review.business,
+                                                        from: 'Admin'
+                                                    })
+                                                }}
+                                            >
                                                 <View style={{
                                                     width: screenWidth - 40, backgroundColor: '#fff', borderRadius: 3,
                                                     marginTop: 30 / 930 * screenHeight, alignItems: "center", paddingVertical: 10, paddingHorizontal: 10
@@ -633,7 +640,14 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
 
                                             </TouchableOpacity>
 
-                                            <TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.push(ScreenNames.CustomerProfileDetails, {
+                                                        user: review.customer,
+                                                        from: 'Admin'
+                                                    })
+                                                }}
+                                            >
                                                 <View style={{
                                                     width: screenWidth - 40, backgroundColor: '#fff', borderRadius: 3,
                                                     marginTop: 30 / 930 * screenHeight, alignItems: "center", paddingVertical: 10, paddingHorizontal: 10
@@ -680,7 +694,19 @@ const ReviewDetailsScreen = ({ navigation, route }) => {
                                                 </View>
 
                                             </TouchableOpacity>
+
+                                            <Text style={[GlobalStyles.text14, { color: '#00000050', marginTop: 50 / 930 * screenHeight }]}>
+                                                Dispute Reason
+                                            </Text>
+
+                                            <Text style={[GlobalStyles.text17, { marginTop: 20 / 930 * screenHeight }]}>
+                                                {review.disputeReason}
+                                            </Text>
+
+
                                         </View>
+
+
                                     )
                                 }
 

@@ -185,7 +185,7 @@ export default function NotificationsScreen({ navigation }) {
     } else if (item.type === NotificationType.ProfileView) {
       let not = {
         image: profileViewIcon,
-        message: item.fromUser.name + " viewed your business page",
+        message: item.fromUser.name + ` viewed your ${item.toUser.role} page`,
         time: item.createdAt,
         type: item.type,
       };

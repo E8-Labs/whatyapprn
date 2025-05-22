@@ -11,7 +11,7 @@ import axios from 'axios'
 import { Apipath } from '../../Api/Apipaths'
 import { ReviewTypes } from '../../res/ReviewsTypes'
 import LoadingAnimation from '../../components/LoadingAnimation'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import moment from 'moment'
 import GaleryCamPopup from '../../components/GaleryCamPopup'
 import * as ImagePicker from 'expo-image-picker';
@@ -19,7 +19,16 @@ import { updateProfile } from '../../components/UpdateProfile'
 import { ImageViewer } from '../../components/ImageViewer'
 
 
-const CustomerProfileDetails = ({ navigation, route }) => {
+const CustomerProfileDetails = (props) => {
+
+     const navigation = useNavigation();
+  const route = useRoute();
+
+  const userFromProps = props.user;
+
+  const usr = route.params?.user || userFromProps;
+  const [user, setUser] = useState(usr);
+
 
     const [role, setRole] = useState("")
     const [selectedMenu, setselectedMenu] = useState({
@@ -65,10 +74,20 @@ const CustomerProfileDetails = ({ navigation, route }) => {
     }, [])
 
 
-    let user = route.params.user
+
+    useEffect(()=>{
+        const updateUser = ()=>{
+            if(usr){
+                setUser(usr)
+                console.log('user updated on profile screen', usr.yapScore3Digit)
+            }
+        }
+
+        updateUser()
+    },[usr])
 
     // let user = role && role === "business" ? usr.viewed : usr
-    console.log('user on prfile datails screen ', user.media)
+    console.log('user on prfile datails screen ', user.yapScore3Digit)
 
     useFocusEffect(
         useCallback(() => {

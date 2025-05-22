@@ -181,36 +181,48 @@ const TabbarContainer = ({ navigation, route }) => {
     });
   };
 
-  
 
-  useFocusEffect(
-
-    useCallback(() => {
-      DeviceEventEmitter.addListener("UpdateProfile", (data) => {
-       checkUserRole()
-      });
-      const checkUserRole = async () => {
-        const data = await AsyncStorage.getItem("USER");
-        if (data) {
-          let u = JSON.parse(data);
-          // console.log('user role in user role function is', u.user.role)
-          // u.user.from = "tabbar";
-          let d = await getProfile();
-          d.from = "tabbar";
-          setUser(d);
-          setRole(d.role);
-          // console.log("user after update is", d);
-        }
-      };
-      checkUserRole();
-    }, [])
-  );
+  DeviceEventEmitter.addListener("UpdateProfile", (data) => {
+    checkUserRole()
+  });
 
   useEffect(() => {
     console.log("trying to refresh subscription status");
     refreshSubscriptionStatus();
   }, [user]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("state", () => {
+      checkUserRole();
+    });
+
+    return unsubscribe; // cleanup on unmount
+  }, [navigation]);
+
+
+  useFocusEffect(
+
+    useCallback(() => {
+
+      checkUserRole();
+    }, [])
+  );
+
+
+  const checkUserRole = async () => {
+    console.log('trying to check user role')
+    const data = await AsyncStorage.getItem("USER");
+    if (data) {
+      let u = JSON.parse(data);
+      // console.log('user role in user role function is', u.user.role)
+      // u.user.from = "tabbar";
+      let d = await getProfile();
+      d.from = "tabbar";
+      setUser(d);
+      setRole(d.role);
+      console.log("user after update is", d.yapScore3Digit);
+    }
+  };
   function checkSubscriptionStatus(info) {
     if (typeof info.entitlements.active["premium"] !== "undefined") {
       console.log(
@@ -221,7 +233,7 @@ const TabbarContainer = ({ navigation, route }) => {
       console.log("User not subscribed", user.role);
       if (user.role == "business") {
         console.log("Navigating to Plans");
-        navigation.navigate(ScreenNames.PlansScreen);
+        // navigation.navigate(ScreenNames.PlansScreen);
       }
     }
   }
@@ -230,7 +242,7 @@ const TabbarContainer = ({ navigation, route }) => {
     try {
       const customerInfo = await Purchases.getCustomerInfo();
       Purchases.addCustomerInfoUpdateListener((info) => {
-        console.log("Listner info user ", info);
+        // console.log("Listner info user ", info);
         checkSubscriptionStatus(info);
       });
       checkSubscriptionStatus(customerInfo);
@@ -392,7 +404,16 @@ const TabbarContainer = ({ navigation, route }) => {
                 focused ? <Text style={styles.labelText}>Profile</Text> : "",
             }}
           >
-            {() => <ProfileStackScreen user={user} from="tabbar" role={role} />}
+            {() => (
+              <ProfileStackScreen
+                user={user}
+                role={role}
+                from="tabbar"
+                setUser={setUser}
+                setRole={setRole}
+              />
+            )}
+
           </Tab.Screen>
         </Tab.Navigator>
       )}

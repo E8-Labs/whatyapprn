@@ -13,7 +13,6 @@ export const Apipath = {
   updateProfile: baseUrl + "user/updateProfile",
   addNewCustomer: baseUrl + "dashboard/addCustomer",
   getAllCustomers: baseUrl + "dashboard/customersNear",
-  addReview: baseUrl + "dashboard/addReview",
   getReviews: baseUrl + "review/loadReviews",
   loadMessages: baseUrl + "review/loadMessages",
   sendMessage: baseUrl + "review/sendMessage",

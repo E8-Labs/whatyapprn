@@ -29,7 +29,7 @@ const DisputeScreen = ({ navigation, route }) => {
 
                 let apidata = {
                     reviewId: review.id,
-                    resone: resone
+                    reason: resone
                 }
                 let path = Apipath.disputeReview
                 console.log('path is', path)
