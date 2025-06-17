@@ -5,7 +5,8 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert
+  Alert,
+  Linking
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
@@ -270,7 +271,13 @@ const ProfileMainScreen = ({ navigation }) => {
 
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={()=>{
+            Linking.openURL(
+              "https://docs.google.com/document/d/1aNHsrrgwmsDSPAX0G5El735xq85k21Cd/edit?tab=t.0"
+            )
+          }}
+        >
           <View style={styles.btnContainer}>
             <View
               style={{
