@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>29</string>
+	<string>31</string>
 	<key>FacebookAppID</key>
 	<string>1490848418243027</string>
 	<key>FacebookClientToken</key>
@@ -59,17 +59,17 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to open the camera</string>
+	<string>This app requires camera access to allow you to take photos or scan content.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use your location.</string>
+	<string>This app uses your location while in use to provide location-based features or services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location</string>
+	<string>This app uses your location even when not in use to support background location tracking.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location</string>
+	<string>This app needs continuous location access to deliver real-time location-based functionality.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your microphone</string>
+	<string>This app uses the microphone to record audio for voice input.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to open the Photos</string>
+	<string>This app needs access to your photo library to upload or select existing images.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

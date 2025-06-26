@@ -94,7 +94,7 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                     onPress={getLocation}
                 >
                     <Text style={GlobalStyles.BtnText}>
-                        Allow Location
+                        Continue
                     </Text>
                 </TouchableOpacity>
 

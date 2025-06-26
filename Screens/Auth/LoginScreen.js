@@ -362,7 +362,7 @@ const LoginScreen = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={appleLogin}
                         >
                             <View style={styles.socialContainer}>
@@ -374,6 +374,16 @@ const LoginScreen = ({ navigation }) => {
                                         Sign in with Apple
                                     </Text>
                                 </View>
+                            </View>
+                        </TouchableOpacity> */}
+
+                        <TouchableOpacity onPress={appleLogin}>
+                            <View style={styles.appleButton}>
+                                <Image
+                                    source={require('../../assets/Images/appleIcon.png')}
+                                    style={styles.appleIcon}
+                                />
+                                <Text style={styles.appleText}>Sign in with Apple</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -406,13 +416,35 @@ const styles = StyleSheet.create({
         marginTop: 30 / 930 * screenHeight
     },
     socialText: {
-        fontSize: 18 / 930 * screenHeight,
+        fontSize: 16 / 930 * screenHeight,
         fontFamily: CustomFonts.InterMedium
     },
     socialIcon: {
-        height: 25 / 930 * screenHeight,
-        width: 25 / 430 * screenWidth,
+        height: 20 / 930 * screenHeight,
+        width: 20 / 430 * screenWidth,
         resizeMode: 'contain'
 
-    }
+    },
+     appleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000', // black background
+    paddingVertical: 12,
+    paddingHorizontal:20,
+    borderRadius: 6,
+    textAlign:'center'
+  },
+  appleIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+    resizeMode: 'contain',
+    tintColor:'white'
+  },
+  appleText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 })

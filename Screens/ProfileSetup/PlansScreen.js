@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import React, { useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
-import { screenHeight, screenWidth } from "../../res/Constants";
+import { screenHeight, screenWidth, termsAndConditionsUrl } from "../../res/Constants";
 import { Colors } from "../../res/Colors";
 import { CustomFonts } from "../../assets/font/Fonts";
 import { ScreenNames } from "../../res/ScreenNames";
@@ -187,7 +188,7 @@ const PlansScreen = ({ navigation }) => {
                             }
                             style={GlobalStyles.image24}
                           />
-                          <View style = {{alignItems:'flex-end',justifyContent:'flex-end',borderWidth:0,}}>
+                          <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end', borderWidth: 0, }}>
                             <Text
                               style={{
                                 fontSize: 12,
@@ -195,7 +196,7 @@ const PlansScreen = ({ navigation }) => {
                                 color: Colors.orangeColor,
                                 width: 200 / 430 * screenWidth,
                                 borderWidth: 0,
-                                textAlign:'right'
+                                textAlign: 'right'
 
                               }}
                             >
@@ -239,6 +240,45 @@ const PlansScreen = ({ navigation }) => {
                 off ateast 24hrs before current period ends. Payment is charged
                 to your iTunes Account.
               </Text>
+
+              <View style={{
+                flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5
+              }}>
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: CustomFonts.InterRegular,
+                      color: Colors.orangeColor,
+                      marginTop: 30,
+                    }}
+                    onPress={() => {
+                      Linking.openURL(
+                        termsAndConditionsUrl
+                      )
+                    }}
+                  >
+                    Terms and Conditions
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: CustomFonts.InterRegular,
+                      color: Colors.orangeColor,
+                      marginTop: 5,
+                    }}
+                    onPress={() => {
+                      Linking.openURL(
+                        termsAndConditionsUrl
+                      )
+                    }}
+                  >
+                    Privacy Policy
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>

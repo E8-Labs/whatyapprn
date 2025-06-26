@@ -12,8 +12,10 @@ import React, { useEffect, useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
 import {
   placeholderImage,
+  privacyPolicyUrl,
   screenHeight,
   screenWidth,
+  termsAndConditionsUrl,
 } from "../../res/Constants";
 import { CustomFonts } from "../../assets/font/Fonts";
 import { Colors } from "../../res/Colors";
@@ -272,11 +274,11 @@ const ProfileMainScreen = ({ navigation }) => {
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
         <TouchableOpacity
-          onPress={()=>{
-            Linking.openURL(
-              "https://docs.google.com/document/d/1aNHsrrgwmsDSPAX0G5El735xq85k21Cd/edit?tab=t.0"
-            )
-          }}
+        onPress={()=>{
+          Linking.openURL(
+            privacyPolicyUrl
+          )
+        }}
         >
           <View style={styles.btnContainer}>
             <View
@@ -305,7 +307,13 @@ const ProfileMainScreen = ({ navigation }) => {
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            Linking.openURL(
+              termsAndConditionsUrl
+            )
+          }}
+        >
           <View style={styles.btnContainer}>
             <View
               style={{
