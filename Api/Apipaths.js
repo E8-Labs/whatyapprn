@@ -42,12 +42,9 @@ export const Apipath = {
   getTransactions: `${baseUrl}user/get_transactions`,
   addNewCard: `${baseUrl}user/add_card`,
   adminUnreadChat: `${baseUrl}user/readNotifications`,
-
   //chat
   createChat: `${baseUrl}review/createchat`,
-
-
   getSuspendedUsers:`${baseUrl}admin/suspendedUsers`,
-
   sendFeedback : `${baseUrl}admin/sendFeedback`,
+  deleteAccount:`${baseUrl}admin/deleteAccount`
 };

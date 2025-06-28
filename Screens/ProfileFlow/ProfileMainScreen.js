@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Linking
+  Linking,
+  Modal,
+  ActivityIndicator
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GlobalStyles } from "../../assets/styles/GlobalStyles";
@@ -26,10 +28,17 @@ import { getProfile } from "../../components/GetProfile";
 import { useFocusEffect } from "@react-navigation/native";
 
 import Mailer from 'react-native-mail';
+import axios from "axios";
+import { Apipath } from "../../Api/Apipaths";
+import { ShowMessage } from "../../components/ShowMessage";
+import ConfirmationPopup from "../../components/ConfirmationPopup";
 
 
 const ProfileMainScreen = ({ navigation }) => {
   const [user, setUser] = useState("");
+
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const logoutUser = () => {
     AsyncStorage.removeItem("USER");
@@ -71,6 +80,50 @@ const ProfileMainScreen = ({ navigation }) => {
         }
       }
     );
+  }
+
+  const deleteAccount = async () => {
+    try {
+      setLoading(true)
+      let data = await AsyncStorage.getItem("USER")
+
+      if (data) {
+        let u = JSON.parse(data)
+        let path = Apipath.deleteAccount
+
+        let apidata = {
+          userId: user.id
+        }
+        console.log('api data is', apidata)
+        // return
+        const response = await axios.post(path, apidata, {
+          headers: {
+            'Authorization': "Bearer " + u.token
+          }
+        })
+
+        if (response) {
+          setLoading(false)
+          if (response.data.status === true) {
+            setShowConfirmationPopup(false);
+            setTimeout(() => {
+              AsyncStorage.removeItem("USER"); navigation.reset({
+                index: 0,
+                routes: [{ name: ScreenNames.LoginScreen }]
+              })
+            }, 300);
+            ShowMessage("Account delted successfully", 'green')
+
+
+          } else {
+            ShowMessage(response.data.message,)
+          }
+        }
+      }
+    } catch (e) {
+      setLoading(false)
+      console.log('error in delete account api is', e)
+    }
   }
 
   return (
@@ -274,11 +327,11 @@ const ProfileMainScreen = ({ navigation }) => {
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
         <TouchableOpacity
-        onPress={()=>{
-          Linking.openURL(
-            privacyPolicyUrl
-          )
-        }}
+          onPress={() => {
+            Linking.openURL(
+              privacyPolicyUrl
+            )
+          }}
         >
           <View style={styles.btnContainer}>
             <View
@@ -303,9 +356,7 @@ const ProfileMainScreen = ({ navigation }) => {
         </TouchableOpacity>
 
 
-
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
-
 
         <TouchableOpacity
           onPress={() => {
@@ -337,6 +388,32 @@ const ProfileMainScreen = ({ navigation }) => {
         </TouchableOpacity>
 
 
+        <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setShowConfirmationPopup(true)
+          }}
+        >
+          <View style={styles.btnContainer}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: (8 / 430) * screenWidth,
+              }}
+            >
+              <Image
+                source={require("../../assets/Images/deleteIcon.png")}
+                style={GlobalStyles.image24}
+              />
+              <Text style={[GlobalStyles.text17, { color: '#000' }]}>Delete Account</Text>
+            </View>
+
+
+          </View>
+        </TouchableOpacity>
+
 
         <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
 
@@ -362,6 +439,13 @@ const ProfileMainScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <ConfirmationPopup
+          showConfirmationPopup={showConfirmationPopup}
+          setShowConfirmationPopup={setShowConfirmationPopup}
+          loading={loading}
+          onContinue={() => deleteAccount()}
+
+        />
       </View>
     </SafeAreaView>
   );

@@ -17,17 +17,19 @@ import GaleryCamPopup from '../../components/GaleryCamPopup'
 import * as ImagePicker from 'expo-image-picker';
 import { updateProfile } from '../../components/UpdateProfile'
 import { ImageViewer } from '../../components/ImageViewer'
+import { ShowMessage } from '../../components/ShowMessage'
+import ConfirmationPopup from '../../components/ConfirmationPopup'
 
 
 const CustomerProfileDetails = (props) => {
 
-     const navigation = useNavigation();
-  const route = useRoute();
+    const navigation = useNavigation();
+    const route = useRoute();
 
-  const userFromProps = props.user;
+    const userFromProps = props.user;
 
-  const usr = route.params?.user || userFromProps;
-  const [user, setUser] = useState(usr);
+    const usr = route.params?.user || userFromProps;
+    const [user, setUser] = useState(usr);
 
 
     const [role, setRole] = useState("")
@@ -44,7 +46,9 @@ const CustomerProfileDetails = (props) => {
     const [image, setImage] = useState('')
     const [imageLoader, setImageLoader] = useState(false)
 
-    const [showImage,setShowImage] = useState(null)
+    const [showImage, setShowImage] = useState(null)
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState(false)
+
 
 
     const menues = [
@@ -75,16 +79,16 @@ const CustomerProfileDetails = (props) => {
 
 
 
-    useEffect(()=>{
-        const updateUser = ()=>{
-            if(usr){
+    useEffect(() => {
+        const updateUser = () => {
+            if (usr) {
                 setUser(usr)
                 console.log('user updated on profile screen', usr.yapScore3Digit)
             }
         }
 
         updateUser()
-    },[usr])
+    }, [usr])
 
     // let user = role && role === "business" ? usr.viewed : usr
     console.log('user on prfile datails screen ', user.yapScore3Digit)
@@ -268,6 +272,52 @@ const CustomerProfileDetails = (props) => {
             }
         }
     }
+
+
+
+    const deleteCustomerAccount = async () => {
+        try {
+            setLoading2(true)
+            let data = await AsyncStorage.getItem("USER")
+
+            if (data) {
+                let u = JSON.parse(data)
+                let path = Apipath.deleteAccount
+
+                let apidata = {
+                    userId: user.id
+                }
+                console.log('api data is', apidata)
+                // return
+                const response = await axios.post(path, apidata, {
+                    headers: {
+                        'Authorization': "Bearer " + u.token
+                    }
+                })
+
+                if (response) {
+                    setLoading2(false)
+                    if (response.data.status === true) {
+                        setShowConfirmationPopup(false);
+                        setTimeout(() => {
+                            AsyncStorage.removeItem("USER"); navigation.reset({
+                                index: 0,
+                                routes: [{ name: ScreenNames.LoginScreen }]
+                            })
+                        }, 300);
+                        ShowMessage("Account delted successfully", 'green')
+
+                    } else {
+                        ShowMessage(response.data.message,)
+                    }
+                }
+            }
+        } catch (e) {
+            setLoading2(false)
+            console.log('error in delete account api is', e)
+        }
+    }
+
 
 
     async function createChat(user) {
@@ -465,10 +515,10 @@ const CustomerProfileDetails = (props) => {
                     )
                 }
 
-                <ImageViewer 
-                    visible={showImage!= null}
+                <ImageViewer
+                    visible={showImage != null}
                     url={showImage}
-                    close={()=>setShowImage(null)}
+                    close={() => setShowImage(null)}
                 />
 
 
@@ -549,6 +599,8 @@ const CustomerProfileDetails = (props) => {
 
                                         </View>
 
+
+
                                         <TouchableOpacity style={{}}
                                             onPress={logoutUser}
                                         >
@@ -556,6 +608,23 @@ const CustomerProfileDetails = (props) => {
                                                 Logout
                                             </Text>
                                         </TouchableOpacity>
+
+                                        <TouchableOpacity style={{}}
+                                            onPress={() => {
+                                                setShowConfirmationPopup(true)
+                                            }}
+                                        >
+                                            <Image
+                                                source={require("../../assets/Images/deleteIcon.png")}
+                                                style={GlobalStyles.image24}
+                                            />
+                                        </TouchableOpacity>
+                                        <ConfirmationPopup
+                                            showConfirmationPopup={showConfirmationPopup}
+                                            setShowConfirmationPopup={setShowConfirmationPopup}
+                                            loading={loading2}
+                                            onContinue={() => deleteCustomerAccount()}
+                                        />
                                     </View>
                                 )
                             }
@@ -616,8 +685,8 @@ const CustomerProfileDetails = (props) => {
                                             }}
                                         >
                                             <TouchableOpacity
-                                                onPress={()=>{
-                                                    setShowImage(item.thumb_url )
+                                                onPress={() => {
+                                                    setShowImage(item.thumb_url)
                                                 }}
                                             >
 

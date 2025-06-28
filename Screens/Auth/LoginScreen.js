@@ -230,6 +230,8 @@ const LoginScreen = ({ navigation }) => {
                         AsyncStorage.setItem("USER", JSON.stringify(result.data.data))
                         if (result.data.data.user.role === "admin") {
                             navigation.push(ScreenNames.AdminTabbarContainer)
+                        } else if (result.data.data.user.status === "deleted") {
+                            ShowMessage("Account has been deleted.")
                         } else {
                             navigation.push(ScreenNames.TabbarContainer, {
                                 from: 'login'
@@ -425,26 +427,26 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
 
     },
-     appleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000', // black background
-    paddingVertical: 12,
-    paddingHorizontal:20,
-    borderRadius: 6,
-    textAlign:'center'
-  },
-  appleIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
-    resizeMode: 'contain',
-    tintColor:'white'
-  },
-  appleText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+    appleButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#000', // black background
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 6,
+        textAlign: 'center'
+    },
+    appleIcon: {
+        width: 20,
+        height: 20,
+        marginRight: 8,
+        resizeMode: 'contain',
+        tintColor: 'white'
+    },
+    appleText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 })
