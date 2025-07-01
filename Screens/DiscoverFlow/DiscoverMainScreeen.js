@@ -346,12 +346,12 @@ const DiscoverMainScreeen = ({ navigation }) => {
                         marginTop: 30 / 930 * screenHeight
                       }}>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 60, justifyContent: 'space-between' }}>
 
                           <View style={{ flexDirection: 'row', alignItems: "center", gap: 5 }}>
                             <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
                               style={{
-                                height: 30 / 930 * screenHeight, width: 30 / 430 * screenWidth, borderRadius: 20, resizeMode: 'cover'
+                                height: 30, width: 30, borderRadius: 20, resizeMode: 'cover'
                               }}
                             />
                             <Text style={[GlobalStyles.text17, { color: 'black' }]}>
@@ -371,7 +371,7 @@ const DiscoverMainScreeen = ({ navigation }) => {
                           </Text>
                           <View style={{
                             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                            width: screenWidth - 70, marginTop: 10
+                            width: screenWidth - 70/430*screenWidth, marginTop: 10
                           }}>
                             {
                               item.role != "business" && (

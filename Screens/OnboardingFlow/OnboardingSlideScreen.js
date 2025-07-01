@@ -19,21 +19,21 @@ export default function OnboardingSlideScreen({ navigation }) {
     const slideImages = [
         {
             id: 1,
-            image: require('../../assets/Images/onboardingProgress1.png'),
+            image: require('../../assets/Images/onboarding1.png'),
             heading: 'Your trusted partner for customer validation.',
             subheading: 'Quickly verify customer reliability and enhance your business decision-making.'
         },
         {
             id: 2,
-            image: require('../../assets/Images/onboardingProgress2.png'),
+            image: require('../../assets/Images/onboarding2.png'),
             heading: 'Comprehensive Customer Profiles',
             subheading: 'Make informed decisions with reliable customer data at your fingertips.'
         },
         {
             id: 3,
-            image: require('../../assets/Images/onboardingProgress3.png'),
-            heading: 'Seamless Dispute and Settlement Resolution',
-            subheading: 'Reduce business risks by looking into their past experience with other businesses and ensure smooth transactions with built-in dispute resolution.',
+            image: require('../../assets/Images/onboarding3.png'),
+            heading: 'WhatYap Pro Subscription Plans',
+            subheading: 'Verify customers, and resolve disputes fast. Provides trust and security for your business. ',
         }
     ]
 
@@ -101,7 +101,7 @@ export default function OnboardingSlideScreen({ navigation }) {
                             slideImages.map((item) => (
                                 <View key={item.id} style={{ width: screenWidth, alignItems: 'center' }}>
                                     <View style={{ width: screenWidth - 30, flexDirection: 'column', alignItems: 'center', gap: 5 }}>
-                                        <Image source={require('../../assets/Images/onboarding1.png')}
+                                        <Image source={item.image}
                                             style={{ height: 430 / 930 * screenHeight, width: 320 / 430 * screenWidth, marginTop: 8 / 930 * screenHeight }}
                                         />
 
@@ -120,7 +120,7 @@ export default function OnboardingSlideScreen({ navigation }) {
 
 
                     </ScrollView>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 40, justifyContent: 'space-between' ,marginTop:20}}>
                         {
                             currentIndex > 0 ? (
                                 <TouchableOpacity

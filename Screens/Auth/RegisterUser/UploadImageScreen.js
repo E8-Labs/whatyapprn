@@ -137,7 +137,7 @@ const UploadImageScreen = ({ navigation, route }) => {
                                 <Image source={image ? { uri: image } : require('../../../assets/Images/placeholderImage.png')}
                                     style={{
                                         height: 88 / 930 * screenHeight,
-                                        width: 88 / 430 * screenWidth,
+                                        width: 88 / 930 * screenHeight,
                                         resizeMode: 'cover',
                                         borderRadius: 50
                                     }}

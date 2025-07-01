@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>33</string>
+	<string>34</string>
 	<key>FacebookAppID</key>
 	<string>1490848418243027</string>
 	<key>FacebookClientToken</key>
@@ -69,7 +69,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app uses the microphone to record audio for voice input.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to upload or select existing images.</string>
+	<string>This app needs access to your photo library to upload or select existing images so you can add them to WhatYap.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
