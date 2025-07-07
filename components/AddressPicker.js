@@ -56,12 +56,12 @@ const AddressPicker = ({ closeModal, PickAddress, }) => {
             addressComponents.forEach(component => {
                 if (component.types.includes('locality')) {
                     city = component.long_name;
-                    // console.log('city from component name is :', city);
+                    console.log('city from component name is :', city);
                     setCityName(city);
                 }
                 if (component.types.includes('administrative_area_level_1')) {
                     state = component.short_name;
-                    // console.log('State from component :', state);
+                    console.log('State from component :', state);
                     setStateName(state);
                 }
                 if (component.types.includes('administrative_area_level_2')) {
@@ -71,22 +71,22 @@ const AddressPicker = ({ closeModal, PickAddress, }) => {
                 }
                 if (component.types.includes('country')) {
                     country = component.long_name;
-                    // console.log('Country name from components is :', country);
+                    console.log('Country name from components is :', country);
                     setCountryName(country);
                 }
                 if (component.types.includes('postal_code')) {
                     Addresspostal_Code = component.long_name;
-                    // console.log('Postal code from component is :', Addresspostal_Code);
+                    console.log('Postal code from component is :', Addresspostal_Code);
                     setPostalCode(Addresspostal_Code);
                 }
                 if (component.types.includes('street_number')) {
                     street = component.long_name;
-                    // console.log('Street number from component is :', street);
+                    console.log('Street number from component is :', street);
                     setStreetNumber(street);
                 }
                 if (component.types.includes('route')) {
                     addressRoute = component.long_name;
-                    // console.log('Route from component is :', addressRoute);
+                    console.log('Route from component is :', addressRoute);
 
                 }
             });
@@ -102,7 +102,7 @@ const AddressPicker = ({ closeModal, PickAddress, }) => {
                 route: addressRoute,
                 longState: state2
             }
-            // console.log('Address sending back screen is :', address);
+            console.log('Address sending back screen is :', address);
             // console.warn('Values are selected');
             PickAddress(address)
             closeModal()

@@ -113,11 +113,17 @@ const BusinessLocation = ({ navigation, route }) => {
                                 if (address.city) {
                                     completeAddress = completeAddress + ` ${address.city}`
                                 }
-                                if (address.longState) {
+                                if (address.longState && !address.shortState) {
                                     completeAddress = completeAddress + ` ${address.longState}`
                                 }
                                 if (address.state) {
                                     completeAddress = completeAddress + ` ${address.state}`
+                                }
+                                if(address.shortState && !address.longState){
+                                    completeAddress = completeAddress + ` ${address.shortState}`
+                                }
+                                if(address.country && !address.city){
+                                    completeAddress = completeAddress + ` ${address.country}`
                                 }
                                 console.log("Compelte address is ", completeAddress)
                                 setState(address.shortState)
