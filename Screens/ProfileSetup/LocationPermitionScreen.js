@@ -98,7 +98,7 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ marginTop: 40 }}
+                {/* <TouchableOpacity style={{ marginTop: 40 }}
                     onPress={() => {
                         if (from == "CustomerFlow") {
                             navigation.push(ScreenNames.TabbarContainer, {
@@ -112,7 +112,7 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                     <Text style={[GlobalStyles.BtnText, { color: 'black' }]}>
                         Not Now
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         </SafeAreaView>
     )

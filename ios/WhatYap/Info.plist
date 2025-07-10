@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>35</string>
+	<string>40</string>
 	<key>FacebookAppID</key>
 	<string>1490848418243027</string>
 	<key>FacebookClientToken</key>
@@ -65,7 +65,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app uses your location even when not in use to support background location tracking.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs continuous location access to deliver real-time location-based functionality.</string>
+	<string>We use your location to show nearby businesses and help you easily discover local services in your area.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app uses the microphone to record audio for voice input.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
