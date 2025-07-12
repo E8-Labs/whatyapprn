@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableOpacity, Linking, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { GlobalStyles } from '../../assets/styles/GlobalStyles'
 import { screenHeight, screenWidth } from '../../res/Constants'
@@ -7,13 +7,22 @@ import { ScreenNames } from '../../res/ScreenNames'
 import * as Location from 'expo-location'
 import { updateProfile } from '../../components/UpdateProfile'
 import LoadingAnimation from '../../components/LoadingAnimation'
+import { CustomFonts } from '../../assets/font/Fonts'
 
-const LocationPremitionScreen = ({ navigation, route }) => {
+const LocationPremitionScreen = ({
+    navigation,
+    route = { params: {} },
+    title = 'Location Permission',
+    desc = '',
+    showNotBtn = true,
+    handleAllowLocation
+
+}) => {
 
     const [loading, setLoading] = useState(false)
 
 
-    let from = route.params.from
+    const from = route?.params?.from ?? 'default';
     console.log('from', from)
 
     const allowLocation = () => {
@@ -31,10 +40,36 @@ const LocationPremitionScreen = ({ navigation, route }) => {
 
     const getLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
+        // if (status !== 'granted') {
+        //     alert('Go to settings to allow location');
+        //     return;
+        // }
+
         if (status !== 'granted') {
-            alert('Go to settings to allow location');
-            return;
+            if (from === "Discover") {
+                Alert.alert(
+                    'Permission Needed',
+                    'Location permission is denied. Please enable it in Settings.',
+                    [
+                        { text: 'Cancel', style: 'cancel' },
+                        {
+                            text: 'Open Settings',
+                            onPress: () => Linking.openSettings()
+                        }
+                    ]
+                );
+                return
+            } else if (from == "CustomerFlow") {
+                navigation.push(ScreenNames.TabbarContainer, {
+                    from: 'CustomerFlow'
+                })
+                return
+            } else {
+                navigation.push(ScreenNames.PlansScreen)
+            }
         }
+
+        console.log('status', status)
 
         let location = await Location.getCurrentPositionAsync({});
         // setLocation(location);
@@ -65,6 +100,9 @@ const LocationPremitionScreen = ({ navigation, route }) => {
                         from: 'CustomerFlow'
                     })
                     return
+                } else if (from == "Discover") {
+                    handleAllowLocation()
+                    return
                 }
                 navigation.push(ScreenNames.PlansScreen)
             }
@@ -75,21 +113,24 @@ const LocationPremitionScreen = ({ navigation, route }) => {
     };
 
     return (
-        <SafeAreaView style={GlobalStyles.container}>
+        <SafeAreaView style={[GlobalStyles.container, { backgroundColor: from === "Discover" ? 'transparent' : 'white' }]}>
             {
                 loading && <LoadingAnimation visible={loading} />
             }
-            <View style={[GlobalStyles.container, { alignItems: 'center', marginTop: 120 / 930 * screenHeight, width: screenWidth - 40 }]}>
+            <View style={[{ alignItems: 'center', marginTop: 120 / 930 * screenHeight, width: screenWidth - 40 }]}>
                 <Image source={require('../../assets/Images/locationImage.png')}
                     style={{ width: 142 / 930 * screenHeight, height: 142 / 930 * screenHeight, resizeMode: 'contain' }}
                 />
 
-                <Text style={[GlobalStyles.heading, { marginTop: 20, textAlign: 'center' }]}>
-                    Location permission
+                <Text style={{
+                    marginTop: 20, textAlign: 'center', fontSize: from === "Discover" ? 16 : 24,
+                    fontFamily: CustomFonts.PoppinsMedium
+                }}>
+                    {title}
                 </Text>
-                {/* <Text style={[GlobalStyles.subheading14, { marginTop: 20, textAlign: 'center' }]}>
-                    Lorem ipsum dolor sit amet consectetur. Id feugiat sit magna fermentum bibendum tincidunt. Dolor sit et et enim.
-                </Text> */}
+                <Text style={[GlobalStyles.subheading14, { marginTop: 20, textAlign: 'center' }]}>
+                    {desc}
+                </Text>
                 <TouchableOpacity style={[GlobalStyles.capsuleBtn, { marginTop: 40 }]}
                     onPress={getLocation}
                 >

@@ -180,7 +180,7 @@ const TabbarContainer = ({ navigation, route }) => {
       console.log("User not subscribed",role);
       if (
         role&&role == "business" 
-        && Device.isDevice // it was added to prevent subscription not enable issue. by using this there is no need to comment scubscriotion screen for testing or development
+       //&& Device.isDevice // it was added to prevent subscription not enable issue. by using this there is no need to comment scubscriotion screen for testing or development
       ) {
         console.log("Navigating to Plans");
         navigation.navigate(ScreenNames.PlansScreen);

@@ -15,6 +15,7 @@ import { getCutomerProfile } from '../../components/GetCustomerProfile'
 import LoadingAnimation from '../../components/LoadingAnimation'
 import calculateSpent from '../../res/CalculateSpent'
 import { useFocusEffect } from '@react-navigation/native'
+import LocationPremitionScreen from '../ProfileSetup/LocationPermitionScreen'
 
 
 const profileImage = require('../../assets/Images/profileImage.png')
@@ -27,6 +28,8 @@ const DiscoverMainScreeen = ({ navigation }) => {
   const [recentlyViewed, setRecentlyViewed] = useState([])
   const [loading, setLoading] = useState(false)
   const [role, setRole] = useState("")
+  const [locationAvailable, setLocationAvailable] = useState(null);
+
   const [user, setUser] = useState("")
 
   const searchAnim = useRef(new Animated.Value(0)).current
@@ -58,10 +61,24 @@ const DiscoverMainScreeen = ({ navigation }) => {
       getDashboardData()
     }, [])
   )
-
   useEffect(() => {
-    // getDashboardData()
-  }, [])
+    const checkLocation = async () => {
+      const data = await AsyncStorage.getItem("USER");
+      if (data) {
+        const u = JSON.parse(data);
+        const lat = u?.user?.lat;
+        const lon = u?.user?.lon;
+        if (lat && lon) {
+          setLocationAvailable(true);
+        } else {
+          setLocationAvailable(false);
+        }
+        }
+    };
+
+    checkLocation();
+  }, []);
+
 
   const getDashboardData = async () => {
     console.log('trying to call dashboard apip')
@@ -103,10 +120,10 @@ const DiscoverMainScreeen = ({ navigation }) => {
     setLoading(false)
     if (data) {
       // if (item.role === "customer") {
-        navigation.push(ScreenNames.CustomerProfileDetails, {
-          user: item,
-          from: 'User'
-        })
+      navigation.push(ScreenNames.CustomerProfileDetails, {
+        user: item,
+        from: 'User'
+      })
       // } else {
       //   navigation.push(ScreenNames.BusinessInfoScreen, {
       //     user: item,
@@ -114,6 +131,234 @@ const DiscoverMainScreeen = ({ navigation }) => {
       //   })
       // }
     }
+  }
+
+  const renderView = () => {
+    console.log('locationAvailable', locationAvailable)
+    if (locationAvailable === null) return null;
+    if (locationAvailable) return defaultView();
+    return NoLocationView();
+  };
+
+
+  const defaultView = () => {
+    return (
+      <ScrollView style={{}} showsVerticalScrollIndicator={false}>
+        <View style={{ alignItems: 'center', marginBottom: 20 }}>
+          <Text style={[GlobalStyles.text17, { textAlign: 'left', marginTop: 25 / 930 * screenHeight, width: screenWidth - 40 }]}>
+            Recently Viewed
+          </Text>
+
+          <View style={{ width: screenWidth - 20, marginTop: 30 / 930 * screenHeight }}>
+            <ScrollView horizontal style={{}} showsHorizontalScrollIndicator={false}>
+              <View style={{ alignItems: 'center', flexDirection: 'row', gap: 20 / 430 * screenWidth, }}>
+                {
+                  recentlyViewed && recentlyViewed.length > 0 ? (
+                    recentlyViewed && recentlyViewed.map((item) => (
+                      <TouchableOpacity onPress={() => getProfile(item)}>
+                        <View key={item.id} style={{
+                          backgroundColor: 'white', alignItems: 'center', padding: 20, borderRadius: 10, width: 240 / 430 * screenWidth
+                        }}>
+                          <View style={{ width: 200 / 430 * screenWidth, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            {/* <View style={{
+                              height: 36 / 930 * screenHeight, width: 36 / 430 * screenWidth, borderRadius: 20, borderWidth: 2, borderColor: Colors.orangeColor,
+                            }}> */}
+
+                            <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
+                              style={{
+                                height: 36 / 930 * screenHeight, width: 36 / 930 * screenHeight, borderRadius: 20, borderWidth: 2, borderColor: 'white',
+                                resizeMode: 'cover'
+                              }}
+                            />
+                            {/* </View> */}
+                            {
+                              item.role != "business" && (
+                                <View style={{ backgroundColor: "#FF570020", padding: 8 / 930 * screenHeight, alignItems: 'center', borderRadius: 20 }}>
+                                  <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
+                                    Spent over {calculateSpent(item.totalSpent)}
+                                  </Text>
+                                </View>
+                              )}
+                          </View>
+                          <View style={{
+                            width: 200 / 430 * screenWidth, flexDirection: 'column', alignItems: 'flex-start',
+                            marginTop: 20 / 930 * screenHeight, gap: 15
+                          }}>
+                            <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, }}>
+                              {item.name}
+                            </Text>
+
+                            <Text numberOfLines={1} style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                              {item.city ? item.city : ''} {item.state && `, ${item.state}`}
+                            </Text>
+
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 200 / 430 * screenWidth }}>
+                              {
+                                item.role != "business" && (
+                                  <View style={{ flexDirection: 'column', gap: 4 }}>
+                                    <View style={{ flexDirection: 'row', }}>
+                                      <Image source={require('../../assets/Images/yIcon.png')}
+                                        style={GlobalStyles.yIcon}
+                                      />
+                                      <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                        ap score
+                                      </Text>
+                                    </View>
+                                    <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
+                                      {item.yapScore3Digit}
+                                    </Text>
+                                  </View>
+                                )}
+                              <View style={{ flexDirection: 'column', gap: 4 }}>
+                                <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
+                                  Total Reviews
+                                </Text>
+                                <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
+                                  {item.totalReviews}
+                                </Text>
+                              </View>
+                            </View>
+
+
+
+
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <Text style={[GlobalStyles.text14Intria, { alignSelf: 'center', marginLeft: 40 / 430 * screenWidth }]}>
+                      No recently viewed
+                    </Text>
+                  )
+                }
+              </View>
+            </ScrollView>
+
+          </View>
+
+          <View style={{
+            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth - 40,
+            marginTop: 30 / 930 * screenHeight
+          }}>
+            <Text style={[GlobalStyles.text17,]}>
+              {role && role === "customer" ? "Businesses" : "Customers"} Near Me
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push(ScreenNames.AllCustomersScreen, {
+                  role: role
+                })
+              }}
+            >
+              <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
+                View all
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {
+            customersNearMe && customersNearMe.length > 0 ? (
+              customersNearMe.map((item) => (
+                <TouchableOpacity
+                  onPress={() => getProfile(item)}
+                >
+                  <View key={item.id} style={{
+                    width: screenWidth - 40, alignItems: 'flex-start', flexDirection: 'column', gap: 5,
+                    marginTop: 30 / 930 * screenHeight
+                  }}>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 60, justifyContent: 'space-between' }}>
+
+                      <View style={{ flexDirection: 'row', alignItems: "center", gap: 5 }}>
+                        <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
+                          style={{
+                            height: 30, width: 30, borderRadius: 20, resizeMode: 'cover'
+                          }}
+                        />
+                        <Text style={[GlobalStyles.text17, { color: 'black' }]}>
+                          {item.name}
+                        </Text>
+                      </View>
+                      {
+                        item.role != "business" && (
+                          <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
+                            Spent over {calculateSpent(item.totalSpent)}
+                          </Text>
+                        )}
+                    </View>
+                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 30 / 430 * screenWidth }}>
+                      <Text style={[GlobalStyles.text17, { color: '#00000080' }]}>
+                        {item.city ? item.city : ''} {item.state && `, ${item.state}`}
+                      </Text>
+                      <View style={{
+                        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                        width: screenWidth - 70 / 430 * screenWidth, marginTop: 10
+                      }}>
+                        {
+                          item.role != "business" && (
+                            <View style={{ flexDirection: 'column', gap: 5 }}>
+
+                              <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
+                                Yap score
+                              </Text>
+                              <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
+                                {item.yapScore3Digit}
+                              </Text>
+                            </View>
+                          )
+                        }
+
+                        <View style={{ flexDirection: 'column', gap: 5 }}>
+                          <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
+                            Total Reviews
+                          </Text>
+                          <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
+                            {item.totalReviews ? item.totalReviews : 0}
+                          </Text>
+                        </View>
+
+                        <Image source={require('../../assets/Images/farwordBtn.png')}
+                          style={GlobalStyles.image37}
+                        />
+                      </View>
+                    </View>
+
+
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={[GlobalStyles.text14Intria, { alignSelf: 'flex-start', margin: 20 / 930 * screenHeight }]}>
+                No customers near me
+              </Text>
+            )
+
+          }
+
+        </View>
+      </ScrollView>
+    )
+  }
+
+  const handleAllowLocation = () => {
+    console.log('handle location')
+    setLocationAvailable(true)
+    // renderView()
+  }
+
+  const NoLocationView = () => {
+    return (
+      <LocationPremitionScreen
+        from="Discover"
+        title='Location Permission is Pending'
+        desc='To show data near you, please enable location.'
+        showNotBtn={false}
+        route={{ params: { from: 'Discover' } }}
+        handleAllowLocation={handleAllowLocation}
+      />
+    )
   }
 
   return (
@@ -220,202 +465,9 @@ const DiscoverMainScreeen = ({ navigation }) => {
         </Modal>
 
         <View style={{ height: screenHeight * 0.69 }}>
-          <ScrollView style={{}} showsVerticalScrollIndicator={false}>
-            <View style={{ alignItems: 'center', marginBottom: 20 }}>
-              <Text style={[GlobalStyles.text17, { textAlign: 'left', marginTop: 25 / 930 * screenHeight, width: screenWidth - 40 }]}>
-                Recently Viewed
-              </Text>
-
-              <View style={{ width: screenWidth - 20, marginTop: 30 / 930 * screenHeight }}>
-                <ScrollView horizontal style={{}} showsHorizontalScrollIndicator={false}>
-                  <View style={{ alignItems: 'center', flexDirection: 'row', gap: 20 / 430 * screenWidth, }}>
-                    {
-                      recentlyViewed && recentlyViewed.length > 0 ? (
-                        recentlyViewed && recentlyViewed.map((item) => (
-                          <TouchableOpacity onPress={() => getProfile(item)}>
-                            <View key={item.id} style={{
-                              backgroundColor: 'white', alignItems: 'center', padding: 20, borderRadius: 10, width: 240 / 430 * screenWidth
-                            }}>
-                              <View style={{ width: 200 / 430 * screenWidth, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                {/* <View style={{
-                              height: 36 / 930 * screenHeight, width: 36 / 430 * screenWidth, borderRadius: 20, borderWidth: 2, borderColor: Colors.orangeColor,
-                            }}> */}
-
-                                <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                                  style={{
-                                    height: 36 / 930 * screenHeight, width: 36 / 930 * screenHeight, borderRadius: 20, borderWidth: 2, borderColor: 'white',
-                                    resizeMode: 'cover'
-                                  }}
-                                />
-                                {/* </View> */}
-                                {
-                                  item.role != "business" && (
-                                    <View style={{ backgroundColor: "#FF570020", padding: 8 / 930 * screenHeight, alignItems: 'center', borderRadius: 20 }}>
-                                      <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: Colors.orangeColor }}>
-                                        Spent over {calculateSpent(item.totalSpent)}
-                                      </Text>
-                                    </View>
-                                  )}
-                              </View>
-                              <View style={{
-                                width: 200 / 430 * screenWidth, flexDirection: 'column', alignItems: 'flex-start',
-                                marginTop: 20 / 930 * screenHeight, gap: 15
-                              }}>
-                                <Text style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, }}>
-                                  {item.name}
-                                </Text>
-
-                                <Text numberOfLines={1} style={{ fontSize: 17, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                  {item.city ? item.city : ''} {item.state && `, ${item.state}`}
-                                </Text>
-
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 200 / 430 * screenWidth }}>
-                                  {
-                                    item.role != "business" && (
-                                      <View style={{ flexDirection: 'column', gap: 4 }}>
-                                        <View style={{ flexDirection: 'row', }}>
-                                          <Image source={require('../../assets/Images/yIcon.png')}
-                                            style={GlobalStyles.yIcon}
-                                          />
-                                          <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                            ap score
-                                          </Text>
-                                        </View>
-                                        <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                          {item.yapScore3Digit}
-                                        </Text>
-                                      </View>
-                                  )}
-                                  <View style={{ flexDirection: 'column', gap: 4 }}>
-                                    <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium, color: "#00000080" }}>
-                                      Total Reviews
-                                    </Text>
-                                    <Text style={{ fontSize: 24, fontFamily: CustomFonts.IntriaBold, color: 'black' }}>
-                                      {item.totalReviews}
-                                    </Text>
-                                  </View>
-                                </View>
-
-
-
-
-                              </View>
-                            </View>
-                          </TouchableOpacity>
-                        ))
-                      ) : (
-                        <Text style={[GlobalStyles.text14Intria, { alignSelf: 'center', marginLeft: 40 / 430 * screenWidth }]}>
-                          No recently viewed
-                        </Text>
-                      )
-                    }
-                  </View>
-                </ScrollView>
-
-              </View>
-
-              <View style={{
-                flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: screenWidth - 40,
-                marginTop: 30 / 930 * screenHeight
-              }}>
-                <Text style={[GlobalStyles.text17,]}>
-                  {role && role === "customer" ? "Businesses" : "Customers"} Near Me
-                </Text>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.push(ScreenNames.AllCustomersScreen, {
-                      role: role
-                    })
-                  }}
-                >
-                  <Text style={[GlobalStyles.BtnText, { color: Colors.orangeColor }]}>
-                    View all
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {
-                customersNearMe && customersNearMe.length > 0 ? (
-                  customersNearMe.map((item) => (
-                    <TouchableOpacity
-                      onPress={() => getProfile(item)}
-                    >
-                      <View key={item.id} style={{
-                        width: screenWidth - 40, alignItems: 'flex-start', flexDirection: 'column', gap: 5,
-                        marginTop: 30 / 930 * screenHeight
-                      }}>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', width: screenWidth - 60, justifyContent: 'space-between' }}>
-
-                          <View style={{ flexDirection: 'row', alignItems: "center", gap: 5 }}>
-                            <Image source={item.profile_image ? { uri: item.profile_image } : placeholderImage}
-                              style={{
-                                height: 30, width: 30, borderRadius: 20, resizeMode: 'cover'
-                              }}
-                            />
-                            <Text style={[GlobalStyles.text17, { color: 'black' }]}>
-                              {item.name}
-                            </Text>
-                          </View>
-                          {
-                            item.role != "business" && (
-                              <Text style={{ fontSize: 14, fontFamily: CustomFonts.InterMedium }}>
-                                Spent over {calculateSpent(item.totalSpent)}
-                              </Text>
-                            )}
-                        </View>
-                        <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginLeft: 30 / 430 * screenWidth }}>
-                          <Text style={[GlobalStyles.text17, { color: '#00000080' }]}>
-                            {item.city ? item.city : ''} {item.state && `, ${item.state}`}
-                          </Text>
-                          <View style={{
-                            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                            width: screenWidth - 70/430*screenWidth, marginTop: 10
-                          }}>
-                            {
-                              item.role != "business" && (
-                                <View style={{ flexDirection: 'column', gap: 5 }}>
-
-                                  <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
-                                    Yap score
-                                  </Text>
-                                  <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                    {item.yapScore3Digit}
-                                  </Text>
-                                </View>
-                              )
-                            }
-
-                            <View style={{ flexDirection: 'column', gap: 5 }}>
-                              <Text style={{ fontSize: 13, fontFamily: CustomFonts.InterRegular }}>
-                                Total Reviews
-                              </Text>
-                              <Text style={{ fontSize: 20, fontFamily: CustomFonts.IntriaBold }}>
-                                {item.totalReviews ? item.totalReviews : 0}
-                              </Text>
-                            </View>
-
-                            <Image source={require('../../assets/Images/farwordBtn.png')}
-                              style={GlobalStyles.image37}
-                            />
-                          </View>
-                        </View>
-
-
-                      </View>
-                    </TouchableOpacity>
-                  ))
-                ) : (
-                  <Text style={[GlobalStyles.text14Intria, { alignSelf: 'flex-start', margin: 20 / 930 * screenHeight }]}>
-                    No customers near me
-                  </Text>
-                )
-
-              }
-
-            </View>
-          </ScrollView>
+          {
+            renderView()
+          }
         </View>
       </SafeAreaView >
     )
